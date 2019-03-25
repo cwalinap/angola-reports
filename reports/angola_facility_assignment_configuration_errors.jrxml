@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facilityAssignmentConfigurationErrors" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="918bcb30-4c1a-4369-8efb-08d7a604d4c2">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="230"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="764"/>
+	<property name="ireport.zoom" value="2.853116706110003"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="plsql">
+		<![CDATA[SELECT
+  DISTINCT facilities.code AS facility_code,
+  facilities.name AS facility_name,
+  facility_types.name AS facility_type,
+  (
+    SELECT string_agg(programs.name, ', ')
+    FROM referencedata.programs AS programs
+    WHERE programs.id IN (SELECT subsets.programid FROM referencedata.supported_programs AS subsets WHERE subsets.facilityid = facilities.id AND subsets.active = TRUE)
+  ) AS program_names,
+  (
+    WITH RECURSIVE findSupervisoryNodes AS (
+      SELECT nodes.id, nodes.parentid
+      FROM referencedata.supervisory_nodes AS nodes
+      WHERE nodes.facilityid = facilities.id
+      UNION ALL
+        SELECT nodes.id, nodes.parentid
+        FROM referencedata.supervisory_nodes AS nodes
+        JOIN findSupervisoryNodes ON findSupervisoryNodes.parentid = nodes.id
+    )
+
+    SELECT
+      string_agg(DISTINCT roles.name, ', ')
+    FROM
+      referencedata.role_assignments AS role_assignments
+      JOIN referencedata.users AS users ON users.id = role_assignments.userid
+      JOIN referencedata.roles AS roles ON roles.id = role_assignments.roleid
+      JOIN referencedata.role_rights AS role_rights ON role_rights.roleid = roles.id
+      JOIN referencedata.rights AS rights ON rights.id = role_rights.rightid
+    WHERE
+      (role_assignments.supervisorynodeid IN (SELECT id FROM findSupervisoryNodes) OR users.homefacilityid = facilities.id)
+      AND rights.name IN ('REQUISITION_VIEW', 'REQUISITION_CREATE', 'REQUISITION_DELETE', 'REQUISITION_AUTHORIZE', 'REQUISITION_APPROVE')
+      AND role_assignments.programid IN (SELECT subsets.programid FROM referencedata.supported_programs AS subsets WHERE subsets.facilityid = facilities.id AND subsets.active = TRUE)
+  ) AS assigned_roles,
+  (
+    SELECT string_agg(DISTINCT nodes.code, ', ')
+    FROM referencedata.supervisory_nodes AS nodes
+    WHERE nodes.facilityid = facilities.id
+  ) AS supervisory_nodes
+FROM
+  referencedata.supported_programs AS sets
+  JOIN referencedata.facilities AS facilities ON facilities.id = sets.facilityid
+  JOIN referencedata.facility_types AS facility_types ON facility_types.id = facilities.typeid
+  FULL OUTER JOIN referencedata.supervisory_nodes AS supervisory_nodes ON supervisory_nodes.facilityid = facilities.id
+WHERE
+  sets.active = TRUE
+  AND (
+    (
+      WITH RECURSIVE findSupervisoryNodes AS (
+        SELECT nodes.id, nodes.parentid
+        FROM referencedata.supervisory_nodes AS nodes
+        WHERE nodes.id = supervisory_nodes.id
+        UNION ALL
+          SELECT nodes.id, nodes.parentid
+          FROM referencedata.supervisory_nodes AS nodes
+          JOIN findSupervisoryNodes ON findSupervisoryNodes.parentid = nodes.id
+      ), findSupervisingUsers AS (
+        SELECT
+          COUNT (DISTINCT users.id) AS count,
+          rights.name AS right
+        FROM
+          referencedata.users AS users
+          JOIN referencedata.role_assignments AS role_assignments ON role_assignments.userid = users.id
+          JOIN referencedata.role_rights AS role_rights ON role_rights.roleid = role_assignments.roleid
+          JOIN referencedata.rights AS rights ON rights.id = role_rights.rightid
+        WHERE
+          CASE WHEN role_assignments.supervisorynodeid IS NOT NULL THEN
+            role_assignments.supervisorynodeid IN (SELECT id FROM findSupervisoryNodes)
+          ELSE
+            users.homefacilityid = facilities.id
+          END
+            AND rights.name IN ('REQUISITION_VIEW', 'REQUISITION_CREATE', 'REQUISITION_DELETE', 'REQUISITION_AUTHORIZE', 'REQUISITION_APPROVE')
+            AND role_assignments.programid = sets.programid
+        GROUP BY
+          rights.name
+      )
+
+      SELECT COUNT(*) FROM findSupervisingUsers WHERE count > 0
+    ) < 5
+  )
+ORDER BY
+  facilities.code
+;]]>
+	</queryString>
+	<field name="facility_code" class="java.lang.String"/>
+	<field name="facility_name" class="java.lang.String"/>
+	<field name="facility_type" class="java.lang.String"/>
+	<field name="program_names" class="java.lang.String"/>
+	<field name="assigned_roles" class="java.lang.String"/>
+	<field name="supervisory_nodes" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="450" y="0" width="100" height="20" uuid="7e71222a-5f8f-4569-a08a-c9a0d4baa75f"/>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="110" y="15" width="340" height="30" uuid="2eae18a6-3ef5-4262-a8f1-f70181687cef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Instalações Com Configurações Incompletas]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="70" height="30" backcolor="#F5F5F5" uuid="8aa7ebbc-27ca-4eec-a861-4d3158bcd465"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código de Facilidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="70" y="0" width="90" height="30" backcolor="#F5F5F5" uuid="b51d715c-7db4-4451-a802-5c70b65c4531"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome da Facilidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="160" y="0" width="70" height="30" backcolor="#F5F5F5" uuid="f87a81b1-317d-4358-9aac-2c6466af1d5b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Facilidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="230" y="0" width="100" height="30" backcolor="#F5F5F5" uuid="021854db-dc1c-450c-ad8a-b2741285a3dc"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Programas Atribuídos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="330" y="0" width="130" height="30" backcolor="#F5F5F5" uuid="f2968725-4840-4f6c-aaa0-e4c2edb0da20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Papéis Atribuídos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="460" y="0" width="90" height="30" backcolor="#F5F5F5" uuid="d1f94026-2997-4430-a5bc-844449767fcc"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nó Supervisor Atribuído]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="0" width="70" height="40" uuid="143238e8-aa81-485f-8631-796f1daa6e3b"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facility_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="0" width="100" height="40" uuid="96257e14-e83c-432c-a63c-5b85c569bc0f"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{program_names}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="70" height="40" uuid="431a0453-bdf2-42d4-8b7b-8c277c7498e9"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facility_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="90" height="40" uuid="9cb74a09-f5be-4ae1-a0a3-01a88b4b861c"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facility_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="90" height="40" uuid="c9b4c4b7-a190-4157-86e0-6fb37d4f25e6"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{supervisory_nodes} == null ? "" : $F{supervisory_nodes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="130" height="40" uuid="d4b07c8d-4a86-4e71-b6e4-3a2df32c8877"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{assigned_roles} == null ? "" : $F{assigned_roles}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="430" y="10" width="70" height="20" uuid="49d7030b-3cad-47e5-af05-f063c98fb9e4"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="500" y="10" width="50" height="20" uuid="08848fb7-8d78-4e93-a448-483ebae4c582"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="60">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="80" y="30" width="400" height="30" uuid="a85b79b3-b860-4905-befe-981c588c1e6d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nenhum registro pendente de atribuições.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

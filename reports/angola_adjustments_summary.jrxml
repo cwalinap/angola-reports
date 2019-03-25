@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="adjustments_summary_district" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="false"/>
+	<property name="net.sf.jasperreports.export.csv.one.page.per.sheet" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.csv.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.group.1" value="Product Group"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="title"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.4" value="summary"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.3" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.group.1" value="Product Group"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.3" value="title"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.4" value="summary"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.3" value="columnHeader"/>
+	<property name="ireport.zoom" value="2.1435888100000016"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="ReportingRate" uuid="175bdf39-9735-4eac-a1e5-26bfab616c0b">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="388"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="603"/>
+		<parameter name="Program" class="java.lang.String">
+			<property name="displayName" value="Program"/>
+			<property name="selectExpression" value="/api/reports/programs"/>
+			<property name="selectProperty" value="name"/>
+			<property name="displayProperty" value="name"/>
+			<property name="required" value="true"/>
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<parameter name="Period" class="java.lang.String">
+			<property name="displayName" value="Period"/>
+			<property name="selectExpression" value="/api/reports/processingPeriods"/>
+			<property name="displayProperty" value="name"/>
+			<property name="selectProperty" value="name"/>
+			<property name="required" value="true"/>
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<parameter name="GeographicZone" class="java.lang.String">
+			<property name="displayName" value="District"/>
+			<property name="selectExpression" value="/api/reports/districts"/>
+			<property name="displayProperty" value="name"/>
+			<property name="selectProperty" value="name"/>
+			<property name="required" value="false"/>
+		</parameter>
+		<parameter name="DueDays" class="java.lang.String">
+			<property name="displayName" value="Due date (days)"/>
+			<property name="required" value="false"/>
+		</parameter>
+		<queryString>
+			<![CDATA[WITH RECURSIVE findChildZones AS (
+  SELECT * FROM referencedata.geographic_zones WHERE name = $P{GeographicZone}
+  UNION ALL
+  SELECT referencedata.geographic_zones.* FROM referencedata.geographic_zones JOIN findChildZones ON findChildZones.id = referencedata.geographic_zones.parentId
+)
+SELECT
+  referencedata.processing_periods.name AS periodname,
+  COUNT(CASE WHEN status_change.createddate IS NOT NULL THEN 1 END) AS completed,
+  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 20 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
+  COUNT(CASE WHEN status_change.createddate IS NULL THEN 1 END) AS missed,
+  COUNT(*) as total
+FROM referencedata.facilities
+  JOIN referencedata.geographic_zones ON
+   referencedata.facilities.geographiczoneid = referencedata.geographic_zones.id
+   JOIN referencedata.programs program ON
+   $P{Program}::varchar IS NULL OR program.name = $P{Program}::varchar
+  JOIN referencedata.requisition_group_members rgm ON
+   facilityid = referencedata.facilities.id
+  JOIN referencedata.requisition_groups rg ON
+    rgm.requisitiongroupid = rg.id
+  JOIN referencedata.requisition_group_program_schedules rgps ON
+    rgps.requisitiongroupid = rg.id AND rgps.programid = program.id
+  JOIN referencedata.supported_programs sp ON
+    sp.programid = program.id AND sp.facilityid = referencedata.facilities.id
+  LEFT JOIN referencedata.processing_periods ON
+   referencedata.processing_periods.name = $P{Period}::varchar
+  LEFT JOIN requisition.requisitions ON
+    requisition.requisitions.facilityid = referencedata.facilities.id
+    AND requisition.requisitions.processingperiodid =  referencedata.processing_periods.id
+    AND requisition.requisitions.programid = program.id
+    AND requisition.requisitions.emergency = false
+  LEFT JOIN (SELECT DISTINCT ON (requisitionid) requisitionid, createddate FROM requisition.status_changes WHERE requisition.status_changes.status = 'SUBMITTED') status_change
+   ON status_change.requisitionid = requisition.requisitions.id
+WHERE
+   referencedata.facilities.active = true
+   AND referencedata.facilities.enabled = true
+   AND ($P{GeographicZone}::varchar IS NULL OR referencedata.geographic_zones.id IN (SELECT id FROM findChildZones))
+   AND sp.active = true
+GROUP BY periodname]]>
+		</queryString>
+		<field name="periodname" class="java.lang.String"/>
+		<field name="completed" class="java.lang.Integer"/>
+		<field name="missed" class="java.lang.Integer"/>
+		<field name="ontime" class="java.lang.Integer"/>
+		<field name="total" class="java.lang.Integer"/>
+		<variable name="PercentAndNumberFormat" class="java.lang.String">
+			<variableExpression><![CDATA["%1$.0f%%"]]></variableExpression>
+			<initialValueExpression><![CDATA["%.0f%%"]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<parameter name="period" class="java.lang.String">
+		<property name="displayName" value="Period Name"/>
+		<property name="selectExpression" value="/api/reports/processingPeriods"/>
+		<property name="selectProperty" value="name"/>
+		<property name="displayProperty" value="name"/>
+		<property name="required" value="true"/>
+	</parameter>
+	<parameter name="district" class="java.lang.String">
+		<property name="displayName" value="District"/>
+		<property name="selectExpression" value="/api/reports/districts"/>
+		<property name="selectProperty" value="name"/>
+		<property name="displayProperty" value="name"/>
+		<property name="required" value="false"/>
+	</parameter>
+	<parameter name="program" class="java.lang.String">
+		<property name="displayName" value="Program Name"/>
+		<property name="selectExpression" value="/api/reports/programs"/>
+		<property name="selectProperty" value="name"/>
+		<property name="displayProperty" value="name"/>
+		<property name="required" value="true"/>
+	</parameter>
+	<parameter name="adjustmentType" class="java.lang.String">
+		<property name="displayName" value="Adjustment Type"/>
+		<property name="selectExpression" value="/api/stockCardLineItemReasons"/>
+		<property name="selectProperty" value="name"/>
+		<property name="displayProperty" value="name"/>
+		<property name="required" value="false"/>
+	</parameter>
+	<parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="timeZone" class="java.lang.String" isForPrompting="false"/>
+	<queryString language="plsql">
+		<![CDATA[WITH RECURSIVE findChildZones AS (
+  SELECT * FROM referencedata.geographic_zones WHERE name = $P{district}::varchar
+  UNION ALL
+  SELECT referencedata.geographic_zones.* FROM referencedata.geographic_zones JOIN findChildZones ON findChildZones.id = referencedata.geographic_zones.parentId)
+
+SELECT
+	programs.name AS programname,
+	products.fullproductname AS productname,
+	dispensingunit.value AS dispensingunit,
+	facilities.name AS facilityname,
+	zones.name AS zonename,
+	stock_card_line_item_reasons.name AS adjustmenttype,
+	stock_adjustments.quantity AS adjustmentquantity,
+	stock_card_line_item_reasons.reasontype AS reasontype
+FROM
+	requisition.stock_adjustments AS stock_adjustments
+    JOIN stockmanagement.stock_card_line_item_reasons AS stock_card_line_item_reasons ON stock_card_line_item_reasons.id = stock_adjustments.reasonid
+	JOIN requisition.requisition_line_items AS requisition_line_items ON requisition_line_items.id = stock_adjustments.requisitionlineitemid
+	JOIN requisition.requisitions AS requisitions ON requisitions.id = requisition_line_items.requisitionid
+	JOIN referencedata.processing_periods AS periods ON periods.id = requisitions.processingperiodid
+	JOIN referencedata.facilities AS facilities ON facilities.id = requisitions.facilityid
+	JOIN referencedata.programs AS programs ON programs.id = requisitions.programid
+	JOIN referencedata.orderables AS products ON products.id = requisition_line_items.orderableid
+	LEFT JOIN referencedata.dispensable_attributes AS dispensingunit ON dispensingunit.key = 'dispensingUnit' AND dispensingunit.dispensableid = products.dispensableid
+	JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
+WHERE
+	programs.name = $P{program}::varchar
+  	AND (requisitions.status = 'SUBMITTED' OR requisitions.status = 'AUTHORIZED' OR requisitions.status = 'IN_APPROVAL' OR requisitions.status = 'APPROVED' OR requisitions.status = 'RELEASED')
+	AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
+	AND periods.name = $P{period}::varchar
+	AND ($P{adjustmentType}::varchar IS NULL OR stock_card_line_item_reasons.name = $P{adjustmentType}::varchar)
+ORDER BY productname, adjustmenttype]]>
+	</queryString>
+	<field name="productname" class="java.lang.String"/>
+	<field name="facilityname" class="java.lang.String"/>
+	<field name="adjustmenttype" class="java.lang.String"/>
+	<field name="adjustmentquantity" class="java.lang.Integer"/>
+	<field name="reasontype" class="java.lang.String"/>
+	<field name="dispensingunit" class="java.lang.String"/>
+	<field name="programname" class="java.lang.String"/>
+	<field name="zonename" class="java.lang.String"/>
+	<variable name="Adjustment Quantity total for Adjustment Type" class="java.lang.Integer" resetType="Group" resetGroup="Adjustment Type Group" calculation="Sum">
+		<variableExpression><![CDATA[$V{Additive Adjustment Quantity}]]></variableExpression>
+	</variable>
+	<variable name="Adjustment Quantity total for Product" class="java.lang.Integer" resetType="Group" resetGroup="Product Group" calculation="Sum">
+		<variableExpression><![CDATA[$V{Additive Adjustment Quantity}]]></variableExpression>
+	</variable>
+	<variable name="Additive Adjustment Quantity" class="java.lang.Integer" resetType="None">
+		<variableExpression><![CDATA["CREDIT".equals($F{reasontype}) ?
+$F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></variableExpression>
+	</variable>
+	<variable name="Adjustment Quantity total for Facility" class="java.lang.Integer" resetType="Group" resetGroup="Facility Group" calculation="Sum">
+		<variableExpression><![CDATA[$V{Additive Adjustment Quantity}]]></variableExpression>
+	</variable>
+	<variable name="Line Count" class="java.lang.Integer" incrementType="Group" incrementGroup="Facility Group" calculation="Count">
+		<variableExpression><![CDATA[$F{facilityname}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="Product Group">
+		<groupExpression><![CDATA[$F{productname}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+				<rectangle>
+					<reportElement x="0" y="0" width="555" height="20" backcolor="#C0C0C0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<textField isBlankWhenNull="false">
+					<reportElement x="20" y="0" width="100" height="20" uuid="eb5409f1-cdfe-481f-a56f-17a78f1d2b6f">
+						<printWhenExpression><![CDATA[$F{productname} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement x="140" y="0" width="99" height="20" uuid="8402f03f-3e3a-42c7-9865-32b6b0dee2ba">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{dispensingunit} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dispensingunit}]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[Arrays.asList("csv", "xls").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+				<staticText>
+					<reportElement x="40" y="0" width="140" height="20" uuid="0187cb09-a694-4ad6-b6d5-2322ddeb1407">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Productos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="230" y="0" width="85" height="20" uuid="0e1d212b-8146-4cd7-8385-eff493d0800f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Facilidade]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="380" y="0" width="109" height="20" uuid="429a7e8d-f187-4026-8beb-96a885690f28">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Categoria de Ajuste]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="470" y="0" width="85" height="20" uuid="b189204d-78a9-4a4f-affd-6d3d9567d5fc">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Ajuste]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="315" y="0" width="65" height="20" uuid="7f548f67-961c-4198-b41a-31b7e4abea49">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Tipo Dado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="0" width="40" height="20" uuid="721959a4-3b54-438c-ac1c-315666ee8446">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="180" y="0" width="50" height="20" uuid="724aec2b-44cb-4095-a6a0-08ba6f45882e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Zona]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<printWhenExpression><![CDATA[$V{REPORT_COUNT}.intValue() > 0 && Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+				<staticText>
+					<reportElement x="380" y="0" width="120" height="20" uuid="b4575a60-4d8c-41cd-abb7-70f6d11293d5">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="20"/>
+					<text><![CDATA[Ajustes Totais]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="500" y="0" width="55" height="20" uuid="12366c95-43e1-4bda-8cde-1fd06302bb53"/>
+					<box leftPadding="5"/>
+					<textFieldExpression><![CDATA[$V{Adjustment Quantity total for Product}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Adjustment Type Group">
+		<groupExpression><![CDATA[$F{adjustmenttype}]]></groupExpression>
+		<groupFooter>
+			<band height="30">
+				<printWhenExpression><![CDATA[$V{REPORT_COUNT}.intValue() > 0 && Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="379" y="5" width="110" height="20" uuid="046569ed-ad5d-4012-a9ed-751d5b38c3d9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA["Total - " + $F{adjustmenttype}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="379" y="5" width="175" height="1" uuid="510d5d0d-f55a-4f1d-af95-1f74677a3aaf">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="500" y="5" width="55" height="20" uuid="637ebc5e-9639-406e-9dcd-645f508be25b">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$V{Adjustment Quantity total for Adjustment Type}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Facility Group">
+		<groupExpression><![CDATA[$F{facilityname}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[$V{Line Count} > 0 && Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="20" uuid="3910b3d3-af42-4f84-86a3-5970c2e05580">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$V{Line Count}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="40" y="0" width="200" height="20" uuid="05b80422-e817-4738-ade5-8224822385fb"/>
+					<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="240" y="0" width="140" height="20" uuid="8cc6afbe-f92c-41d3-b6de-2569c774463b"/>
+					<textFieldExpression><![CDATA[$F{adjustmenttype}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="381" y="0" width="110" height="20" uuid="0114aeb0-fcbd-4d52-b328-614352384632"/>
+					<box leftPadding="2"/>
+					<textFieldExpression><![CDATA[$V{Adjustment Quantity total for Facility}]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[$V{Line Count} > 0 && Arrays.asList("csv", "xls").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+				<textField>
+					<reportElement x="230" y="0" width="85" height="20" uuid="f8bee16a-3b3f-4c30-a714-2b913c36d01e">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="380" y="0" width="90" height="20" uuid="4b7273d9-b59b-48a3-b937-ece374ed135b">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{adjustmenttype}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="40" height="20" uuid="dd8a7094-9768-426b-b91e-5bb460193ce1">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$V{Line Count}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="470" y="0" width="85" height="20" uuid="0e21ace4-5096-4818-a9a8-35fde2eb4c79"/>
+					<box leftPadding="2"/>
+					<textFieldExpression><![CDATA[$V{Adjustment Quantity total for Facility}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement x="315" y="0" width="65" height="20" uuid="63386b44-8304-44a1-a78a-8ce46531e507">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{dispensingunit} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dispensingunit}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement x="40" y="0" width="140" height="20" uuid="719b50e8-10d4-4bf0-8349-97cd8be6f307">
+						<printWhenExpression><![CDATA[$F{productname} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="0" width="50" height="20" uuid="baacbf10-17d6-48ae-8ac8-168af97eb901">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{zonename}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="130" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="340" y="100" width="110" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
+				<textFieldExpression><![CDATA[($P{adjustmentType} == null) ? "All" : $P{adjustmentType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="450" y="100" width="105" height="20" uuid="eecc1140-a4a9-4bd6-9d4e-4828b52367fe">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("d - MMM - yy").format(java.time.LocalDate.now());]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="60" width="555" height="18" forecolor="#FFFFFF" backcolor="#787878" uuid="67c6acd7-5312-4a60-8daf-f3258c4a93f6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resumo de Ajuste]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="230" y="100" width="110" height="20" uuid="b9f82e73-78bb-40d2-ba66-fd3608a549e4"/>
+				<textFieldExpression><![CDATA[$P{period}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="100" width="110" height="20" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
+				<textFieldExpression><![CDATA[($P{district} == null) ? "All" : $P{district}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="80" width="110" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Zona Geográfica:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="80" width="110" height="20" uuid="49396b21-8814-4680-8783-0f1a5a5bfea0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Período do Relatório:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="" x="450" y="80" width="105" height="20" uuid="1f3fbbaa-0915-4a25-90ab-f5d72944ebe4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Criado em:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="80" width="110" height="20" uuid="e70a3e97-e2d7-49f2-b959-5c42335506e4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Ajuste:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="100" width="120" height="20" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
+				<textFieldExpression><![CDATA[$P{program}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="110" y="80" width="120" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Programa:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="0" width="279" height="39" uuid="af8e209d-cf2a-49a1-8c8a-6213dca400ea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Ministério da Saúde de Angola]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="430" y="0" width="80" height="20" uuid="d2a693cf-48f0-4536-bd99-e9d7a04012a8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="510" y="0" width="45" height="20" uuid="056de5f4-5e79-4053-97cd-0c52ec9883cf"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
+				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "malawi_crest.png")]]></imageExpression>
+			</image>
+			<componentElement>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="470" y="39" width="85" height="18" uuid="a27975e5-a406-4ab3-9db5-49dc64505979">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="ReportingRate" uuid="3ae1198f-8654-44d3-9551-21d0b95053d0">
+						<datasetParameter name="DueDays">
+							<datasetParameterExpression><![CDATA[20]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="GeographicZone">
+							<datasetParameterExpression><![CDATA[$P{district}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="Period">
+							<datasetParameterExpression><![CDATA[$P{period}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="Program">
+							<datasetParameterExpression><![CDATA[$P{program}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="155" uuid="562bf844-db0e-430e-ac31-8f669079176f">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<jr:detailCell style="Table_TD" height="18">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement x="0" y="0" width="155" height="18" uuid="3956a45b-9f04-46fc-9128-eb6a93c4a779">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box leftPadding="0">
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement>
+									<font fontName="SansSerif" size="12" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Relatado: " + String.format($V{PercentAndNumberFormat}, (double)$F{completed}/$F{total}*100)]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+			<line>
+				<reportElement x="0" y="38" width="555" height="1" uuid="dfca3e84-ac42-44c5-b49a-c4d3eae30165">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<frame>
+				<reportElement x="0" y="0" width="555" height="40" uuid="752cc625-8c16-4ea1-95cc-255c4d9ae9d5">
+					<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+				</reportElement>
+				<staticText>
+					<reportElement x="20" y="0" width="110" height="20" uuid="77a39773-bbf9-40c4-93ea-34efe2cf5d15"/>
+					<text><![CDATA[Produtos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="20" width="100" height="20" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
+					<text><![CDATA[Nome da Facilidade]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="240" y="20" width="140" height="20" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Categoria de Ajuste]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="380" y="20" width="120" height="20" uuid="c96e692a-154f-473a-9015-6c37ac006c50">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Quantidade de Ajuste]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="500" y="20" width="55" height="20" uuid="2e82c1f1-cc66-4ec0-b712-3a474db89cfd">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="140" y="20" width="100" height="19" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be"/>
+					<text><![CDATA[Tipo Dado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="20" width="40" height="20" uuid="cc283573-003d-4923-a25f-2b35364b1ba3">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+</jasperReport>
