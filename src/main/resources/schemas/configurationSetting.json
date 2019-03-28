@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "ConfigurationSetting",
+  "description": "A single configuration setting",
+  "properties": {
+    "key": { "type": "string", "title": "key" },
+    "value": { "type": "string", "title": "value" }
+  },
+  "required": [
+    "key",
+    "value"
+  ]
+}

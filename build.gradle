@@ -1,0 +1,83 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE"
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "4.0"
+    id "org.sonarqube" version "2.2.1"
+    id "com.moowork.node" version "0.12"
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'jacoco'
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+apply from: "dependency.gradle"
+apply from: "codeAnalysis.gradle"
+apply from: "documentation.gradle"
+apply from: "database.gradle"
+apply from: "tests.gradle"
+apply from: "registration.gradle"
+
+group = serviceGroup
+version = serviceVersion
+archivesBaseName = rootProject.name
+project.ext.buildTime = java.time.Instant.now().toString() // for versioning
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+idea {
+    project {
+        vcs = 'Git'
+        ipr.withXml { xmlFile ->
+            // enable 'Annotation Processors', source: https://gist.github.com/stephanos/8645809
+            xmlFile.asNode().component
+                    .find { it.@name == 'CompilerConfiguration' }['annotationProcessing'][0]
+                    .replaceNode {
+                annotationProcessing {
+                    profile(default: true, name: 'Default', useClasspath: 'true', enabled: true)
+                }
+            }
+        }
+    }
+}
+
+processResources {
+    // we want the generated HTML spec file included in the output jar
+    finalizedBy ramlToHtml
+    // update version information in build
+    filesMatching('**/version.properties') {
+        expand(project.properties)
+    }
+}
+
+check {
+    dependsOn checkApiIsRaml
+    dependsOn integrationTest
+}
+
+build {
+    dependsOn jacocoTestReport
+    dependsOn check
+    dependsOn ramlToHtml
+    dependsOn copyRamlHtmlToBuild
+    dependsOn demoDataSeed
+    dependsOn copyConsulRegistrationToBuild
+}

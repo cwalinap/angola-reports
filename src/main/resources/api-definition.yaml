@@ -1,0 +1,358 @@
+#%RAML 0.8
+---
+title: OpenLMIS Angola Reports API
+version: "@version@"
+baseUri: "@baseUrl@"
+protocols: [ HTTP, HTTPS ]
+
+documentation:
+    - title: Getting Started
+      content: Welcome to the OpenLMIS Angola reports-service documentation.
+
+schemas:
+
+  - configurationSetting: !include schemas/configurationSetting.json
+
+  - jasperTemplateDto: !include schemas/jasperTemplateDto.json
+
+
+  - jasperTemplateDtoArray: |
+      {
+          "type": "array",
+          "items": { "type": "object", "$ref": "schemas/jasperTemplateDto.json" }
+      }
+
+  - localizedMessage: !include schemas/localizedMessage.json
+
+  - geographicLevel: !include schemas/geographicLevel.json
+
+  - geographicZone: !include schemas/geographicZone.json
+
+  - geographicZoneArray: |
+      {
+         "type": "array",
+         "items": { "type": "object", "$ref": "schemas/geographicZone.json" }
+      }
+
+  - processingPeriod: !include schemas/processingPeriod.json
+
+  - processingPeriodArray: |
+      {
+          "type": "array",
+          "items": { "type": "object", "$ref": "schemas/processingPeriod.json" }
+      }
+
+  - program: !include schemas/program.json
+
+  - programArray: |
+      {
+          "type": "array",
+          "items": { "type": "object", "$ref":"schemas/program.json" }
+      }
+
+  - orderable: !include schemas/orderable.json
+
+  - orderableArray: |
+      {
+          "type": "array",
+          "items": { "type": "object", "$ref":"schemas/orderable.json" }
+      }
+
+  - reason: !include schemas/reason.json
+
+  - reasonArray: |
+      {
+          "type": "array",
+          "items": { "type": "object", "$ref":"schemas/reason.json" }
+      }
+
+traits:
+    - secured:
+          queryParameters:
+              access_token:
+                  displayName: access_token
+                  description: OAuth2 access token
+                  type: string
+                  required: true
+                  repeat: false
+    - paginated:
+          queryParameters:
+              page:
+                  description: The page number which should be displayed. Note that the first page is numbered zero rather than one. Additionally, negative and undefined valued are interpreted as zero.
+                  type: integer
+                  required: false
+                  repeat: false
+              size:
+                  description: The desired size of each page. This specifies the maximum number of values that should be returned by the server. Zero, undefined, and negative values should result in all possible values being returned.
+                  type: integer
+                  required: false
+                  repeat: false
+resourceTypes:
+    - collection:
+        get:
+            is: [ secured ]
+            responses:
+                200:
+                  description: Collection retrieved successfully
+                  body:
+                      application/json:
+                          schema: <<schema>>
+                404:
+                  description: Collection is empty.
+        post:
+            is: [ secured ]
+            body:
+                application/json:
+                    schema: <<schema>>
+            responses:
+                201:
+                  description: Item created successfully
+                  body:
+                      application/json:
+                          schema: <<schema>>
+    - member:
+        get:
+            is: [ secured ]
+            responses:
+                200:
+                    body:
+                        application/json:
+                            schema: <<schema>>
+        post:
+            is: [ secured ]
+            body:
+                application/json:
+                    schema: <<schema>>
+            responses:
+                200:
+                    body:
+                        application/json:
+                            schema: <<schema>>
+        delete:
+            is: [ secured ]
+            responses:
+                200:
+
+/api:
+
+  /reports:
+      /requisitions/{id}/print:
+        uriParameters:
+            id:
+                displayName: requisitionId
+                type: string
+                required: true
+                repeat: false
+        get:
+            is: [ secured ]
+            description: Print requisition to a pdf file.
+            responses:
+                200:
+                    body:
+                      application/pdf:
+                404:
+                    body:
+                      application/json:
+                        schema: localizedMessage
+      /districts:
+          displayName: Districts
+          get:
+              is: [ secured ]
+              description: Get all districts.
+              responses:
+                  "200":
+                      body:
+                        application/json:
+                          schema: geographicZoneArray
+                  "403":
+                      body:
+                        application/json:
+                          schema: localizedErrorResponse
+      /programs:
+          displayName: Programs
+          get:
+              is: [ secured ]
+              description: Get all programs.
+              responses:
+                  "200":
+                      body:
+                        application/json:
+                          schema: programArray
+                  "403":
+                      body:
+                        application/json:
+                          schema: localizedErrorResponse
+      /processingPeriods:
+          displayName: Processing periods
+          get:
+              is: [ secured ]
+              description: Get all processing periods.
+              responses:
+                  "200":
+                      body:
+                        application/json:
+                          schema: processingPeriodArray
+                  "403":
+                      body:
+                        application/json:
+                          schema: localizedErrorResponse
+      /validReasons:
+          displayName: Valid reasons
+          get:
+              is: [ secured ]
+              description: Get not hidden valid reasons.
+              responses:
+                  "200":
+                      body:
+                          application/json:
+                              schema: reasonArray
+                  "403":
+                      body:
+                          application/json:
+                              schema: localizedErrorResponse
+      /orderables:
+          /stockout:
+              displayName: Stock out orderables
+              get:
+                is: [ secured ]
+                description: >
+                  Get all products for stock out rate report. The result list will also contain
+                  two combo orderables: ALL_LA - All malaria formulations and ALL_IC - All
+                  implantable contraceptive.
+                queryParameters:
+                  program:
+                    displayName: Program name
+                    type: string
+                    required: false
+                    repeat: false
+                responses:
+                  "200":
+                    body:
+                      application/json:
+                        schema: orderableArray
+                  "403":
+                    body:
+                      application/json:
+                        schema: localizedErrorResponse
+      /templates/angola:
+          displayName: Report Template
+          post:
+              is: [ secured ]
+              description: Create or update report template.
+              body:
+                  multipart/form-data:
+                    formParameters:
+                        file:
+                             displayName: Template with .jrxml format
+                             type: file
+                             required: false
+                             repeat: false
+                        name:
+                             displayName: Name of Template in database
+                             type: string
+                             required: false
+                             repeat: false
+                        description:
+                             displayName: Description of Template
+                             type: string
+                             required: false
+                             repeat: false
+              responses:
+                    200:
+                    403:
+                        body:
+                          application/json:
+                            schema: localizedMessage
+          get:
+              is: [ secured ]
+              description: Get all templates.
+              responses:
+                  200:
+                      body:
+                        application/json:
+                          schema: jasperTemplateDtoArray
+                  403:
+                      body:
+                        application/json:
+                            schema: localizedMessage
+          /{id}:
+              uriParameters:
+                  id:
+                      displayName: id
+                      type: string
+                      required: true
+                      repeat: false
+              delete:
+                  is: [ secured ]
+                  description: Delete chosen template.
+                  responses:
+                      204:
+                      403:
+                          body:
+                            application/json:
+                                schema: localizedMessage
+                      404:
+                          body:
+                            application/json:
+                              schema: localizedMessage
+              get:
+                  is: [ secured ]
+                  description: Get chosen template.
+                  responses:
+                      200:
+                          body:
+                            application/json:
+                              schema: jasperTemplateDto
+                      403:
+                          body:
+                            application/json:
+                                schema: localizedMessage
+                      404:
+                          body:
+                            application/json:
+                                schema: localizedMessage
+              /{format}:
+                  uriParameters:
+                      format:
+                          displayName: format
+                          type: string
+                          required: true
+                          repeat: false
+                  get:
+                      is: [ secured ]
+                      description: Generate report from template ID and format.
+                      responses:
+                          200:
+                              body:
+                                application/pdf:
+                                text/csv:
+                                application/vnd.ms-excel:
+                                text/html:
+                          403:
+                              body:
+                                application/json:
+                                    schema: localizedMessage
+                          404:
+                              body:
+                                application/json:
+                                    schema: localizedMessage
+
+  /settings:
+      displayName: Settings.
+      /{key}:
+            uriParameters:
+              key:
+                  displayName: key
+                  type: string
+                  required: true
+                  repeat: false
+            get:
+               is: [ secured ]
+               description: Get chosen setting.
+               responses:
+                   "200":
+                       body:
+                           application/json:
+                   "404":
+                       body:
+                         application/json:
