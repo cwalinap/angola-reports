@@ -39,7 +39,6 @@ import org.openlmis.ao.reports.service.PermissionService;
 import org.openlmis.ao.utils.Message;
 
 import java.time.Clock;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
