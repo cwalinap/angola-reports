@@ -527,7 +527,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<reportElement x="60" y="0" width="140" height="15" uuid="b78d8dc7-9081-48ab-a7ae-0d6294ccc9da"/>
 				<textFieldExpression><![CDATA[$F{ProductName}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="0" y="0" width="60" height="15" uuid="b703fc63-7f1b-4b68-aa44-6f22d05bb2d6"/>
 				<textFieldExpression><![CDATA[$F{ProductCode}]]></textFieldExpression>
 			</textField>
@@ -556,7 +556,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[($F{MOS} != null) ? String.format("%.2f", Double.valueOf($F{MOS})) : "-"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="115" y="0" width="60" height="15" uuid="56f76e28-7887-47cc-b377-4c724c9b2d30"/>
 				<textFieldExpression><![CDATA[$F{ProductCode}]]></textFieldExpression>
 			</textField>
