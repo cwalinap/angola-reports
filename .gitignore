@@ -3,6 +3,7 @@
 *.iws
 gradlew*
 .env
+.project
 
 out/
 build/
@@ -11,3 +12,4 @@ node_modules/
 .tx/
 .idea/
 .gradle/
+.settings/
