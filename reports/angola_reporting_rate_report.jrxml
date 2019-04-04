@@ -83,7 +83,7 @@
 			<property name="required" value="false"/>
 		</parameter>
 		<parameter name="DueDays" class="java.lang.String">
-			<property name="displayName" value="Due date (days)"/>
+			<property name="displayName" value="Data de vencimento (dias)"/>
 			<property name="required" value="false"/>
 		</parameter>
 		<queryString>
@@ -169,7 +169,7 @@ ORDER BY referencedata.processing_periods.startdate]]>
 			<property name="required" value="false"/>
 		</parameter>
 		<parameter name="DueDays" class="java.lang.String">
-			<property name="displayName" value="Due date (days)"/>
+			<property name="displayName" value="Data de vencimento (dias)"/>
 			<property name="required" value="false"/>
 		</parameter>
 		<queryString>
@@ -250,7 +250,7 @@ GROUP BY geographiczonename]]>
 		<property name="required" value="false"/>
 	</parameter>
 	<parameter name="DueDays" class="java.lang.String">
-		<property name="displayName" value="Due date (days)"/>
+		<property name="displayName" value="Data de vencimento (dias)"/>
 		<property name="required" value="false"/>
 	</parameter>
 	<parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
