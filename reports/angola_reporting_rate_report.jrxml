@@ -98,7 +98,7 @@ findLastPeriods AS (
 SELECT
   referencedata.processing_periods.name AS periodname,
   COUNT(CASE WHEN status_change.createddate IS NOT NULL THEN 1 END) AS completed,
-  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 20 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
+  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 15 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
   COUNT(CASE WHEN status_change.createddate IS NULL THEN 1 END) AS missed,
   COUNT(*) as total
 FROM referencedata.facilities
@@ -184,7 +184,7 @@ findLastPeriods AS (
 SELECT
   referencedata.geographic_zones.name AS geographiczonename,
   COUNT(CASE WHEN status_change.createddate IS NOT NULL THEN 1 END) AS completed,
-  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 20 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
+  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 15 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
   COUNT(CASE WHEN status_change.createddate IS NULL THEN 1 END) AS missed,
   COUNT(*) as total
 FROM referencedata.facilities
@@ -524,7 +524,7 @@ GROUP BY geographiczonename]]>
 			<textField>
 				<reportElement key="" x="340" y="100" width="110" height="20" uuid="af8d0841-2731-4e7a-b534-9bedaaf61a5d"/>
 				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[($P{DueDays} == null) ? "20" : $P{DueDays}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{DueDays} == null) ? "15" : $P{DueDays}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
