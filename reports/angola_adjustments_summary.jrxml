@@ -534,7 +534,7 @@ $F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></v
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
-				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "malawi_crest.png")]]></imageExpression>
+				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
 			</image>
 			<componentElement>
 				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="190" y="39" width="365" height="18" uuid="a27975e5-a406-4ab3-9db5-49dc64505979">

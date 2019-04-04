@@ -168,7 +168,7 @@ WHERE
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="50" height="50" uuid="bb13cce2-4e0f-432d-a84b-e79f77b98980"/>
-				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "malawi_crest.png")]]></imageExpression>
+				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="240" y="0" width="280" height="39" uuid="4a93f7da-7f96-4a6d-8673-79a46347e654">

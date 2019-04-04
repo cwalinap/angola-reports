@@ -354,7 +354,7 @@ ORDER BY referencedata.facilities.name DESC,
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="50" height="50" uuid="9e922171-83b2-4c5f-99db-047bde5e6378"/>
-				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "malawi_crest.png")]]></imageExpression>
+				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="141" y="0" width="279" height="39" uuid="9686f222-3778-4c4d-84fc-7db482ce8e3a"/>

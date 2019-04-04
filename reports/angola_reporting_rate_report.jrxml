@@ -501,7 +501,7 @@ GROUP BY geographiczonename]]>
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="50" height="50" uuid="1f656c38-8cee-492b-9d94-701314bea21e"/>
-				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "malawi_crest.png")]]></imageExpression>
+				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="141" y="0" width="279" height="39" uuid="5e1a29bd-c888-45fa-9f17-14333dcd29f7"/>
