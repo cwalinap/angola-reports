@@ -291,7 +291,7 @@ $F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></v
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
-					<text><![CDATA[Tipo Dado]]></text>
+					<text><![CDATA[Apresentação]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="0" y="0" width="40" height="20" uuid="721959a4-3b54-438c-ac1c-315666ee8446">
@@ -447,7 +447,7 @@ $F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></v
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
 				<reportElement x="340" y="100" width="110" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
-				<textFieldExpression><![CDATA[($P{adjustmentType} == null) ? "All" : $P{adjustmentType}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{adjustmentType} == null) ? "Todos" : $P{adjustmentType}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="" x="450" y="100" width="105" height="20" uuid="eecc1140-a4a9-4bd6-9d4e-4828b52367fe">
@@ -472,7 +472,7 @@ $F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></v
 			</textField>
 			<textField>
 				<reportElement x="0" y="100" width="110" height="20" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
-				<textFieldExpression><![CDATA[($P{district} == null) ? "All" : $P{district}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{district} == null) ? "Todos" : $P{district}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="80" width="110" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688"/>
@@ -614,7 +614,7 @@ $F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></v
 				</staticText>
 				<staticText>
 					<reportElement x="40" y="20" width="100" height="20" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
-					<text><![CDATA[Nome]]></text>
+					<text><![CDATA[Instituição]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="240" y="20" width="140" height="20" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
