@@ -271,7 +271,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<textElement textAlignment="Left">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Facilidade: " + $F{facilityname}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Instituição: " + $F{facilityname}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement mode="Opaque" x="435" y="15" width="60" height="30" backcolor="#F0F0F0" uuid="5784da42-7411-4268-8a4e-e80f2206f8f7"/>
@@ -302,14 +302,14 @@ ORDER BY referencedata.facilities.name DESC,
 					<textFieldExpression><![CDATA["Item #."]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement mode="Opaque" x="255" y="15" width="60" height="30" backcolor="#F0F0F0" uuid="e083e8b2-7a22-4e0e-bf3d-60995a2eab84"/>
+					<reportElement mode="Opaque" x="240" y="15" width="75" height="30" backcolor="#F0F0F0" uuid="e083e8b2-7a22-4e0e-bf3d-60995a2eab84"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Unidade"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Apresentação"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement mode="Opaque" x="105" y="15" width="150" height="30" backcolor="#F0F0F0" uuid="699ecdfb-5aaa-4b84-8a29-c09e4387197f"/>
+					<reportElement mode="Opaque" x="105" y="15" width="135" height="30" backcolor="#F0F0F0" uuid="699ecdfb-5aaa-4b84-8a29-c09e4387197f"/>
 					<textElement verticalAlignment="Middle" markup="none">
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -341,7 +341,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<textElement textAlignment="Right">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Zona Geográfica: " + $F{geographiczone}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Província: " + $F{geographiczone}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -407,7 +407,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Zona Geográfica:]]></text>
+				<text><![CDATA[Província:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="310" y="80" width="120" height="20" uuid="4688a175-1b22-427a-be2b-a143fd250049"/>
@@ -522,7 +522,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<font size="9"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Unidade"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Apresentação"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement mode="Opaque" x="150" y="0" width="46" height="30" backcolor="#F0F0F0" uuid="9c457f6a-4e81-4f0e-973b-21b83e7838b5"/>
@@ -570,7 +570,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<font size="9"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Facilidade"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Instituição"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement mode="Opaque" x="390" y="0" width="40" height="30" backcolor="#F0F0F0" uuid="76d633f9-f811-4e09-bc3e-bdedc3635450"/>
@@ -603,7 +603,7 @@ ORDER BY referencedata.facilities.name DESC,
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
 			<textField isStretchWithOverflow="true" pattern="">
-				<reportElement stretchType="RelativeToTallestObject" x="255" y="0" width="60" height="15" uuid="cbfd5572-bcc6-43a5-97c4-814411847371">
+				<reportElement stretchType="RelativeToTallestObject" x="240" y="0" width="75" height="15" uuid="cbfd5572-bcc6-43a5-97c4-814411847371">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box rightPadding="20"/>
@@ -611,7 +611,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textFieldExpression><![CDATA[$F{unitofissue}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="105" y="0" width="150" height="15" uuid="b78d8dc7-9081-48ab-a7ae-0d6294ccc9da">
+				<reportElement stretchType="RelativeToTallestObject" x="105" y="0" width="135" height="15" uuid="b78d8dc7-9081-48ab-a7ae-0d6294ccc9da">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
