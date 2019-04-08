@@ -192,6 +192,10 @@ public class JasperTemplateService {
     jasperTemplateParameter.setDataType(dataType);
     jasperTemplateParameter.setSelectExpression(
         jrParameter.getPropertiesMap().getProperty("selectExpression"));
+    jasperTemplateParameter.setSelectMethod(
+        jrParameter.getPropertiesMap().getProperty("selectMethod"));
+    jasperTemplateParameter.setSelectBody(
+        jrParameter.getPropertiesMap().getProperty("selectBody"));
     jasperTemplateParameter.setSelectProperty(
         jrParameter.getPropertiesMap().getProperty("selectProperty"));
     jasperTemplateParameter.setDisplayProperty(

@@ -28,6 +28,14 @@
       "type": "string",
       "title": "selectExpression"
     },
+    "requestType": {
+      "type": "string",
+      "title": "selectMethod"
+    },
+    "requestBody": {
+      "type": "string",
+      "title": "selectBody"
+    },
     "description": {
       "type": "string",
       "title": "description"

@@ -23,6 +23,8 @@ public class JasperTemplateParameterDto
   private String defaultValue;
   private String dataType;
   private String selectExpression;
+  private String selectMethod;
+  private String selectBody;
   private String selectProperty;
   private String displayProperty;
   private String description;
