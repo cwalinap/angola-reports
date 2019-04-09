@@ -1,10 +1,12 @@
 package org.openlmis.ao.reports.dto.external;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class RequisitionTemplateColumnDto {
 
   private String name;
@@ -24,4 +26,6 @@ public class RequisitionTemplateColumnDto {
   private AvailableRequisitionColumnOptionDto option;
 
   private String definition;
+
+  private String tag;
 }

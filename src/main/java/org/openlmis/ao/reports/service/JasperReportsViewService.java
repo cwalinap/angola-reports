@@ -2,15 +2,32 @@ package org.openlmis.ao.reports.service;
 
 import static java.io.File.createTempFile;
 import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_FILE_CREATION;
+import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_IO;
+import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_JASPER_FILE_FORMAT;
 import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_CLASS_NOT_FOUND;
 import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_IO;
 import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
 import static net.sf.jasperreports.engine.export.JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 
+import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Collections;
+import net.sf.jasperreports.engine.JRBand;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import org.openlmis.ao.reports.dto.RequisitionReportDto;
 import org.openlmis.ao.reports.dto.external.OrderDto;
 import org.openlmis.ao.reports.dto.external.OrderLineItemDto;
 import org.openlmis.ao.reports.dto.external.ProcessingPeriodDto;
+import org.openlmis.ao.reports.dto.external.RequisitionDto;
+import org.openlmis.ao.reports.dto.external.RequisitionStatusDto;
+import org.openlmis.ao.reports.dto.external.RequisitionTemplateColumnDto;
+import org.openlmis.ao.reports.dto.external.RequisitionTemplateDto;
 import org.openlmis.ao.reports.service.fulfillment.OrderService;
 import org.openlmis.ao.reports.service.referencedata.BaseReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.PeriodReferenceDataService;
@@ -19,7 +36,10 @@ import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperReport;
 
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.openlmis.ao.reports.web.RequisitionReportDtoBuilder;
+import org.openlmis.ao.utils.ReportUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -52,6 +72,9 @@ import org.openlmis.ao.reports.exception.JasperReportViewException;
 
 @Service
 public class JasperReportsViewService {
+  private static final String REQUISITION_REPORT_DIR = "/jasperTemplates/requisition.jrxml";
+  private static final String REQUISITION_LINE_REPORT_DIR =
+      "/jasperTemplates/requisitionLines.jrxml";
   private static final String DATASOURCE = "datasource";
 
   @Autowired
@@ -65,6 +88,24 @@ public class JasperReportsViewService {
 
   @Autowired
   private UserReferenceDataService userReferenceDataService;
+
+  @Autowired
+  private RequisitionReportDtoBuilder requisitionReportDtoBuilder;
+
+  @Value("${dateFormat}")
+  private String dateFormat;
+
+  @Value("${groupingSeparator}")
+  private String groupingSeparator;
+
+  @Value("${groupingSize}")
+  private String groupingSize;
+
+  @Value("${defaultLocale}")
+  private String defaultLocale;
+
+  @Value("${currencyLocale}")
+  private String currencyLocale;
 
   /**
    * Create Jasper Report View.
@@ -171,6 +212,39 @@ public class JasperReportsViewService {
   }
 
   /**
+   * Create custom Jasper Report View for printing a requisition.
+   *
+   * @param requisition requisition to render report for.
+   * @param request  it is used to take web application context.
+   * @return created jasper view.
+   * @throws JasperReportViewException if there will be any problem with creating the view.
+   */
+  public ModelAndView getRequisitionJasperReportView(
+      RequisitionDto requisition, HttpServletRequest request) throws JasperReportViewException {
+    RequisitionReportDto reportDto = requisitionReportDtoBuilder.build(requisition);
+    RequisitionTemplateDto template = requisition.getTemplate();
+
+    Map<String, Object> params = ReportUtils.createParametersMap();
+    params.put("subreport", createCustomizedRequisitionLineSubreport(
+        template, requisition.getStatus()));
+    params.put(DATASOURCE, Collections.singletonList(reportDto));
+    params.put("template", template);
+    params.put("dateFormat", dateFormat);
+    params.put("decimalFormat", createDecimalFormat());
+    params.put("currencyDecimalFormat",
+        NumberFormat.getCurrencyInstance(getLocaleFromService()));
+
+    JasperReportsMultiFormatView jasperView = new JasperReportsMultiFormatView();
+    setExportParams(jasperView);
+    setCustomizedJasperTemplateForRequisitionReport(jasperView);
+
+    if (getApplicationContext(request) != null) {
+      jasperView.setApplicationContext(getApplicationContext(request));
+    }
+    return new ModelAndView(jasperView, params);
+  }
+
+  /**
    * Get report's filename.
    *
    * @param template jasper template
@@ -211,6 +285,49 @@ public class JasperReportsViewService {
         .toLowerCase(Locale.ENGLISH);
   }
 
+  private JasperDesign createCustomizedRequisitionLineSubreport(RequisitionTemplateDto template,
+      RequisitionStatusDto requisitionStatus)
+      throws JasperReportViewException {
+    try (InputStream inputStream = getClass().getResourceAsStream(REQUISITION_LINE_REPORT_DIR)) {
+      JasperDesign design = JRXmlLoader.load(inputStream);
+      JRBand detail = design.getDetailSection().getBands()[0];
+      JRBand header = design.getColumnHeader();
+
+      Map<String, RequisitionTemplateColumnDto> columns =
+          ReportUtils.getSortedTemplateColumnsForPrint(template.getColumnsMap(), requisitionStatus);
+
+      ReportUtils.customizeBandWithTemplateFields(detail, columns, design.getPageWidth(), 9);
+      ReportUtils.customizeBandWithTemplateFields(header, columns, design.getPageWidth(), 9);
+
+      return design;
+    } catch (IOException err) {
+      throw new JasperReportViewException(err, ERROR_IO, err.getMessage());
+    } catch (JRException err) {
+      throw new JasperReportViewException(err, ERROR_JASPER_FILE_FORMAT, err.getMessage());
+    }
+  }
+
+  private void setCustomizedJasperTemplateForRequisitionReport(
+      JasperReportsMultiFormatView jasperView) throws JasperReportViewException {
+    try (InputStream inputStream = getClass().getResourceAsStream(REQUISITION_REPORT_DIR)) {
+      File reportTempFile = createTempFile("requisitionReport_temp", ".jasper");
+      JasperReport report = JasperCompileManager.compileReport(inputStream);
+
+      try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+          ObjectOutputStream out = new ObjectOutputStream(bos)) {
+
+        out.writeObject(report);
+        writeByteArrayToFile(reportTempFile, bos.toByteArray());
+
+        jasperView.setUrl(reportTempFile.toURI().toURL().toString());
+      }
+    } catch (IOException err) {
+      throw new JasperReportViewException(err, ERROR_IO, err.getMessage());
+    } catch (JRException err) {
+      throw new JasperReportViewException(err, ERROR_JASPER_FILE_FORMAT, err.getMessage());
+    }
+  }
+
   private <T> T getIfPresent(BaseReferenceDataService<T> service, UUID id) {
     return Optional.ofNullable(id).isPresent() ? service.findOne(id) : null;
   }
@@ -224,15 +341,15 @@ public class JasperReportsViewService {
         .min(Comparator.comparing(ProcessingPeriodDto::getStartDate)).orElse(null);
   }
 
-  private ProcessingPeriodDto findNextPeriod(String periodName) {
-    List<ProcessingPeriodDto> periods = periodReferenceDataService.findAll();
-    ProcessingPeriodDto period = periods.stream()
-        .filter(p -> p.getName().equals(periodName))
-        .findFirst().orElse(null);
-    if (period != null) {
-      ProcessingPeriodDto nextPeriod = findNextPeriod(period, periods);
-      return nextPeriod;
-    }
-    return null;
+  private DecimalFormat createDecimalFormat() {
+    DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+    decimalFormatSymbols.setGroupingSeparator(groupingSeparator.charAt(0));
+    DecimalFormat decimalFormat = new DecimalFormat("", decimalFormatSymbols);
+    decimalFormat.setGroupingSize(Integer.valueOf(groupingSize));
+    return decimalFormat;
+  }
+
+  protected Locale getLocaleFromService() {
+    return new Locale(defaultLocale, currencyLocale);
   }
 }

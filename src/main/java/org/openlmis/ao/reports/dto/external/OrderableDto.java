@@ -40,21 +40,12 @@ public class OrderableDto {
   }
 
   /**
-   * Get program orderable for given order
+   * Get program orderable for given program id
    * @return program orderable.
    */
   @JsonIgnore
-  public ProgramOrderableDto getProgramOrderable(OrderDto order) {
-    return getProgramOrderable(order.getProgram());
-  }
-
-  /**
-   * Get program orderable for given program
-   * @return program orderable.
-   */
-  @JsonIgnore
-  public ProgramOrderableDto getProgramOrderable(ProgramDto program) {
-    return programs.stream().filter(po -> po.getProgramId().equals(program.getId()))
-            .findFirst().orElse(null);
+  public ProgramOrderableDto findProgramOrderableDto(UUID programId) {
+    return programs.stream().filter(po -> po.getProgramId().equals(programId))
+        .findFirst().orElse(null);
   }
 }

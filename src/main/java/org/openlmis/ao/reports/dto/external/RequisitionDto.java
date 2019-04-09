@@ -1,11 +1,12 @@
 package org.openlmis.ao.reports.dto.external;
 
+import static org.openlmis.ao.utils.CurrencyConfig.currencyCode;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -102,7 +105,7 @@ public class RequisitionDto {
    *
    * @return sum of total costs.
    */
-  public BigDecimal getTotalCost() {
+  public Money getTotalCost() {
     return calculateTotalCostForLines(requisitionLineItems);
   }
 
@@ -111,7 +114,7 @@ public class RequisitionDto {
    *
    * @return sum of total costs.
    */
-  public BigDecimal getNonFullSupplyTotalCost() {
+  public Money getNonFullSupplyTotalCost() {
     return calculateTotalCostForLines(getNonSkippedNonFullSupplyRequisitionLineItems());
   }
 
@@ -120,20 +123,20 @@ public class RequisitionDto {
    *
    * @return sum of total costs.
    */
-  public BigDecimal getFullSupplyTotalCost() {
+  public Money getFullSupplyTotalCost() {
     return calculateTotalCostForLines(getNonSkippedFullSupplyRequisitionLineItems());
   }
 
-  private BigDecimal calculateTotalCostForLines(List<RequisitionLineItemDto> requisitionLineItems) {
+  private Money calculateTotalCostForLines(List<RequisitionLineItemDto> requisitionLineItems) {
+    Money defaultValue = Money.of(CurrencyUnit.of(currencyCode), 0);
+
     if (requisitionLineItems.isEmpty()) {
-      return BigDecimal.ZERO;
+      return defaultValue;
     }
 
-    Optional<BigDecimal> money = requisitionLineItems.stream()
-            .map(RequisitionLineItemDto::getTotalCost)
-            .filter(Objects::nonNull)
-            .reduce(BigDecimal::add);
+    Optional<Money> money = requisitionLineItems.stream()
+        .map(RequisitionLineItemDto::getTotalCost).filter(Objects::nonNull).reduce(Money::plus);
 
-    return money.orElse(BigDecimal.ZERO);
+    return money.orElse(defaultValue);
   }
 }
