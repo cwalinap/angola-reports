@@ -113,7 +113,7 @@ ORDER BY
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Instalações Com Configurações Incompletas]]></text>
+				<text><![CDATA[Configuração de Instalações]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -131,7 +131,7 @@ ORDER BY
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Código de Facilidade]]></text>
+				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="70" y="0" width="90" height="30" backcolor="#F5F5F5" uuid="b51d715c-7db4-4451-a802-5c70b65c4531"/>
@@ -144,7 +144,7 @@ ORDER BY
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Nome da Facilidade]]></text>
+				<text><![CDATA[Nome]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="160" y="0" width="70" height="30" backcolor="#F5F5F5" uuid="f87a81b1-317d-4358-9aac-2c6466af1d5b"/>
@@ -157,7 +157,7 @@ ORDER BY
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Tipo de Facilidade]]></text>
+				<text><![CDATA[Tipologia]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="230" y="0" width="100" height="30" backcolor="#F5F5F5" uuid="021854db-dc1c-450c-ad8a-b2741285a3dc"/>
@@ -196,7 +196,7 @@ ORDER BY
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Nó Supervisor Atribuído]]></text>
+				<text><![CDATA[Supervisão]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
