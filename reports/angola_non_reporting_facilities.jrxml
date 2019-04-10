@@ -152,7 +152,7 @@ WHERE
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Zona Geográfica:]]></text>
+				<text><![CDATA[Província:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="420" y="80" width="220" height="20" uuid="8e225f67-8b0c-4650-a3ed-b033b8e78e4c"/>
@@ -193,7 +193,7 @@ WHERE
 				<textElement textAlignment="Center">
 					<font size="15" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Instalações Sem Relatórios]]></text>
+				<text><![CDATA[Instituições que não subemeteram as requisições]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -232,7 +232,7 @@ WHERE
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Localização]]></text>
+				<text><![CDATA[Município]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
