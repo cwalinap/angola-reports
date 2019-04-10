@@ -271,7 +271,7 @@ $F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></v
 					<reportElement x="230" y="0" width="85" height="20" uuid="0e1d212b-8146-4cd7-8385-eff493d0800f">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
-					<text><![CDATA[Facilidade]]></text>
+					<text><![CDATA[Instituição]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="380" y="0" width="109" height="20" uuid="429a7e8d-f187-4026-8beb-96a885690f28">
@@ -303,7 +303,7 @@ $F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></v
 					<reportElement x="180" y="0" width="50" height="20" uuid="724aec2b-44cb-4095-a6a0-08ba6f45882e">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
-					<text><![CDATA[Zona]]></text>
+					<text><![CDATA[Província]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
