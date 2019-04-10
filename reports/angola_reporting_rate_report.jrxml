@@ -453,7 +453,7 @@ GROUP BY geographiczonename]]>
 				<textElement textAlignment="Center">
 					<font size="15" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Taxa de Relatório]]></text>
+				<text><![CDATA[Reportagem de Envio de Relatórios]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="230" y="100" width="110" height="20" uuid="c369de06-ce13-46ab-b25a-632d3693b5eb"/>
@@ -464,7 +464,7 @@ GROUP BY geographiczonename]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Zona Geográfica:]]></text>
+				<text><![CDATA[Província:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="230" y="80" width="110" height="20" uuid="d27c90da-6dab-4dcb-9666-be7019b8e757"/>
