@@ -594,7 +594,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<font size="9"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Zona"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Província"]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
