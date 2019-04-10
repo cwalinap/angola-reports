@@ -18,15 +18,16 @@ public enum RequisitionStatusDto {
 
   private static final Map<RequisitionStatusDto, String> TRANSLATIONS =
       Collections.unmodifiableMap(new HashMap<RequisitionStatusDto, String>() {{
-        put(INITIATED, "RASCUNHO");
-        put(REJECTED, "REJEITADO");
-        put(SUBMITTED, "SUBMETIDO");
-        put(AUTHORIZED, "AUTORIZADO");
-        put(IN_APPROVAL, "EM APROVAÇÃO");
-        put(APPROVED, "APROVADO");
-        put(RELEASED, "TERMINADO");
-        put(SKIPPED, "IGNORADO");
-      }});
+          put(INITIATED, "RASCUNHO");
+          put(REJECTED, "REJEITADO");
+          put(SUBMITTED, "SUBMETIDO");
+          put(AUTHORIZED, "AUTORIZADO");
+          put(IN_APPROVAL, "EM APROVAÇÃO");
+          put(APPROVED, "APROVADO");
+          put(RELEASED, "TERMINADO");
+          put(SKIPPED, "IGNORADO");
+        }
+      });
 
   private int value;
 
