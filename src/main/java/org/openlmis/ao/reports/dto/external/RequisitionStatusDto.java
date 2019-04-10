@@ -1,6 +1,10 @@
 package org.openlmis.ao.reports.dto.external;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public enum RequisitionStatusDto {
   INITIATED(1),
@@ -11,6 +15,18 @@ public enum RequisitionStatusDto {
   APPROVED(4),
   RELEASED(5),
   SKIPPED(-1);
+
+  private static final Map<RequisitionStatusDto, String> TRANSLATIONS =
+      Collections.unmodifiableMap(new HashMap<RequisitionStatusDto, String>() {{
+        put(INITIATED, "RASCUNHO");
+        put(REJECTED, "REJEITADO");
+        put(SUBMITTED, "SUBMETIDO");
+        put(AUTHORIZED, "AUTORIZADO");
+        put(IN_APPROVAL, "EM APROVAÇÃO");
+        put(APPROVED, "APROVADO");
+        put(RELEASED, "TERMINADO");
+        put(SKIPPED, "IGNORADO");
+      }});
 
   private int value;
 
@@ -49,5 +65,9 @@ public enum RequisitionStatusDto {
 
   public boolean isAuthorized() {
     return value >= 3;
+  }
+
+  public String getTranslation() {
+    return TRANSLATIONS.get(this);
   }
 }
