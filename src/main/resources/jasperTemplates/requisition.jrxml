@@ -248,7 +248,7 @@
 					<subreportParameterExpression><![CDATA[$P{template}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="title">
-					<subreportParameterExpression><![CDATA["Lista de produtos"]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA["Items de entrega não-integral"]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="requisitionStatus">
 					<subreportParameterExpression><![CDATA[$F{requisition}.getStatus()]]></subreportParameterExpression>
