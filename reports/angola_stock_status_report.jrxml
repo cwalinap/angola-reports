@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-10-06T11:08:47 -->
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_status" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="843ea716-ea72-47f8-bbd7-b9050b973ed0">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="open_lmis"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -220,7 +219,7 @@ ORDER BY referencedata.facilities.name DESC,
 				</textField>
 				<staticText>
 					<reportElement x="200" y="20" width="120" height="40" uuid="7d3377d0-addb-436c-9f89-55b29b54e860"/>
-					<box topPadding="0" leftPadding="50" bottomPadding="2" rightPadding="20">
+					<box topPadding="0" leftPadding="35" bottomPadding="2" rightPadding="20">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#D4D4D4"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D4D4D4"/>
@@ -229,11 +228,11 @@ ORDER BY referencedata.facilities.name DESC,
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<paragraph lineSpacing="Single" lineSpacingSize="1.0" spacingAfter="0"/>
 					</textElement>
-					<text><![CDATA[Saldo final]]></text>
+					<text><![CDATA[Stock Disponível]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="440" y="20" width="114" height="40" uuid="431d4cbc-ca50-44e7-8a44-bd1907430138"/>
-					<box topPadding="0" leftPadding="50" bottomPadding="2" rightPadding="20">
+					<box topPadding="0" leftPadding="25" bottomPadding="2" rightPadding="20">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#D4D4D4"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D4D4D4"/>
@@ -248,7 +247,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<reportElement x="320" y="20" width="120" height="40" uuid="a1d70b38-1b5f-4c33-8226-7c4d24adab9c">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					</reportElement>
-					<box topPadding="0" leftPadding="30" bottomPadding="2" rightPadding="20">
+					<box topPadding="0" leftPadding="25" bottomPadding="2" rightPadding="20">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#D4D4D4"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D4D4D4"/>
@@ -257,7 +256,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<paragraph lineSpacing="Single" lineSpacingSize="1.0" spacingAfter="0"/>
 					</textElement>
-					<text><![CDATA[Consumo Mensal Médio]]></text>
+					<text><![CDATA[Consumo Médio Mensal]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="0" y="20" width="200" height="40" uuid="d2d776af-5894-469d-9b37-32c4e64ffa43"/>
@@ -277,7 +276,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<textElement>
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Facilidade:]]></text>
+					<text><![CDATA[Instituição:]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -286,7 +285,7 @@ ORDER BY referencedata.facilities.name DESC,
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="130" splitType="Stretch">
+		<band height="120" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
 				<reportElement x="280" y="100" width="140" height="20" uuid="c7e6d724-faf3-45d5-8119-6c4c0410e4a2"/>
@@ -304,7 +303,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textElement textAlignment="Center">
 					<font size="15" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Status de Estoque]]></text>
+				<text><![CDATA[Situação de Stock]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="140" y="100" width="140" height="20" uuid="2d8d85cb-2583-4a58-9cce-efc84578b732"/>
@@ -439,7 +438,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<paragraph lineSpacing="Single" lineSpacingSize="1.0" spacingAfter="0"/>
 				</textElement>
-				<text><![CDATA[Consumo Mensal Médio]]></text>
+				<text><![CDATA[Consumo Médio Mensal]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="175" y="0" width="140" height="15" uuid="b44960de-a631-40b3-80c5-a4ecf2a9acbe"/>
@@ -480,7 +479,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<paragraph lineSpacing="Single" lineSpacingSize="1.0" spacingAfter="0"/>
 				</textElement>
-				<text><![CDATA[Saldo Final]]></text>
+				<text><![CDATA[Stock Disponível]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="115" y="0" width="60" height="15" uuid="9d12f106-a390-4105-9af1-4dd88553a0f1"/>
@@ -506,7 +505,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textElement verticalAlignment="Bottom">
 					<paragraph lineSpacing="Single" lineSpacingSize="1.0" spacingAfter="0"/>
 				</textElement>
-				<text><![CDATA[Facilidade]]></text>
+				<text><![CDATA[Instituição]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
