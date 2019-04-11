@@ -12,6 +12,9 @@ import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
 import static net.sf.jasperreports.engine.export.JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 
+import org.openlmis.ao.reports.dto.external.ProcessingPeriodDto;
+import org.openlmis.ao.reports.dto.external.ProofOfDeliveryDto;
+import org.openlmis.ao.reports.dto.external.ProofOfDeliveryLineItemDto;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -25,7 +28,6 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.openlmis.ao.reports.dto.RequisitionReportDto;
 import org.openlmis.ao.reports.dto.external.OrderDto;
 import org.openlmis.ao.reports.dto.external.OrderLineItemDto;
-import org.openlmis.ao.reports.dto.external.ProcessingPeriodDto;
 import org.openlmis.ao.reports.dto.external.RequisitionDto;
 import org.openlmis.ao.reports.dto.external.RequisitionStatusDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateColumnDto;
@@ -33,6 +35,7 @@ import org.openlmis.ao.reports.dto.external.RequisitionTemplateDto;
 import org.openlmis.ao.reports.dto.external.StockCardDto;
 import org.openlmis.ao.reports.dto.external.WrappedStockCardDto;
 import org.openlmis.ao.reports.service.fulfillment.OrderService;
+import org.openlmis.ao.reports.service.fulfillment.ProofOfDeliveryService;
 import org.openlmis.ao.reports.service.referencedata.BaseReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.PeriodReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.UserReferenceDataService;
@@ -60,16 +63,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.Locale;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.HashMap;
 import java.util.function.Function;
 
 import javax.servlet.ServletContext;
@@ -110,6 +113,9 @@ public class JasperReportsViewService {
   private StockCardStockSummariesService stockCardStockSummariesService;
 
   @Autowired
+  private ProofOfDeliveryService proofOfDeliveryService;
+
+  @Autowired
   private ApplicationContext appContext;
 
   @Value("${dateFormat}")
@@ -136,7 +142,7 @@ public class JasperReportsViewService {
    * Set 'Jasper' exporter parameters, JDBC data source, web application context, url to file.
    *
    * @param jasperTemplate template that will be used to create a view
-   * @param request  it is used to take web application context
+   * @param request        it is used to take web application context
    * @return created jasper view.
    * @throws JasperReportViewException if there will be any problem with creating the view.
    */
@@ -239,7 +245,7 @@ public class JasperReportsViewService {
   public ModelAndView getOrderJasperReportView(JasperReportsMultiFormatView jasperView,
                                                Map<String, Object> parameters) {
     OrderDto order = orderService.findOne(
-            UUID.fromString(parameters.get("order").toString())
+        UUID.fromString(parameters.get("order").toString())
     );
     order.getStatusChanges().forEach(
         statusChange -> statusChange.setAuthor(
@@ -252,6 +258,34 @@ public class JasperReportsViewService {
     parameters.put("order", order);
     parameters.put("orderingPeriod", order.getEmergency()
         ? order.getProcessingPeriod() : findNextPeriod(order.getProcessingPeriod(), null));
+
+    return new ModelAndView(jasperView, parameters);
+  }
+
+  /**
+   * Create custom Jasper Report View for printing a POD.
+   *
+   * @param jasperView generic jasper report view
+   * @param parameters template parameters populated with values from the request
+   * @return customized jasper view.
+   */
+  public ModelAndView getPodJasperReportView(JasperReportsMultiFormatView jasperView,
+                                             Map<String, Object> parameters) {
+    ProofOfDeliveryDto proofOfDelivery = proofOfDeliveryService.findOne(
+        UUID.fromString(parameters.get("proofOfDelivery").toString())
+    );
+
+    List<ProofOfDeliveryLineItemDto> items = proofOfDelivery.getLineItems();
+
+    parameters.put(DATASOURCE, new JRBeanCollectionDataSource(items));
+    parameters.put("id", proofOfDelivery.getId());
+    parameters.put("dateFormat", dateFormat);
+    DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+    decimalFormatSymbols.setGroupingSeparator(groupingSeparator.charAt(0));
+    DecimalFormat decimalFormat = new DecimalFormat("", decimalFormatSymbols);
+    decimalFormat.setGroupingSize(Integer.parseInt(groupingSize));
+    parameters.put("decimalFormat", decimalFormat);
+    parameters.put("dateTimeFormat", dateTimeFormat);
 
     return new ModelAndView(jasperView, parameters);
   }
@@ -327,7 +361,7 @@ public class JasperReportsViewService {
    * Get report's filename.
    *
    * @param template jasper template
-   * @param params template parameters populated with values from the request
+   * @param params   template parameters populated with values from the request
    * @return filename
    */
   public String getFilename(JasperTemplate template, Map<String, Object> params) {
