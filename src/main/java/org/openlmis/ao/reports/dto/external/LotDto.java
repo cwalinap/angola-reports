@@ -13,21 +13,33 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.ao.reports.service.stockmanagement;
+package org.openlmis.ao.reports.dto.external;
 
-import java.util.List;
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDate;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class StockCardLineItemReasonDto {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class LotDto {
   private UUID id;
-  private String name;
-  private String description;
-  private String reasonType;
-  private String reasonCategory;
-  private Boolean isFreeTextAllowed;
-  private List<String> tags;
+  private String lotCode;
+  private boolean active;
+  private UUID tradeItemId;
+  @JsonFormat(shape = STRING)
+  private LocalDate expirationDate;
+  @JsonFormat(shape = STRING)
+  private LocalDate manufactureDate;
 }
