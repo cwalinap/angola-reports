@@ -1,6 +1,7 @@
 package org.openlmis.ao.reports.service;
 
 import static java.io.File.createTempFile;
+import static java.util.Collections.singletonList;
 import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_FILE_CREATION;
 import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_IO;
 import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_JASPER_FILE_FORMAT;
@@ -28,6 +29,7 @@ import org.openlmis.ao.reports.dto.external.RequisitionDto;
 import org.openlmis.ao.reports.dto.external.RequisitionStatusDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateColumnDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateDto;
+import org.openlmis.ao.reports.dto.external.StockCardDto;
 import org.openlmis.ao.reports.service.fulfillment.OrderService;
 import org.openlmis.ao.reports.service.referencedata.BaseReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.PeriodReferenceDataService;
@@ -36,6 +38,7 @@ import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperReport;
 
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.openlmis.ao.reports.service.stockmanagement.StockCardStockmanagementService;
 import org.openlmis.ao.reports.web.RequisitionReportDtoBuilder;
 import org.openlmis.ao.utils.ReportUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +94,9 @@ public class JasperReportsViewService {
 
   @Autowired
   private RequisitionReportDtoBuilder requisitionReportDtoBuilder;
+
+  @Autowired
+  private StockCardStockmanagementService stockCardService;
 
   @Value("${dateFormat}")
   private String dateFormat;
@@ -182,6 +188,28 @@ public class JasperReportsViewService {
       throw new JasperReportViewException(
           exp, ERROR_REPORTING_CLASS_NOT_FOUND, JasperReport.class.getName());
     }
+  }
+
+  /**
+   * Generate stock card report in PDF format.
+   *
+   * @param jasperView generic jasper report view
+   * @param parameters template parameters populated with values from the request
+   * @return generated stock card report.
+   */
+  public ModelAndView getStockCardReportView(JasperReportsMultiFormatView jasperView,
+      Map<String, Object> parameters) {
+    StockCardDto stockCardDto = stockCardService.findOne(
+        UUID.fromString(parameters.get("stockCard").toString())
+    );
+
+    Collections.reverse(stockCardDto.getLineItems());
+    parameters.put("datasource", singletonList(stockCardDto));
+    parameters.put("hasLot", stockCardDto.hasLot());
+    parameters.put("dateFormat", dateFormat);
+    parameters.put("decimalFormat", createDecimalFormat());
+
+    return new ModelAndView(jasperView, parameters);
   }
 
   /**

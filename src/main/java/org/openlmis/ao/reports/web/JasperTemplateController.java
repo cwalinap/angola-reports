@@ -3,6 +3,7 @@ package org.openlmis.ao.reports.web;
 import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_TEMPLATE_NOT_FOUND;
 import static org.openlmis.ao.reports.web.ReportTypes.CONSISTENCY_REPORT;
 import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_REPORT;
 
 import org.openlmis.ao.reports.dto.external.UserDto;
 import org.openlmis.ao.utils.AuthenticationHelper;
@@ -208,6 +209,8 @@ public class JasperTemplateController extends BaseController {
     String templateType = template.getType();
     if (ORDER_REPORT.equals(templateType)) {
       return jasperReportsViewService.getOrderJasperReportView(jasperView, map);
+    } else if (STOCK_CARD_REPORT.equals(templateType)) {
+      return jasperReportsViewService.getStockCardReportView(jasperView, map);
     } else {
       return new ModelAndView(jasperView, map);
     }
