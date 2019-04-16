@@ -12,9 +12,6 @@ import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
 import static net.sf.jasperreports.engine.export.JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 
-import org.openlmis.ao.reports.dto.external.ProcessingPeriodDto;
-import org.openlmis.ao.reports.dto.external.ProofOfDeliveryDto;
-import org.openlmis.ao.reports.dto.external.ProofOfDeliveryLineItemDto;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -28,6 +25,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.openlmis.ao.reports.dto.RequisitionReportDto;
 import org.openlmis.ao.reports.dto.external.OrderDto;
 import org.openlmis.ao.reports.dto.external.OrderLineItemDto;
+import org.openlmis.ao.reports.dto.external.ProcessingPeriodDto;
 import org.openlmis.ao.reports.dto.external.RequisitionDto;
 import org.openlmis.ao.reports.dto.external.RequisitionStatusDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateColumnDto;
@@ -35,7 +33,6 @@ import org.openlmis.ao.reports.dto.external.RequisitionTemplateDto;
 import org.openlmis.ao.reports.dto.external.StockCardDto;
 import org.openlmis.ao.reports.dto.external.WrappedStockCardDto;
 import org.openlmis.ao.reports.service.fulfillment.OrderService;
-import org.openlmis.ao.reports.service.fulfillment.ProofOfDeliveryService;
 import org.openlmis.ao.reports.service.referencedata.BaseReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.PeriodReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.UserReferenceDataService;
@@ -63,16 +60,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Optional;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 import javax.servlet.ServletContext;
@@ -90,6 +87,8 @@ public class JasperReportsViewService {
   private static final String REQUISITION_LINE_REPORT_DIR =
       "/jasperTemplates/requisitionLines.jrxml";
   private static final String DATASOURCE = "datasource";
+  private static final String DATE_FORMAT = "dateFormat";
+  private static final String DECIMAL_FORMAT = "decimalFormat";
 
   @Autowired
   private DataSource replicationDataSource;
@@ -111,9 +110,6 @@ public class JasperReportsViewService {
 
   @Autowired
   private StockCardStockSummariesService stockCardStockSummariesService;
-
-  @Autowired
-  private ProofOfDeliveryService proofOfDeliveryService;
 
   @Autowired
   private ApplicationContext appContext;
@@ -229,8 +225,8 @@ public class JasperReportsViewService {
     Collections.reverse(stockCardDto.getLineItems());
     parameters.put(DATASOURCE, new JRBeanCollectionDataSource(singletonList(stockCardDto)));
     parameters.put("hasLot", stockCardDto.hasLot());
-    parameters.put("dateFormat", dateFormat);
-    parameters.put("decimalFormat", createDecimalFormat());
+    parameters.put(DATE_FORMAT, dateFormat);
+    parameters.put(DECIMAL_FORMAT, createDecimalFormat());
 
     return new ModelAndView(jasperView, parameters);
   }
@@ -271,20 +267,13 @@ public class JasperReportsViewService {
    */
   public ModelAndView getPodJasperReportView(JasperReportsMultiFormatView jasperView,
                                              Map<String, Object> parameters) {
-    ProofOfDeliveryDto proofOfDelivery = proofOfDeliveryService.findOne(
-        UUID.fromString(parameters.get("proofOfDelivery").toString())
-    );
-
-    List<ProofOfDeliveryLineItemDto> items = proofOfDelivery.getLineItems();
-
-    parameters.put(DATASOURCE, new JRBeanCollectionDataSource(items));
-    parameters.put("id", proofOfDelivery.getId());
-    parameters.put("dateFormat", dateFormat);
+    parameters.put("id", parameters.get("proofOfDelivery").toString());
+    parameters.put(DATE_FORMAT, dateFormat);
     DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
     decimalFormatSymbols.setGroupingSeparator(groupingSeparator.charAt(0));
     DecimalFormat decimalFormat = new DecimalFormat("", decimalFormatSymbols);
     decimalFormat.setGroupingSize(Integer.parseInt(groupingSize));
-    parameters.put("decimalFormat", decimalFormat);
+    parameters.put(DECIMAL_FORMAT, decimalFormat);
     parameters.put("dateTimeFormat", dateTimeFormat);
 
     return new ModelAndView(jasperView, parameters);
@@ -308,8 +297,8 @@ public class JasperReportsViewService {
         template, requisition.getStatus()));
     params.put(DATASOURCE, Collections.singletonList(reportDto));
     params.put("template", template);
-    params.put("dateFormat", dateFormat);
-    params.put("decimalFormat", createDecimalFormat());
+    params.put(DATE_FORMAT, dateFormat);
+    params.put(DECIMAL_FORMAT, createDecimalFormat());
     params.put("currencyDecimalFormat",
         NumberFormat.getCurrencyInstance(getLocaleFromService()));
 
@@ -350,9 +339,9 @@ public class JasperReportsViewService {
     params.put("showProgram", getCount(cards, card -> card.getProgram().getId().toString()) > 1);
     params.put("showFacility", getCount(cards, card -> card.getFacility().getId().toString()) > 1);
     params.put("showLot", cards.stream().anyMatch(card -> card.getLotId() != null));
-    params.put("dateFormat", dateFormat);
+    params.put(DATE_FORMAT, dateFormat);
     params.put("dateTimeFormat", dateTimeFormat);
-    params.put("decimalFormat", createDecimalFormat());
+    params.put(DECIMAL_FORMAT, createDecimalFormat());
 
     return generateReport(CARD_SUMMARY_REPORT_URL, params);
   }
