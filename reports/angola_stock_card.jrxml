@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-05-10T10:15:48 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StockCard" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="d0829c7a-bf73-4e6e-9b5a-1735ab6c4d7d">
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StockCard" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="d0829c7a-bf73-4e6e-9b5a-1735ab6c4d7d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -15,10 +14,10 @@
 	<property name="reportType" value="Stock Card Report"/>
 	<property name="isDisplayed" value="false"/>
 	<import value="org.openlmis.ao.reports.dto.external.*"/>
-	<import value="net.sf.jasperreports.engine.data.*"/>
 	<import value="java.time.LocalDate"/>
 	<import value="java.time.format.DateTimeFormatter"/>
 	<import value="java.text.DecimalFormat"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -46,18 +45,35 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<parameter name="stockCard" class="java.lang.String">
-		<property name="displayName" value="Stock Card ID"/>
-		<property name="required" value="false"/>
-	</parameter>
 	<subDataset name="LineItemDataset" uuid="d30e7c80-bc48-40f0-98c4-960e82d19e87">
 		<parameter name="dateFormat" class="java.lang.String" isForPrompting="false"/>
 		<parameter name="decimalFormat" class="java.text.DecimalFormat" isForPrompting="false"/>
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="lineItem" class="org.openlmis.ao.reports.dto.external.StockCardLineItemDto">
-			<fieldDescription><![CDATA[lineItem]]></fieldDescription>
+		<field name="occurredDate" class="java.time.LocalDate">
+			<fieldDescription><![CDATA[occurredDate]]></fieldDescription>
+		</field>
+		<field name="sourceFreeText">
+			<fieldDescription><![CDATA[sourceFreeText]]></fieldDescription>
+		</field>
+		<field name="destinationFreeText">
+			<fieldDescription><![CDATA[destinationFreeText]]></fieldDescription>
+		</field>
+		<field name="reasonFreeText">
+			<fieldDescription><![CDATA[reasonFreeText]]></fieldDescription>
+		</field>
+		<field name="reason" class="org.openlmis.ao.reports.dto.external.StockCardLineItemReasonDto">
+			<fieldDescription><![CDATA[reason]]></fieldDescription>
+		</field>
+		<field name="quantity" class="java.lang.Integer">
+			<fieldDescription><![CDATA[quantity]]></fieldDescription>
+		</field>
+		<field name="stockOnHand" class="java.lang.Integer">
+			<fieldDescription><![CDATA[stockOnHand]]></fieldDescription>
+		</field>
+		<field name="signature">
+			<fieldDescription><![CDATA[signature]]></fieldDescription>
 		</field>
 		<field name="source" class="org.openlmis.ao.reports.dto.external.FacilityDto">
 			<fieldDescription><![CDATA[source]]></fieldDescription>
@@ -66,10 +82,15 @@
 			<fieldDescription><![CDATA[destination]]></fieldDescription>
 		</field>
 	</subDataset>
+	<parameter name="stockCard" class="java.lang.String">
+		<property name="displayName" value="Stock Card ID"/>
+		<property name="required" value="false"/>
+		<property name="selectMethod" value="GET"/>
+	</parameter>
 	<parameter name="hasLot" class="java.lang.Boolean" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
-	<parameter name="dateFormat" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dateFormat" isForPrompting="false"/>
 	<parameter name="decimalFormat" class="java.text.DecimalFormat" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
@@ -282,9 +303,7 @@
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression>
-					<![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{lot}.getExpirationDate().toString()))]]>
-				</textFieldExpression>
+				<textFieldExpression><![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{lot}.getExpirationDate().toString()))]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -348,9 +367,7 @@
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="80" height="30" uuid="3442e65e-4567-4aa5-9baf-75de733717ed"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression>
-									<![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{lineItem}.getOccurredDate().toString()))]]>
-								</textFieldExpression>
+								<textFieldExpression><![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{occurredDate}.toString()))]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -370,7 +387,7 @@
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="80" height="30" uuid="f0f02791-44c8-44d8-96e0-15d78068606b"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{lineItem}.getSourceFreeText() != null ? MessageFormat.format("{0} : {1}", $F{source}.getName(), $F{lineItem}.getSourceFreeText()) :  $F{source}.getName()]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{sourceFreeText} != null ? MessageFormat.format("{0} : {1}", $F{source}.getName(), $F{sourceFreeText}) :  $F{source}.getName()]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -387,7 +404,7 @@
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="80" height="30" uuid="45281874-eba8-42a9-824b-62e4b04cdf75"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{lineItem}.getDestinationFreeText() != null ? MessageFormat.format("{0} : {1}", $F{destination}.getName(), $F{lineItem}.getDestinationFreeText()) : $F{destination}.getName()]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{destinationFreeText} != null ? MessageFormat.format("{0} : {1}", $F{destination}.getName(), $F{destinationFreeText}) : $F{destination}.getName()]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -408,7 +425,7 @@
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="80" height="30" uuid="2237b77f-d8d1-40c8-9a3c-350b740eecd2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{lineItem}.getReasonFreeText() != null ? MessageFormat.format("{0} : {1}", $F{lineItem}.getReason().getName(), $F{lineItem}.getReasonFreeText()) : $F{lineItem}.getReason().getName()]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{reasonFreeText} != null ? MessageFormat.format("{0} : {1}", $F{reason}.getName(), $F{reasonFreeText}) : $F{reason}.getName()]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -428,7 +445,7 @@
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="80" height="30" uuid="109c656e-5a92-4ab3-9578-cf1e39ee1e3d"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$P{decimalFormat}.format($F{lineItem}.getQuantity()).toString()]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$P{decimalFormat}.format($F{quantity}).toString()]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -448,7 +465,7 @@
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="80" height="30" uuid="2b8cc7f3-6461-4122-b530-cdacfa242a8c"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$P{decimalFormat}.format($F{lineItem}.getStockOnHand()).toString()]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$P{decimalFormat}.format($F{stockOnHand}).toString()]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -466,7 +483,7 @@
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="80" height="30" uuid="ef145284-93eb-4f5f-a9a6-b3c979a527e1"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{lineItem}.getSignature()]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{signature}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

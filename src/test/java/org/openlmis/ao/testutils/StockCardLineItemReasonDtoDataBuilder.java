@@ -3,7 +3,7 @@ package org.openlmis.ao.testutils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.openlmis.ao.reports.service.stockmanagement.StockCardLineItemReasonDto;
+import org.openlmis.ao.reports.dto.external.StockCardLineItemReasonDto;
 
 public class StockCardLineItemReasonDtoDataBuilder {
 

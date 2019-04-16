@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.ao.reports.service.stockmanagement;
+package org.openlmis.ao.reports.dto.external;
 
 import java.util.List;
 import java.util.UUID;

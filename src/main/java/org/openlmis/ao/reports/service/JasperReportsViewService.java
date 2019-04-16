@@ -221,7 +221,7 @@ public class JasperReportsViewService {
     );
 
     Collections.reverse(stockCardDto.getLineItems());
-    parameters.put("datasource", singletonList(stockCardDto));
+    parameters.put(DATASOURCE, new JRBeanCollectionDataSource(singletonList(stockCardDto)));
     parameters.put("hasLot", stockCardDto.hasLot());
     parameters.put("dateFormat", dateFormat);
     parameters.put("decimalFormat", createDecimalFormat());
