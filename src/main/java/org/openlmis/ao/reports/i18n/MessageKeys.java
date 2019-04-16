@@ -16,6 +16,8 @@ public class MessageKeys {
           REQUISITION_ERROR + ".statusChange.user.system";
   public static final String ERROR_REQUISITION_NOT_FOUND = REQUISITION_ERROR
           + ".requisitionNotFound";
+  public static final String ERROR_GENERATE_REPORT_FAILED =
+          SERVICE_ERROR + ".generateReport.failed";
 
   protected static final String NOT_FOUND = "notFound";
 

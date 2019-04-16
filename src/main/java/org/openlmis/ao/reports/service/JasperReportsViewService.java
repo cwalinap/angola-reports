@@ -3,6 +3,7 @@ package org.openlmis.ao.reports.service;
 import static java.io.File.createTempFile;
 import static java.util.Collections.singletonList;
 import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_FILE_CREATION;
+import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_GENERATE_REPORT_FAILED;
 import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_IO;
 import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_JASPER_FILE_FORMAT;
 import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_CLASS_NOT_FOUND;
@@ -30,6 +31,7 @@ import org.openlmis.ao.reports.dto.external.RequisitionStatusDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateColumnDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateDto;
 import org.openlmis.ao.reports.dto.external.StockCardDto;
+import org.openlmis.ao.reports.dto.external.WrappedStockCardDto;
 import org.openlmis.ao.reports.service.fulfillment.OrderService;
 import org.openlmis.ao.reports.service.referencedata.BaseReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.PeriodReferenceDataService;
@@ -39,10 +41,13 @@ import net.sf.jasperreports.engine.JasperReport;
 
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.openlmis.ao.reports.service.stockmanagement.StockCardStockmanagementService;
+import org.openlmis.ao.reports.service.stockmanagement.StockCardStockSummariesService;
 import org.openlmis.ao.reports.web.RequisitionReportDtoBuilder;
 import org.openlmis.ao.utils.ReportUtils;
+import org.openlmis.ao.utils.RequestParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -65,6 +70,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -72,10 +78,12 @@ import javax.sql.DataSource;
 
 import org.openlmis.ao.reports.domain.JasperTemplate;
 import org.openlmis.ao.reports.exception.JasperReportViewException;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView;
 
 @Service
 public class JasperReportsViewService {
   private static final String REQUISITION_REPORT_DIR = "/jasperTemplates/requisition.jrxml";
+  private static final String CARD_SUMMARY_REPORT_URL = "/jasperTemplates/stockCardSummary.jrxml";
   private static final String REQUISITION_LINE_REPORT_DIR =
       "/jasperTemplates/requisitionLines.jrxml";
   private static final String DATASOURCE = "datasource";
@@ -98,8 +106,17 @@ public class JasperReportsViewService {
   @Autowired
   private StockCardStockmanagementService stockCardService;
 
+  @Autowired
+  private StockCardStockSummariesService stockCardStockSummariesService;
+
+  @Autowired
+  private ApplicationContext appContext;
+
   @Value("${dateFormat}")
   private String dateFormat;
+
+  @Value("${dateTimeFormat}")
+  private String dateTimeFormat;
 
   @Value("${groupingSeparator}")
   private String groupingSeparator;
@@ -273,6 +290,40 @@ public class JasperReportsViewService {
   }
 
   /**
+   * Generate stock card summary report in PDF format.
+   *
+   * @param program  program id
+   * @param facility facility id
+   * @return generated stock card summary report.
+   */
+  public ModelAndView getStockCardSummariesReportView(UUID program, UUID facility)
+          throws JasperReportViewException {
+    RequestParameters requestParameters = RequestParameters
+            .init()
+            .set("program", program)
+            .set("facility", facility);
+    WrappedStockCardDto wrappedStockCardDto = stockCardStockSummariesService
+            .findOne("", requestParameters);
+    List<StockCardDto> cards = wrappedStockCardDto.getContent();
+    StockCardDto firstCard = cards.get(0);
+    Map<String, Object> params = new HashMap<>();
+    params.put("stockCardSummaries", cards);
+
+    params.put("program", firstCard.getProgram());
+    params.put("facility", firstCard.getFacility());
+    //right now, each report can only be about one program, one facility
+    //in the future we may want to support one reprot for multiple programs
+    params.put("showProgram", getCount(cards, card -> card.getProgram().getId().toString()) > 1);
+    params.put("showFacility", getCount(cards, card -> card.getFacility().getId().toString()) > 1);
+    params.put("showLot", cards.stream().anyMatch(card -> card.getLotId() != null));
+    params.put("dateFormat", dateFormat);
+    params.put("dateTimeFormat", dateTimeFormat);
+    params.put("decimalFormat", createDecimalFormat());
+
+    return generateReport(CARD_SUMMARY_REPORT_URL, params);
+  }
+
+  /**
    * Get report's filename.
    *
    * @param template jasper template
@@ -311,6 +362,53 @@ public class JasperReportsViewService {
     return fileName.toString()
         .replaceAll("\\s+", "_")
         .toLowerCase(Locale.ENGLISH);
+  }
+
+  private long getCount(List<StockCardDto> stockCards, Function<StockCardDto, String> mapper) {
+    return stockCards.stream().map(mapper).distinct().count();
+  }
+
+  private ModelAndView generateReport(String templateUrl, Map<String, Object> params)
+          throws JasperReportViewException {
+    JasperReportsPdfView view = createJasperReportsPdfView();
+    view.setUrl(compileReportAndGetUrl(templateUrl));
+    view.setApplicationContext(appContext);
+    return new ModelAndView(view, params);
+  }
+
+  protected JasperReportsPdfView createJasperReportsPdfView() {
+    return new JasperReportsPdfView();
+  }
+
+  private String saveAndGetUrl(JasperReport report, String templateName)
+          throws JasperReportViewException, IOException {
+    File reportTempFile;
+    try {
+      reportTempFile = createTempFile(templateName, ".jasper");
+    } catch (IOException ex) {
+      throw new JasperReportViewException(ex, ERROR_JASPER_FILE_CREATION, ex.getMessage());
+    }
+
+    try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+         ObjectOutputStream out = new ObjectOutputStream(bos)) {
+
+      out.writeObject(report);
+      writeByteArrayToFile(reportTempFile, bos.toByteArray());
+
+      return reportTempFile.toURI().toURL().toString();
+    }
+  }
+
+  private String compileReportAndGetUrl(String templateUrl) throws JasperReportViewException {
+    try (InputStream inputStream = getClass().getResourceAsStream(templateUrl)) {
+      JasperReport report = JasperCompileManager.compileReport(inputStream);
+
+      return saveAndGetUrl(report, "report_temp");
+    } catch (IOException ex) {
+      throw new JasperReportViewException(ex, ERROR_IO, ex.getMessage());
+    } catch (JRException ex) {
+      throw new JasperReportViewException(ex, ERROR_GENERATE_REPORT_FAILED, ex.getMessage());
+    }
   }
 
   private JasperDesign createCustomizedRequisitionLineSubreport(RequisitionTemplateDto template,

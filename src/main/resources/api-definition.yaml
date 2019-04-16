@@ -154,6 +154,29 @@ resourceTypes:
                     body:
                       application/json:
                         schema: localizedMessage
+      /stockCardSummaries/print:
+        get:
+            is: [ secured ]
+            description: Print Stock card summaries to a pdf file.
+            responses:
+                200:
+                    body:
+                      application/pdf:
+                404:
+                    body:
+                      application/json:
+                        schema: localizedMessage
+            queryParameters:
+                program:
+                    displayName: Program id
+                    type: string
+                    required: true
+                    repeat: false
+                facility:
+                    displayName: Facility id
+                    type: string
+                    required: true
+                    repeat: false
       /districts:
           displayName: Districts
           get:

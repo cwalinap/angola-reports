@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@SuppressWarnings("PMD.TooManyMethods")
 public class PermissionService {
   public static final String REPORT_TEMPLATES_EDIT = "REPORT_TEMPLATES_EDIT";
   public static final String REPORTS_VIEW = "REPORTS_VIEW";
@@ -29,6 +30,7 @@ public class PermissionService {
   public static final UUID ORDER_ID =
           UUID.fromString("9b8726b9-0de6-46eb-b5d0-d035d400a61e");
   public static final String REQUISITION_VIEW = "REQUISITION_VIEW";
+  public static final String STOCK_CARDS_VIEW = "STOCK_CARDS_VIEW";
 
   @Autowired
   private AuthenticationHelper authenticationHelper;
@@ -59,6 +61,16 @@ public class PermissionService {
   public void canViewRequisition(RequisitionDto requisition) {
     checkPermission(REQUISITION_VIEW, requisition.getProgram().getId(),
             requisition.getFacility().getId(), null);
+  }
+
+  /**
+   * Checks if current user has permission to view stock card.
+   *
+   * @param programId  program id.
+   * @param facilityId facility id.
+   */
+  public void canViewStockCard(UUID programId, UUID facilityId) {
+    hasPermission(STOCK_CARDS_VIEW, programId, facilityId, null);
   }
 
   public void canViewReportsOrOrders() {
