@@ -54,13 +54,13 @@
 		<field name="occurredDate" class="java.time.LocalDate">
 			<fieldDescription><![CDATA[occurredDate]]></fieldDescription>
 		</field>
-		<field name="sourceFreeText">
+		<field name="sourceFreeText" class="java.lang.String">
 			<fieldDescription><![CDATA[sourceFreeText]]></fieldDescription>
 		</field>
-		<field name="destinationFreeText">
+		<field name="destinationFreeText" class="java.lang.String">
 			<fieldDescription><![CDATA[destinationFreeText]]></fieldDescription>
 		</field>
-		<field name="reasonFreeText">
+		<field name="reasonFreeText" class="java.lang.String">
 			<fieldDescription><![CDATA[reasonFreeText]]></fieldDescription>
 		</field>
 		<field name="reason" class="org.openlmis.ao.reports.dto.external.StockCardLineItemReasonDto">
@@ -72,7 +72,7 @@
 		<field name="stockOnHand" class="java.lang.Integer">
 			<fieldDescription><![CDATA[stockOnHand]]></fieldDescription>
 		</field>
-		<field name="signature">
+		<field name="signature" class="java.lang.String">
 			<fieldDescription><![CDATA[signature]]></fieldDescription>
 		</field>
 		<field name="source" class="org.openlmis.ao.reports.dto.external.FacilityDto">
@@ -90,7 +90,7 @@
 	<parameter name="hasLot" class="java.lang.Boolean" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
-	<parameter name="dateFormat" isForPrompting="false"/>
+	<parameter name="dateFormat" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="decimalFormat" class="java.text.DecimalFormat" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
@@ -116,12 +116,13 @@
 	</background>
 	<title>
 		<band height="124" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="0" y="20" width="595" height="50" uuid="ecab56ef-a62f-486f-bc7d-c1431467efc4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="26" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Stock Card Report]]></text>
+				<text><![CDATA[Ficha de Stock]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -129,14 +130,14 @@
 		<band height="50" splitType="Stretch">
 			<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == 1)]]></printWhenExpression>
 			<staticText>
-				<reportElement x="10" y="0" width="30" height="10" uuid="d88076e4-ce9f-4886-a172-855275a4a5e7">
+				<reportElement x="10" y="0" width="40" height="10" uuid="d88076e4-ce9f-4886-a172-855275a4a5e7">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Facility:]]></text>
+				<text><![CDATA[Instituição:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement x="50" y="0" width="100" height="10" uuid="68d8d341-d519-4cd5-adaf-845085a2b343"/>
@@ -152,7 +153,7 @@
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Facility code:]]></text>
+				<text><![CDATA[Código:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement x="70" y="20" width="80" height="10" uuid="e28722c1-aff1-4167-af88-1d9b88dc2c81"/>
@@ -170,7 +171,7 @@
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Program:]]></text>
+				<text><![CDATA[Programa:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="210" y="0" width="90" height="10" uuid="090f268a-9013-48d7-bf4c-2d082ce82426">
@@ -183,7 +184,7 @@
 				<textFieldExpression><![CDATA[$F{program}.getName()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="490" y="0" width="40" height="10" uuid="f233a52e-358f-492e-972b-5893cca24c7f">
+				<reportElement x="460" y="0" width="70" height="10" uuid="f233a52e-358f-492e-972b-5893cca24c7f">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -191,10 +192,10 @@
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[SOH:]]></text>
+				<text><![CDATA[Stock Disponível:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement x="520" y="0" width="80" height="10" uuid="83ee175f-b7f6-47ab-97d1-e0e47cbd5ba8"/>
+				<reportElement x="530" y="0" width="64" height="10" uuid="83ee175f-b7f6-47ab-97d1-e0e47cbd5ba8"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -335,7 +336,7 @@
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Card Line Items]]></text>
+				<text><![CDATA[Lista de Movimentos]]></text>
 			</staticText>
 			<componentElement>
 				<reportElement x="10" y="35" width="575" height="60" uuid="49aff7ec-0984-4b44-aaf6-ba51725190dd">
@@ -360,7 +361,7 @@
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" uuid="79d413a0-e8b1-46b0-8026-16b7fb5193b3"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Date]]></text>
+								<text><![CDATA[Data]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
@@ -380,7 +381,7 @@
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Receive from]]></text>
+								<text><![CDATA[Recebido de]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
@@ -397,7 +398,7 @@
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" uuid="80704dca-2510-44bd-9b1b-d8638caa2c29"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Issue to]]></text>
+								<text><![CDATA[Enviado para]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
@@ -417,7 +418,7 @@
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Reason]]></text>
+								<text><![CDATA[Motivo]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
@@ -438,7 +439,7 @@
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Adjustment]]></text>
+								<text><![CDATA[Quantidade]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
@@ -458,7 +459,7 @@
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Stock on hand]]></text>
+								<text><![CDATA[Stock Existente]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
@@ -476,7 +477,7 @@
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" uuid="fbcacb14-dc82-482c-b5d3-1dd2884b80bc"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Signature]]></text>
+								<text><![CDATA[Assinatura]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
