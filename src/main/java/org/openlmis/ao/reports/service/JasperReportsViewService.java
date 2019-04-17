@@ -80,6 +80,8 @@ public class JasperReportsViewService {
   private static final String REQUISITION_LINE_REPORT_DIR =
       "/jasperTemplates/requisitionLines.jrxml";
   private static final String DATASOURCE = "datasource";
+  private static final String DATE_FORMAT = "dateFormat";
+  private static final String DECIMAL_FORMAT = "decimalFormat";
 
   @Autowired
   private DataSource replicationDataSource;
@@ -126,7 +128,7 @@ public class JasperReportsViewService {
    * Set 'Jasper' exporter parameters, JDBC data source, web application context, url to file.
    *
    * @param jasperTemplate template that will be used to create a view
-   * @param request  it is used to take web application context
+   * @param request        it is used to take web application context
    * @return created jasper view.
    * @throws JasperReportViewException if there will be any problem with creating the view.
    */
@@ -213,8 +215,8 @@ public class JasperReportsViewService {
     Collections.reverse(stockCardDto.getLineItems());
     parameters.put(DATASOURCE, new JRBeanCollectionDataSource(singletonList(stockCardDto)));
     parameters.put("hasLot", stockCardDto.hasLot());
-    parameters.put("dateFormat", dateFormat);
-    parameters.put("decimalFormat", createDecimalFormat());
+    parameters.put(DATE_FORMAT, dateFormat);
+    parameters.put(DECIMAL_FORMAT, createDecimalFormat());
 
     return new ModelAndView(jasperView, parameters);
   }
@@ -229,7 +231,7 @@ public class JasperReportsViewService {
   public ModelAndView getOrderJasperReportView(JasperReportsMultiFormatView jasperView,
                                                Map<String, Object> parameters) {
     OrderDto order = orderService.findOne(
-            UUID.fromString(parameters.get("order").toString())
+        UUID.fromString(parameters.get("order").toString())
     );
     order.getStatusChanges().forEach(
         statusChange -> statusChange.setAuthor(
@@ -242,6 +244,27 @@ public class JasperReportsViewService {
     parameters.put("order", order);
     parameters.put("orderingPeriod", order.getEmergency()
         ? order.getProcessingPeriod() : findNextPeriod(order.getProcessingPeriod(), null));
+
+    return new ModelAndView(jasperView, parameters);
+  }
+
+  /**
+   * Create custom Jasper Report View for printing a POD.
+   *
+   * @param jasperView generic jasper report view
+   * @param parameters template parameters populated with values from the request
+   * @return customized jasper view.
+   */
+  public ModelAndView getPodJasperReportView(JasperReportsMultiFormatView jasperView,
+                                             Map<String, Object> parameters) {
+    parameters.put("id", parameters.get("proofOfDelivery").toString());
+    parameters.put(DATE_FORMAT, dateFormat);
+    DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+    decimalFormatSymbols.setGroupingSeparator(groupingSeparator.charAt(0));
+    DecimalFormat decimalFormat = new DecimalFormat("", decimalFormatSymbols);
+    decimalFormat.setGroupingSize(Integer.parseInt(groupingSize));
+    parameters.put(DECIMAL_FORMAT, decimalFormat);
+    parameters.put("dateTimeFormat", dateTimeFormat);
 
     return new ModelAndView(jasperView, parameters);
   }
@@ -264,8 +287,8 @@ public class JasperReportsViewService {
         template, requisition.getStatus()));
     params.put(DATASOURCE, Collections.singletonList(reportDto));
     params.put("template", template);
-    params.put("dateFormat", dateFormat);
-    params.put("decimalFormat", createDecimalFormat());
+    params.put(DATE_FORMAT, dateFormat);
+    params.put(DECIMAL_FORMAT, createDecimalFormat());
     params.put("currencyDecimalFormat",
         NumberFormat.getCurrencyInstance(getLocaleFromService()));
 
@@ -307,9 +330,9 @@ public class JasperReportsViewService {
     params.put("showProgram", getCount(cards, card -> card.getProgram().getId().toString()) > 1);
     params.put("showFacility", getCount(cards, card -> card.getFacility().getId().toString()) > 1);
     params.put("showLot", cards.stream().anyMatch(card -> card.getLotId() != null));
-    params.put("dateFormat", dateFormat);
+    params.put(DATE_FORMAT, dateFormat);
     params.put("dateTimeFormat", dateTimeFormat);
-    params.put("decimalFormat", createDecimalFormat());
+    params.put(DECIMAL_FORMAT, createDecimalFormat());
 
     return new ModelAndView(jasperView, params);
   }
@@ -318,7 +341,7 @@ public class JasperReportsViewService {
    * Get report's filename.
    *
    * @param template jasper template
-   * @param params template parameters populated with values from the request
+   * @param params   template parameters populated with values from the request
    * @return filename
    */
   public String getFilename(JasperTemplate template, Map<String, Object> params) {

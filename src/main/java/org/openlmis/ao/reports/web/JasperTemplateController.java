@@ -44,6 +44,7 @@ import static org.openlmis.ao.reports.web.ReportTypes.CONSISTENCY_REPORT;
 import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
 import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_REPORT;
 import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_SUMMARY_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.PROOF_OF_DELIVERY_PRINT;
 
 @Controller
 @Transactional
@@ -211,6 +212,8 @@ public class JasperTemplateController extends BaseController {
       return jasperReportsViewService.getStockCardReportView(jasperView, map);
     } else if (STOCK_CARD_SUMMARY_REPORT.equals(templateType)) {
       return jasperReportsViewService.getStockCardSummariesReportView(jasperView, map);
+    } else if (PROOF_OF_DELIVERY_PRINT.equals(templateType)) {
+      return jasperReportsViewService.getPodJasperReportView(jasperView, map);
     } else {
       return new ModelAndView(jasperView, map);
     }
