@@ -130,8 +130,8 @@
 		<band height="50" splitType="Stretch">
 			<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == 1)]]></printWhenExpression>
 			<staticText>
-				<reportElement x="10" y="0" width="40" height="10" uuid="d88076e4-ce9f-4886-a172-855275a4a5e7">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<reportElement x="10" y="0" width="45" height="10" uuid="d88076e4-ce9f-4886-a172-855275a4a5e7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -140,7 +140,7 @@
 				<text><![CDATA[Instituição:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement x="50" y="0" width="100" height="10" uuid="68d8d341-d519-4cd5-adaf-845085a2b343"/>
+				<reportElement stretchType="RelativeToTallestObject" x="55" y="0" width="100" height="10" uuid="68d8d341-d519-4cd5-adaf-845085a2b343"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
