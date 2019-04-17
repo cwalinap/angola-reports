@@ -553,7 +553,7 @@ ORDER BY
           <textElement>
             <font isBold="true"/>
           </textElement>
-          <text><![CDATA[Order Date]]></text>
+          <text><![CDATA[Data]]></text>
         </staticText>
         <staticText>
           <reportElement x="290" y="9" width="120" height="15" uuid="d7359e09-d700-49c3-a066-621f28881f4d">
@@ -563,7 +563,7 @@ ORDER BY
           <textElement>
             <font isBold="true"/>
           </textElement>
-          <text><![CDATA[Ordering Facility]]></text>
+          <text><![CDATA[Instituição Receptora]]></text>
         </staticText>
         <staticText>
           <reportElement x="540" y="9" width="130" height="15" uuid="976df0bb-2396-4db1-a65c-375b043775a5">
@@ -572,7 +572,7 @@ ORDER BY
           <textElement>
             <font isBold="true"/>
           </textElement>
-          <text><![CDATA[Reporting Period]]></text>
+          <text><![CDATA[Período]]></text>
         </staticText>
         <staticText>
           <reportElement x="20" y="10" width="100" height="15" uuid="e4140e17-41af-484d-992e-a80f6d6905da">
@@ -581,7 +581,7 @@ ORDER BY
           <textElement>
             <font isBold="true"/>
           </textElement>
-          <text><![CDATA[Order No.]]></text>
+          <text><![CDATA[Nº]]></text>
         </staticText>
         <staticText>
           <reportElement x="680" y="9" width="110" height="15" uuid="198334fa-23d7-4409-878c-0f9f3a9427ee">
@@ -590,7 +590,7 @@ ORDER BY
           <textElement>
             <font isBold="true"/>
           </textElement>
-          <text><![CDATA[Supplying Facility]]></text>
+          <text><![CDATA[Instituição Fornecedora]]></text>
         </staticText>
         <staticText>
           <reportElement x="185" y="10" width="95" height="15" uuid="7173a943-1f7d-44cd-98c6-f3fb41c66b65">
@@ -601,7 +601,7 @@ ORDER BY
           <textElement>
             <font isBold="true"/>
           </textElement>
-          <text><![CDATA[Order Status]]></text>
+          <text><![CDATA[Estado]]></text>
         </staticText>
         <textField isStretchWithOverflow="true" isBlankWhenNull="true">
           <reportElement stretchType="RelativeToTallestObject" x="20" y="25" width="159" height="20" uuid="884fadf8-ba37-4d75-b597-2d24b17f8943">
@@ -655,7 +655,7 @@ ORDER BY
         <textElement textAlignment="Left" verticalAlignment="Middle">
           <font size="10" isBold="true"/>
         </textElement>
-        <text><![CDATA[Product Unit]]></text>
+        <text><![CDATA[Apresentação]]></text>
       </staticText>
       <staticText>
         <reportElement mode="Opaque" x="620" y="0" width="80" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="f9d6f98e-afd8-4ce5-8157-220bd9fa8446">
@@ -667,7 +667,7 @@ ORDER BY
         <textElement textAlignment="Left" verticalAlignment="Middle">
           <font size="10" isBold="true"/>
         </textElement>
-        <text><![CDATA[Rejection Reason]]></text>
+        <text><![CDATA[Motivo de Devolução]]></text>
       </staticText>
       <staticText>
         <reportElement mode="Opaque" x="410" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="3667b897-6566-4a00-9115-84b1bd096b63">
@@ -679,7 +679,7 @@ ORDER BY
         <textElement textAlignment="Left" verticalAlignment="Middle">
           <font size="10" isBold="true"/>
         </textElement>
-        <text><![CDATA[Quantity Accepted]]></text>
+        <text><![CDATA[Qtd. Recebida]]></text>
       </staticText>
       <staticText>
         <reportElement mode="Opaque" x="550" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="d72c000a-17fc-4a96-8117-65f457417583">
@@ -691,7 +691,7 @@ ORDER BY
         <textElement textAlignment="Left" verticalAlignment="Middle">
           <font size="10" isBold="true"/>
         </textElement>
-        <text><![CDATA[Quantity Returned]]></text>
+        <text><![CDATA[Qtd. Devolvida]]></text>
       </staticText>
       <staticText>
         <reportElement mode="Opaque" x="700" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="4f61abba-d09f-476f-b326-8128d8beabf6">
@@ -704,7 +704,7 @@ ORDER BY
         <textElement textAlignment="Left" verticalAlignment="Middle">
           <font size="10" isBold="true"/>
         </textElement>
-        <text><![CDATA[Notes]]></text>
+        <text><![CDATA[Notas]]></text>
       </staticText>
       <staticText>
         <reportElement mode="Opaque" x="330" y="0" width="80" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="b9210c7f-69d9-46a7-b90a-b762cba5722e">
@@ -728,7 +728,7 @@ ORDER BY
         <textElement textAlignment="Left" verticalAlignment="Middle">
           <font size="10" isBold="true"/>
         </textElement>
-        <text><![CDATA[Quantity Ordered]]></text>
+        <text><![CDATA[Qtd. Solicitada]]></text>
       </staticText>
       <staticText>
         <reportElement mode="Opaque" x="260" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="956509d5-6869-481c-ac40-3c532d43f180">
@@ -740,7 +740,7 @@ ORDER BY
         <textElement textAlignment="Left" verticalAlignment="Middle">
           <font size="10" isBold="true"/>
         </textElement>
-        <text><![CDATA[Quantity Shipped]]></text>
+        <text><![CDATA[Qtd. Levantada]]></text>
       </staticText>
       <staticText>
         <reportElement mode="Opaque" x="0" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="8d8bd2db-ee0f-4eda-8ae3-b7f5a67b1a36">
@@ -752,7 +752,7 @@ ORDER BY
         <textElement textAlignment="Left" verticalAlignment="Middle">
           <font size="10" isBold="true"/>
         </textElement>
-        <text><![CDATA[Product Name]]></text>
+        <text><![CDATA[Designação]]></text>
       </staticText>
       <staticText>
         <reportElement mode="Opaque" x="480" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="4dd0ebe8-9fe8-47bc-bd24-a2f0cc58a70d">
