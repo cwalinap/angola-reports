@@ -1,21 +1,23 @@
 package org.openlmis.ao.reports.web;
 
-import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_TEMPLATE_NOT_FOUND;
-import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
-import static org.openlmis.ao.reports.web.ReportTypes.PROOF_OF_DELIVERY_PRINT;
-import static org.openlmis.ao.reports.web.ReportTypes.CONSISTENCY_REPORT;
-import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_REPORT;
-
-import org.openlmis.ao.reports.dto.external.UserDto;
-import org.openlmis.ao.utils.AuthenticationHelper;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRVirtualizationHelper;
 import net.sf.jasperreports.engine.JRVirtualizer;
 import net.sf.jasperreports.engine.fill.JRSwapFileVirtualizer;
 import net.sf.jasperreports.engine.util.JRSwapFile;
-
 import org.apache.log4j.Logger;
+import org.openlmis.ao.reports.domain.JasperTemplate;
+import org.openlmis.ao.reports.dto.JasperTemplateDto;
+import org.openlmis.ao.reports.dto.external.UserDto;
+import org.openlmis.ao.reports.exception.JasperReportViewException;
+import org.openlmis.ao.reports.exception.NotFoundMessageException;
+import org.openlmis.ao.reports.exception.ReportingException;
+import org.openlmis.ao.reports.repository.JasperTemplateRepository;
 import org.openlmis.ao.reports.service.JasperReportsViewService;
+import org.openlmis.ao.reports.service.JasperTemplateService;
+import org.openlmis.ao.reports.service.PermissionService;
+import org.openlmis.ao.utils.AuthenticationHelper;
+import org.openlmis.ao.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -30,23 +32,19 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
-import org.openlmis.ao.reports.domain.JasperTemplate;
-import org.openlmis.ao.reports.dto.JasperTemplateDto;
-import org.openlmis.ao.reports.exception.JasperReportViewException;
-import org.openlmis.ao.reports.exception.NotFoundMessageException;
-import org.openlmis.ao.reports.exception.ReportingException;
-import org.openlmis.ao.reports.repository.JasperTemplateRepository;
-import org.openlmis.ao.reports.service.JasperTemplateService;
-import org.openlmis.ao.reports.service.PermissionService;
-import org.openlmis.ao.utils.Message;
-
+import javax.servlet.http.HttpServletRequest;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
+import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_TEMPLATE_NOT_FOUND;
+import static org.openlmis.ao.reports.web.ReportTypes.CONSISTENCY_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_SUMMARY_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.PROOF_OF_DELIVERY_PRINT;
 
 @Controller
 @Transactional
@@ -212,6 +210,8 @@ public class JasperTemplateController extends BaseController {
       return jasperReportsViewService.getOrderJasperReportView(jasperView, map);
     } else if (STOCK_CARD_REPORT.equals(templateType)) {
       return jasperReportsViewService.getStockCardReportView(jasperView, map);
+    } else if (STOCK_CARD_SUMMARY_REPORT.equals(templateType)) {
+      return jasperReportsViewService.getStockCardSummariesReportView(jasperView, map);
     } else if (PROOF_OF_DELIVERY_PRINT.equals(templateType)) {
       return jasperReportsViewService.getPodJasperReportView(jasperView, map);
     } else {

@@ -1,7 +1,5 @@
 package org.openlmis.ao.reports.web;
 
-import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 import org.openlmis.ao.reports.dto.external.RequisitionDto;
 import org.openlmis.ao.reports.exception.JasperReportViewException;
 import org.openlmis.ao.reports.exception.NotFoundMessageException;
@@ -15,9 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -55,19 +55,5 @@ public class ReportsController extends BaseController {
     permissionService.canViewRequisition(requisition);
 
     return jasperReportsViewService.getRequisitionJasperReportView(requisition, request);
-  }
-
-  /**
-   * Get stock card summaries report by program and facility.
-   *
-   * @return generated PDF report
-   */
-  @RequestMapping(value = "/stockCardSummaries/print", method = GET)
-  @ResponseBody
-  public ModelAndView getStockCardSummaries(
-          @RequestParam("program") UUID program,
-          @RequestParam("facility") UUID facility) throws JasperReportViewException {
-    permissionService.canViewStockCard(program, facility);
-    return jasperReportsViewService.getStockCardSummariesReportView(program, facility);
   }
 }
