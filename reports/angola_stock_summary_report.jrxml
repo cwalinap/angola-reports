@@ -73,6 +73,14 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
+	<parameter name="program" class="java.lang.String">
+		<property name="displayName" value="Program ID"/>
+		<property name="required" value="false"/>
+	</parameter>
+	<parameter name="facility" class="java.lang.String">
+		<property name="displayName" value="Facility ID"/>
+		<property name="required" value="false"/>
+	</parameter>
 	<subDataset name="summaryDataset" uuid="ae304191-3438-4962-8ef9-3c2d74be4f9a">
 		<parameter name="showProgram" class="java.lang.Boolean">
 			<parameterDescription><![CDATA[]]></parameterDescription>
