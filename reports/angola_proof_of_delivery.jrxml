@@ -538,7 +538,7 @@ ORDER BY
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<rectangle radius="4">
-					<reportElement stretchType="RelativeToTallestObject" x="0" y="-10" width="800" height="65" backcolor="#F0F0F0" uuid="d124f003-e77e-4dc8-b2b2-387fe3b9f8e9">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="800" height="55" backcolor="#F0F0F0" uuid="68cc84d5-4970-4d79-9b4f-e9c8bc20001c">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -547,35 +547,7 @@ ORDER BY
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="420" y="0" width="110" height="15" uuid="427a0e98-8858-4140-93a4-67a420156957">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font isBold="true"/>
-					</textElement>
-					<text><![CDATA[Data]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="290" y="0" width="120" height="15" uuid="d7359e09-d700-49c3-a066-621f28881f4d">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement>
-						<font isBold="true"/>
-					</textElement>
-					<text><![CDATA[Instituição Receptora]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="540" y="0" width="130" height="15" uuid="976df0bb-2396-4db1-a65c-375b043775a5">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font isBold="true"/>
-					</textElement>
-					<text><![CDATA[Período]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="20" y="1" width="100" height="15" uuid="e4140e17-41af-484d-992e-a80f6d6905da">
+					<reportElement x="20" y="10" width="100" height="15" uuid="becaf03e-1b2b-4a05-a092-cd8f9e72546b">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement>
@@ -583,17 +555,14 @@ ORDER BY
 					</textElement>
 					<text><![CDATA[Nº]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="680" y="0" width="110" height="30" uuid="198334fa-23d7-4409-878c-0f9f3a9427ee">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="20" y="25" width="159" height="20" uuid="77e79f7e-c6a9-4b99-8fa5-c60fb2330bd4">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
-					<textElement>
-						<font isBold="true"/>
-					</textElement>
-					<text><![CDATA[Instituição Fornecedora]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$F{ordercode}]]></textFieldExpression>
+				</textField>
 				<staticText>
-					<reportElement x="185" y="1" width="95" height="15" uuid="7173a943-1f7d-44cd-98c6-f3fb41c66b65">
+					<reportElement x="185" y="10" width="95" height="15" uuid="806a398a-982a-429a-80c1-eef481485141">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -604,38 +573,69 @@ ORDER BY
 					<text><![CDATA[Estado]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="20" y="31" width="159" height="20" uuid="884fadf8-ba37-4d75-b597-2d24b17f8943">
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					</reportElement>
-					<textFieldExpression><![CDATA[$F{ordercode}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="185" y="31" width="95" height="20" uuid="29a25e17-f036-4b8d-9fc3-0e111c9e5fb1">
+					<reportElement stretchType="RelativeToTallestObject" x="185" y="25" width="95" height="20" uuid="2ed5c06f-a105-485b-8838-f55ea26d9dfe">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textFieldExpression><![CDATA[$F{orderstatus}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="290" y="30" width="120" height="20" uuid="dc36e235-9922-4f47-8643-d7ef79ea4bb8">
+					<reportElement stretchType="RelativeToTallestObject" x="290" y="24" width="120" height="20" uuid="b71cd235-7f9d-4808-b261-51cc814d0329">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textFieldExpression><![CDATA[$F{orderingfacilitycode} + " - " + $F{orderingfacility}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="290" y="9" width="120" height="15" uuid="28a2fc54-d984-4202-9171-682ca6cf5ead">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Instituição Receptora]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="420" y="9" width="110" height="15" uuid="0a520ae5-5616-4cde-97a6-1039f7af99b2">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data]]></text>
+				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="420" y="30" width="110" height="20" uuid="bce52b53-860d-4071-b91e-88c902b244f2"/>
+					<reportElement stretchType="RelativeToTallestObject" x="420" y="24" width="110" height="20" uuid="6c098cff-8f73-409c-a942-353753b3bcb2"/>
 					<textFieldExpression><![CDATA[DateTimeFormatter.ofPattern($P{dateTimeFormat}).format(
             ZonedDateTime.ofInstant($F{orderdate}.toInstant(), ZoneId.of($P{timeZone})))]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="540" y="9" width="110" height="15" uuid="dfbd5e52-6a79-4043-bd2c-8a9a66e67435">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Período]]></text>
+				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="540" y="30" width="130" height="20" uuid="e22e66f2-d7be-4f05-99b4-57cacf3a7567"/>
+					<reportElement stretchType="RelativeToTallestObject" x="540" y="24" width="110" height="20" uuid="6a3b6b51-d3cb-4210-9b94-d6a3ed2b58cd"/>
 					<textFieldExpression><![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{periodstartdate}))
            + " - " + DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{periodenddate}))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="680" y="30" width="110" height="20" uuid="d5d4d509-c122-4414-b010-23283f1ab8a1"/>
+					<reportElement stretchType="RelativeToTallestObject" x="660" y="24" width="130" height="20" uuid="5819d9ab-f417-40a6-96fb-2a91c4f18ed7"/>
 					<textFieldExpression><![CDATA[$F{supplyingfacility}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="660" y="9" width="130" height="15" uuid="de211e5a-bcf2-4e08-b7dc-78dc0c201e93">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Instituição Fornecedora]]></text>
+				</staticText>
 			</frame>
 		</band>
 	</title>
@@ -713,7 +713,7 @@ ORDER BY
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Lot Code]]></text>
+				<text><![CDATA[Nº de Lote]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="190" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#3D3D3D" uuid="6b057f3a-3628-4b32-89a5-19424bd9a0a1">

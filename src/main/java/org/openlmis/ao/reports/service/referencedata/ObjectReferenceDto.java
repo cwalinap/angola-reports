@@ -10,7 +10,7 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Affero General Public License for more details. You should have received a copy of
  * the GNU Affero General Public License along with this program. If not, see
- * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+ * http://www.gnu.org/licenses. For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.ao.reports.service.referencedata;
@@ -40,7 +40,7 @@ public final class ObjectReferenceDto {
    * Returns new object reference.
    *
    * @param path resource path
-   * @param id   object id
+   * @param id object id
    */
   public ObjectReferenceDto(String serviceUrl, String path, UUID id) {
     this.id = id;

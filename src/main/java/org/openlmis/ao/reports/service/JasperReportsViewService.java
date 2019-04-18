@@ -128,7 +128,7 @@ public class JasperReportsViewService {
    * Set 'Jasper' exporter parameters, JDBC data source, web application context, url to file.
    *
    * @param jasperTemplate template that will be used to create a view
-   * @param request        it is used to take web application context
+   * @param request it is used to take web application context
    * @return created jasper view.
    * @throws JasperReportViewException if there will be any problem with creating the view.
    */
@@ -341,7 +341,7 @@ public class JasperReportsViewService {
    * Get report's filename.
    *
    * @param template jasper template
-   * @param params   template parameters populated with values from the request
+   * @param params template parameters populated with values from the request
    * @return filename
    */
   public String getFilename(JasperTemplate template, Map<String, Object> params) {
