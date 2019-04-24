@@ -68,17 +68,6 @@ Lista de Pré-despacho de Medicamentos]]></text>
 		<band height="185">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="0" y="10" width="250" height="60" uuid="69507ad9-863a-4e09-a591-90e161383f9e"/>
-				<textElement>
-					<font size="10"/>
-					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
-				</textElement>
-				<text><![CDATA[To The Managing Director
-Medical Stores Ltd.
-Lusaka
-Fax numbers: 01-241193,01-246288]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="321" y="40" width="80" height="15" uuid="2ebe95a1-27cc-45b6-86c0-4fe603b2a68c"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<text><![CDATA[Instituição:]]></text>
