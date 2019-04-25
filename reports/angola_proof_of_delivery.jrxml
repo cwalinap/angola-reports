@@ -4,6 +4,7 @@
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="reportType" value="Proof of Delivery Print"/>
+	<import value="org.openlmis.ao.reports.dto.external.OrderStatusDto"/>
 	<import value="java.time.ZonedDateTime"/>
 	<import value="java.time.LocalDate"/>
 	<import value="java.time.format.DateTimeFormatter"/>
@@ -556,13 +557,13 @@ ORDER BY
 					<text><![CDATA[Nº]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="20" y="25" width="159" height="20" uuid="77e79f7e-c6a9-4b99-8fa5-c60fb2330bd4">
+					<reportElement stretchType="RelativeToTallestObject" x="20" y="25" width="140" height="20" uuid="77e79f7e-c6a9-4b99-8fa5-c60fb2330bd4">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textFieldExpression><![CDATA[$F{ordercode}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="185" y="10" width="95" height="15" uuid="806a398a-982a-429a-80c1-eef481485141">
+					<reportElement x="170" y="10" width="110" height="15" uuid="806a398a-982a-429a-80c1-eef481485141">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -573,11 +574,11 @@ ORDER BY
 					<text><![CDATA[Estado]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="185" y="25" width="95" height="20" uuid="2ed5c06f-a105-485b-8838-f55ea26d9dfe">
+					<reportElement stretchType="RelativeToTallestObject" x="170" y="25" width="110" height="20" uuid="2ed5c06f-a105-485b-8838-f55ea26d9dfe">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
-					<textFieldExpression><![CDATA[$F{orderstatus}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[OrderStatusDto.getTranslation($F{orderstatus})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" x="290" y="24" width="120" height="20" uuid="b71cd235-7f9d-4808-b261-51cc814d0329">
