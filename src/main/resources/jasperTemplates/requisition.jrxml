@@ -81,7 +81,7 @@
 				<textFieldExpression><![CDATA[MessageFormat.format("Requisição do programa de {0} {1}", $F{requisition}.getProgram().getName(), $F{requisition}.getFacility().getType().getName())]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement mode="Opaque" x="10" y="35" width="820" height="50" backcolor="#C0C0C0" uuid="65fe1d4d-8334-48d2-b383-ee533c8d5742"/>
+				<reportElement mode="Opaque" x="0" y="40" width="820" height="50" backcolor="#C0C0C0" uuid="65fe1d4d-8334-48d2-b383-ee533c8d5742"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
@@ -130,21 +130,21 @@
 				<textFieldExpression><![CDATA[$F{requisition}.getProgram().getName()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="">
-				<reportElement x="55" y="45" width="130" height="10" uuid="97807c17-6feb-44db-b0ec-eb1fdb21aa21"/>
+				<reportElement x="70" y="45" width="130" height="10" uuid="97807c17-6feb-44db-b0ec-eb1fdb21aa21"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{requisition}.getFacility().getName()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="">
-				<reportElement x="55" y="65" width="130" height="10" uuid="eb29697d-1d2f-42b6-9b25-2e2bcdadc080"/>
+				<reportElement x="54" y="65" width="146" height="10" uuid="eb29697d-1d2f-42b6-9b25-2e2bcdadc080"/>
 				<textElement textAlignment="Left">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{requisition}.getFacility().getCode()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="20" y="45" width="35" height="10" uuid="9ff435e1-2db7-4309-8a64-0111b0a6decb">
+				<reportElement x="20" y="45" width="50" height="10" uuid="9ff435e1-2db7-4309-8a64-0111b0a6decb">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
