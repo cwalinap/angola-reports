@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-05-10T16:49:49 -->
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StockCardSummary" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="d0829c7a-bf73-4e6e-9b5a-1735ab6c4d7d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -12,13 +11,12 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<import value="org.openlmis.stockmanagement.domain.card.*"/>
 	<import value="org.openlmis.ao.reports.dto.external.*"/>
-	<import value="net.sf.jasperreports.engine.data.*"/>
 	<import value="java.time.LocalDate"/>
 	<import value="java.time.format.DateTimeFormatter"/>
 	<import value="java.time.ZonedDateTime"/>
 	<import value="java.text.DecimalFormat"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -73,14 +71,6 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<parameter name="program" class="java.lang.String">
-		<property name="displayName" value="Program ID"/>
-		<property name="required" value="false"/>
-	</parameter>
-	<parameter name="facility" class="java.lang.String">
-		<property name="displayName" value="Facility ID"/>
-		<property name="required" value="false"/>
-	</parameter>
 	<subDataset name="summaryDataset" uuid="ae304191-3438-4962-8ef9-3c2d74be4f9a">
 		<parameter name="showProgram" class="java.lang.Boolean">
 			<parameterDescription><![CDATA[]]></parameterDescription>
@@ -109,8 +99,8 @@
 	<parameter name="showFacility" class="java.lang.Boolean" isForPrompting="false"/>
 	<parameter name="showLot" class="java.lang.Boolean" isForPrompting="false"/>
 	<parameter name="dateTimeFormat" class="java.lang.String" isForPrompting="false"/>
-  <parameter name="dateFormat" class="java.lang.String" isForPrompting="false"/>
-  <parameter name="decimalFormat" class="java.text.DecimalFormat" isForPrompting="false"/>
+	<parameter name="dateFormat" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="decimalFormat" class="java.text.DecimalFormat" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -227,11 +217,11 @@
 				<textFieldExpression><![CDATA[DateTimeFormatter.ofPattern($P{dateTimeFormat}).format(ZonedDateTime.now())]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="510" y="30" width="40" height="15" uuid="ee62efa8-b6f7-4de5-8ede-1ac3db0020cd">
+				<reportElement x="487" y="30" width="63" height="15" uuid="ee62efa8-b6f7-4de5-8ede-1ac3db0020cd">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="550" y="30" width="40" height="15" uuid="fbe34c63-7cfe-41e9-98dd-f1d379e7338c"/>
@@ -257,13 +247,13 @@
 						<datasetParameter name="showProgram">
 							<datasetParameterExpression><![CDATA[$P{showProgram}]]></datasetParameterExpression>
 						</datasetParameter>
-            <datasetParameter name="dateFormat">
-              <datasetParameterExpression><![CDATA[$P{dateFormat}]]></datasetParameterExpression>
-            </datasetParameter>
-            <datasetParameter name="decimalFormat">
-              <datasetParameterExpression><![CDATA[$P{decimalFormat}]]></datasetParameterExpression>
-            </datasetParameter>
-            <dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($P{stockCardSummaries})]]></dataSourceExpression>
+						<datasetParameter name="dateFormat">
+							<datasetParameterExpression><![CDATA[$P{dateFormat}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="decimalFormat">
+							<datasetParameterExpression><![CDATA[$P{decimalFormat}]]></datasetParameterExpression>
+						</datasetParameter>
+						<dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($P{stockCardSummaries})]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="93" uuid="72fd2aee-eded-4f91-b865-2eed6c1f45c2">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
@@ -358,7 +348,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="12"/>
 								</textElement>
-								<text><![CDATA[Lot Code]]></text>
+								<text><![CDATA[Código do lote]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="30">
@@ -380,16 +370,14 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="12"/>
 								</textElement>
-								<text><![CDATA[Expiry Date]]></text>
+								<text><![CDATA[Data de validade]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="73" height="30" uuid="32fea3a9-1db4-4e09-90d0-49c214525ec5"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression>
-									<![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{lot}.getExpirationDate().toString()))]]>
-								</textFieldExpression>
+								<textFieldExpression><![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{lot}.getExpirationDate().toString()))]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -408,9 +396,7 @@
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="102" height="30" uuid="e8a313ec-9db5-4892-9671-fc221c5e6abd"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression>
-									<![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{lastUpdate}.toString()))]]>
-								</textFieldExpression>
+								<textFieldExpression><![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.parse($F{lastUpdate}.toString()))]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
