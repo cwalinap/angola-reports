@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportingRate" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="4e1d9a97-c93a-4ad3-87e1-e305d6e7da2e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -24,10 +25,10 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="java.lang.*"/>
-	<import value="java.util.stream.*"/>
 	<import value="java.util.*"/>
-	<import value="net.sf.jasperreports.engine.data.*"/>
 	<import value="mw.gov.health.lmis.reports.dto.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="java.util.stream.*"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -497,7 +498,7 @@ GROUP BY geographiczonename]]>
 			<textField>
 				<reportElement x="430" y="0" width="80" height="20" uuid="b2a32e42-ac20-4eea-b97e-6003ec134b4f"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Pág. " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="50" height="50" uuid="1f656c38-8cee-492b-9d94-701314bea21e"/>

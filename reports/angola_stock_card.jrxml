@@ -315,14 +315,14 @@
 				<textFieldExpression><![CDATA[DateTimeFormatter.ofPattern($P{dateFormat}).format(LocalDate.now())]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="490" y="24" width="50" height="20" uuid="ee62efa8-b6f7-4de5-8ede-1ac3db0020cd"/>
+				<reportElement x="470" y="24" width="70" height="20" uuid="ee62efa8-b6f7-4de5-8ede-1ac3db0020cd"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Página" + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="540" y="24" width="40" height="20" uuid="fbe34c63-7cfe-41e9-98dd-f1d379e7338c"/>
 				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

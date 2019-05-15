@@ -344,7 +344,7 @@ ORDER BY referencedata.facilities.name DESC,
 			<textField evaluationTime="Report">
 				<reportElement x="510" y="0" width="45" height="20" uuid="5a830a91-ea98-4784-96da-85360efd00eb"/>
 				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="430" y="0" width="80" height="20" uuid="6bf8570a-3e52-461d-9a10-8fbf5c9d3f0a"/>

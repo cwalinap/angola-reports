@@ -530,7 +530,7 @@ $F{adjustmentquantity}.intValue() : -1 * $F{adjustmentquantity}.intValue()]]></v
 			<textField evaluationTime="Report">
 				<reportElement x="510" y="0" width="45" height="20" uuid="056de5f4-5e79-4053-97cd-0c52ec9883cf"/>
 				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
