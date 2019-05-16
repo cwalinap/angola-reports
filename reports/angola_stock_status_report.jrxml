@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_status" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="843ea716-ea72-47f8-bbd7-b9050b973ed0">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="open_lmis"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -90,7 +90,7 @@
 SELECT
   referencedata.processing_periods.name AS periodname,
   COUNT(CASE WHEN status_change.createddate IS NOT NULL THEN 1 END) AS completed,
-  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 20 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
+  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 15 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
   COUNT(CASE WHEN status_change.createddate IS NULL THEN 1 END) AS missed,
   COUNT(*) as total
 FROM referencedata.facilities
@@ -113,7 +113,7 @@ FROM referencedata.facilities
     AND requisition.requisitions.processingperiodid =  referencedata.processing_periods.id
     AND requisition.requisitions.programid = program.id
     AND requisition.requisitions.emergency = false
-  LEFT JOIN (SELECT DISTINCT ON (requisitionid) requisitionid, createddate FROM requisition.status_changes WHERE requisition.status_changes.status = 'SUBMITTED') status_change 
+  LEFT JOIN (SELECT DISTINCT ON (requisitionid) requisitionid, createddate FROM requisition.status_changes WHERE requisition.status_changes.status = 'SUBMITTED') status_change
    ON status_change.requisitionid = requisition.requisitions.id
 WHERE
    referencedata.facilities.active = true
@@ -151,6 +151,10 @@ GROUP BY periodname]]>
 		<property name="selectExpression" value="/api/reports/districts"/>
 		<property name="selectProperty" value="name"/>
 		<property name="displayProperty" value="name"/>
+		<property name="required" value="false"/>
+	</parameter>
+	<parameter name="DueDays" class="java.lang.String">
+		<property name="displayName" value="Data de vencimento (dias)"/>
 		<property name="required" value="false"/>
 	</parameter>
 	<parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
@@ -374,7 +378,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="ReportingRate" uuid="6048e9cc-0fe4-4b5c-8ba2-ad5b71e52e1d">
 						<datasetParameter name="DueDays">
-							<datasetParameterExpression><![CDATA[20]]></datasetParameterExpression>
+							<datasetParameterExpression><![CDATA[$P{DueDays}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="GeographicZone">
 							<datasetParameterExpression><![CDATA[$P{district}]]></datasetParameterExpression>
