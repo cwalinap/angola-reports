@@ -355,7 +355,7 @@
 							<textField isBlankWhenNull="false">
 								<reportElement x="0" y="0" width="80" height="30" uuid="6680122f-b158-4277-afff-29f8eae11525"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{lot} != null ? $F{lot}.getLotCode()  : "No lot defined"]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{lot} != null ? $F{lot}.getLotCode()  : "Nenhum lote definido"]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
