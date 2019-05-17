@@ -129,7 +129,7 @@
 SELECT
   referencedata.processing_periods.name AS periodname,
   COUNT(CASE WHEN status_change.createddate IS NOT NULL THEN 1 END) AS completed,
-  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 20 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
+  COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 15 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
   COUNT(CASE WHEN status_change.createddate IS NULL THEN 1 END) AS missed,
   COUNT(*) as total
 FROM referencedata.facilities
@@ -190,6 +190,10 @@ GROUP BY periodname]]>
 		<property name="selectExpression" value="/api/reports/districts"/>
 		<property name="selectProperty" value="name"/>
 		<property name="displayProperty" value="name"/>
+		<property name="required" value="false"/>
+	</parameter>
+	<parameter name="DueDays" class="java.lang.String">
+		<property name="displayName" value="Data de vencimento (dias)"/>
 		<property name="required" value="false"/>
 	</parameter>
 	<parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
@@ -466,7 +470,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="ReportingRate" uuid="215712f7-28ed-451c-a137-3b1412e4e0fb">
 						<datasetParameter name="DueDays">
-							<datasetParameterExpression><![CDATA[20]]></datasetParameterExpression>
+							<datasetParameterExpression><![CDATA[$P{DueDays}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="GeographicZone">
 							<datasetParameterExpression><![CDATA[$P{district}]]></datasetParameterExpression>
