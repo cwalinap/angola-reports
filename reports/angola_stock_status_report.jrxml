@@ -289,7 +289,7 @@ ORDER BY referencedata.facilities.name DESC,
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="120" splitType="Stretch">
+		<band height="160" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
 				<reportElement x="280" y="100" width="140" height="20" uuid="c7e6d724-faf3-45d5-8119-6c4c0410e4a2"/>
@@ -423,6 +423,19 @@ ORDER BY referencedata.facilities.name DESC,
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<textField>
+				<reportElement x="0" y="140" width="160" height="20" uuid="bafe5c66-7037-4821-83b1-378e42a2dd50"/>
+				<textFieldExpression><![CDATA[($P{DueDays} == null) ? "15" : $P{DueDays}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="" x="0" y="120" width="160" height="20" uuid="4f01574e-f28d-4dac-8b3f-ae5d77392280">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Vencimento (dias):]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
