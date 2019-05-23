@@ -14,6 +14,7 @@ public enum RequisitionStatusDto {
   IN_APPROVAL(3),
   APPROVED(4),
   RELEASED(5),
+  RELEASED_WITHOUT_ORDER(6),
   SKIPPED(-1);
 
   private static final Map<RequisitionStatusDto, String> TRANSLATIONS =
@@ -25,6 +26,7 @@ public enum RequisitionStatusDto {
           put(IN_APPROVAL, "EM APROVAÇÃO");
           put(APPROVED, "APROVADO");
           put(RELEASED, "TERMINADO");
+          put(RELEASED_WITHOUT_ORDER, "TERMINADO SEM ENCOMENDA");
           put(SKIPPED, "IGNORADO");
         }
       });
