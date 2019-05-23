@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_status" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="843ea716-ea72-47f8-bbd7-b9050b973ed0">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="open_lmis"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -540,7 +540,10 @@ ORDER BY referencedata.facilities.name DESC,
 				<textFieldExpression><![CDATA[($F{MOS} != null) ? String.format("%.2f", Double.valueOf($F{MOS})) : "-"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="0" width="140" height="15" uuid="b78d8dc7-9081-48ab-a7ae-0d6294ccc9da"/>
+				<reportElement x="65" y="0" width="185" height="15" uuid="b78d8dc7-9081-48ab-a7ae-0d6294ccc9da">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{ProductName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
@@ -548,7 +551,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textFieldExpression><![CDATA[$F{ProductCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="0" width="120" height="15" uuid="cc856392-d0be-499c-97fb-26727d074942"/>
+				<reportElement x="250" y="0" width="70" height="15" uuid="cc856392-d0be-499c-97fb-26727d074942"/>
 				<box rightPadding="20"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[($F{SOH} == null) ? "-" : $F{SOH}]]></textFieldExpression>
