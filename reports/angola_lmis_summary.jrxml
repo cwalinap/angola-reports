@@ -659,7 +659,7 @@ ORDER BY referencedata.facilities.name DESC,
 				</reportElement>
 				<box rightPadding="2"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[($F{approvedquantity} == null) ? "-" : $F{approvedquantity}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{quantityrequired} == null) ? "-" : $F{quantityrequired}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement stretchType="RelativeToTallestObject" x="50" y="0" width="55" height="15" uuid="e551397e-cb09-466d-8082-28298fe9a398">
