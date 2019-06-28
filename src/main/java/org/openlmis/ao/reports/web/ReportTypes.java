@@ -6,6 +6,7 @@ public class ReportTypes {
   public static final String STOCK_CARD_SUMMARY_REPORT = "Stock Card Summary Report";
   public static final String CONSISTENCY_REPORT = "Consistency Report";
   public static final String PROOF_OF_DELIVERY_PRINT = "Proof of Delivery Print";
+  public static final String INVENTORY_REPORT = "Inventory Report";
 
   protected ReportTypes() {
     throw new UnsupportedOperationException();

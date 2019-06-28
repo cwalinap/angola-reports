@@ -3,6 +3,7 @@ package org.openlmis.ao.reports.service;
 import net.sf.jasperreports.engine.JRBand;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -10,22 +11,33 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.openlmis.ao.reports.domain.JasperTemplate;
 import org.openlmis.ao.reports.dto.RequisitionReportDto;
+import org.openlmis.ao.reports.dto.external.CanFulfillForMeEntryDto;
+import org.openlmis.ao.reports.dto.external.DispensableDto;
+import org.openlmis.ao.reports.dto.external.FacilityDto;
+import org.openlmis.ao.reports.dto.external.FullStockCardSummaryV2Dto;
+import org.openlmis.ao.reports.dto.external.GeographicZoneDto;
+import org.openlmis.ao.reports.dto.external.LotDto;
 import org.openlmis.ao.reports.dto.external.OrderDto;
 import org.openlmis.ao.reports.dto.external.OrderLineItemDto;
+import org.openlmis.ao.reports.dto.external.OrderableDto;
 import org.openlmis.ao.reports.dto.external.ProcessingPeriodDto;
 import org.openlmis.ao.reports.dto.external.RequisitionDto;
 import org.openlmis.ao.reports.dto.external.RequisitionStatusDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateColumnDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateDto;
 import org.openlmis.ao.reports.dto.external.StockCardDto;
-import org.openlmis.ao.reports.dto.external.WrappedStockCardDto;
+import org.openlmis.ao.reports.dto.external.StockCardSummaryV2Dto;
+import org.openlmis.ao.reports.dto.external.WrappedStockCardV2Dto;
 import org.openlmis.ao.reports.exception.JasperReportViewException;
 import org.openlmis.ao.reports.service.fulfillment.OrderService;
 import org.openlmis.ao.reports.service.referencedata.BaseReferenceDataService;
+import org.openlmis.ao.reports.service.referencedata.FacilityReferenceDataService;
+import org.openlmis.ao.reports.service.referencedata.LotReferenceDataService;
+import org.openlmis.ao.reports.service.referencedata.OrderableReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.PeriodReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.UserReferenceDataService;
-import org.openlmis.ao.reports.service.stockmanagement.StockCardStockSummariesService;
 import org.openlmis.ao.reports.service.stockmanagement.StockCardStockmanagementService;
+import org.openlmis.ao.reports.service.stockmanagement.StockCardV2StockSummariesService;
 import org.openlmis.ao.reports.web.RequisitionReportDtoBuilder;
 import org.openlmis.ao.utils.ReportUtils;
 import org.openlmis.ao.utils.RequestParameters;
@@ -50,6 +62,7 @@ import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -82,6 +95,13 @@ public class JasperReportsViewService {
   private static final String DATASOURCE = "datasource";
   private static final String DATE_FORMAT = "dateFormat";
   private static final String DECIMAL_FORMAT = "decimalFormat";
+  private static final String FACILITY = "facility";
+  private static final String FACILITY_ID = "facilityId";
+  private static final String PROGRAM_ID = "programId";
+  private static final String AS_OF_DATE = "asOfDate";
+
+  private static final int PROVINCE_LEVEL = 2;
+  private static final int REGION_LEVEL = 3;
 
   @Autowired
   private DataSource replicationDataSource;
@@ -102,7 +122,16 @@ public class JasperReportsViewService {
   private StockCardStockmanagementService stockCardService;
 
   @Autowired
-  private StockCardStockSummariesService stockCardStockSummariesService;
+  private StockCardV2StockSummariesService stockCardV2StockSummariesService;
+
+  @Autowired
+  private FacilityReferenceDataService facilityReferenceDataService;
+
+  @Autowired
+  private OrderableReferenceDataService orderableReferenceDataService;
+
+  @Autowired
+  private LotReferenceDataService lotReferenceDataService;
 
   @Value("${dateFormat}")
   private String dateFormat;
@@ -303,38 +332,40 @@ public class JasperReportsViewService {
   }
 
   /**
-   * Generate stock card summary report in PDF format.
+   * Generate inventory report.
    *
    * @param jasperView jasper template
    * @param parameters template parameters populated with values from the request
-   * @return generated stock card summary report.
+   * @return generated inventory report.
    */
-  public ModelAndView getStockCardSummariesReportView(JasperReportsMultiFormatView jasperView,
+  public ModelAndView getInventoryReportView(JasperReportsMultiFormatView jasperView,
                                                       Map<String, Object> parameters) {
+    LocalDate asOfDate = getAsOfDate(parameters);
+    parameters.put(AS_OF_DATE, asOfDate);
     RequestParameters requestParameters = RequestParameters
             .init()
-            .set("program", UUID.fromString(parameters.get("programId").toString()))
-            .set("facility", UUID.fromString(parameters.get("facilityId").toString()));
-    WrappedStockCardDto wrappedStockCardDto = stockCardStockSummariesService
+            .set(PROGRAM_ID, UUID.fromString(parameters.get(PROGRAM_ID).toString()))
+            .set(FACILITY_ID, UUID.fromString(parameters.get(FACILITY_ID).toString()))
+            .set(AS_OF_DATE, asOfDate);
+
+    WrappedStockCardV2Dto wrappedStockCardDto = stockCardV2StockSummariesService
             .findOne("", requestParameters);
-    List<StockCardDto> cards = wrappedStockCardDto.getContent();
-    StockCardDto firstCard = cards.get(0);
-    Map<String, Object> params = new HashMap<>();
-    params.put(DATASOURCE, new JRBeanCollectionDataSource(cards));
-    params.put("stockCardSummaries", cards);
+    List<FullStockCardSummaryV2Dto> fullSummaries = extractFullSummaries(
+            wrappedStockCardDto.getContent());
+    FacilityDto facilityDto = getReferencedFacility(parameters);
 
-    params.put("program", firstCard.getProgram());
-    params.put("facility", firstCard.getFacility());
-    //right now, each report can only be about one program, one facility
-    //in the future we may want to support one report for multiple programs
-    params.put("showProgram", getCount(cards, card -> card.getProgram().getId().toString()) > 1);
-    params.put("showFacility", getCount(cards, card -> card.getFacility().getId().toString()) > 1);
-    params.put("showLot", cards.stream().anyMatch(card -> card.getLotId() != null));
-    params.put(DATE_FORMAT, dateFormat);
-    params.put("dateTimeFormat", dateTimeFormat);
-    params.put(DECIMAL_FORMAT, createDecimalFormat());
+    parameters.put(FACILITY, facilityDto);
+    parameters.put("province", extractProvinceName(facilityDto.getGeographicZone()));
+    parameters.put("region", extractRegionName(facilityDto.getGeographicZone()));
+    parameters.put(DATASOURCE, new JRBeanCollectionDataSource(fullSummaries));
+    parameters.put("stockCardSummaries", fullSummaries);
+    parameters.put(DATE_FORMAT, dateFormat);
+    parameters.put(DECIMAL_FORMAT, createDecimalFormat());
+    if (parameters.get("format").toString().equals("html")) {
+      parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+    }
 
-    return new ModelAndView(jasperView, params);
+    return new ModelAndView(jasperView, parameters);
   }
 
   /**
@@ -376,6 +407,69 @@ public class JasperReportsViewService {
     return fileName.toString()
         .replaceAll("\\s+", "_")
         .toLowerCase(Locale.ENGLISH);
+  }
+
+  private FacilityDto getReferencedFacility(Map<String, Object> parameters) {
+    return facilityReferenceDataService
+            .findOne(UUID.fromString(parameters.get(FACILITY_ID).toString()));
+  }
+
+  private List<FullStockCardSummaryV2Dto> extractFullSummaries(
+          List<StockCardSummaryV2Dto> summaries) {
+    List<FullStockCardSummaryV2Dto> result = new ArrayList<>();
+    summaries.forEach(card -> {
+      if (card.getCanFulfillForMe().isEmpty()) {
+        OrderableDto orderable = orderableReferenceDataService.findOne(card.getOrderable().getId());
+        result.add(buildFullSummaryFromOrderable(orderable));
+      } else {
+        card.getCanFulfillForMe().forEach(entry -> result.add(
+                buildFullSummaryFromFulfillEntry(entry)));
+      }
+    });
+    return result;
+  }
+
+  private FullStockCardSummaryV2Dto buildFullSummaryFromFulfillEntry(
+          CanFulfillForMeEntryDto entry) {
+    OrderableDto orderable = entry.getOrderable() == null ? null :
+            orderableReferenceDataService.findOne(entry.getOrderable().getId());
+    LotDto lot = entry.getLot() == null ? null :
+            lotReferenceDataService.findOne(entry.getLot().getId());
+    DispensableDto dispensable = orderable == null ? null :
+            orderable.getDispensable();
+    return new FullStockCardSummaryV2Dto(orderable, dispensable, lot, entry.getStockOnHand());
+  }
+
+  private FullStockCardSummaryV2Dto buildFullSummaryFromOrderable(OrderableDto orderable) {
+    return new FullStockCardSummaryV2Dto(orderable, orderable.getDispensable(), null, null);
+  }
+
+  private LocalDate getAsOfDate(Map<String, Object> parameters) {
+    LocalDate date = LocalDate.now();
+    if (parameters.get(AS_OF_DATE) != null) {
+      date = LocalDate.parse(parameters.get(AS_OF_DATE).toString());
+    }
+    return date;
+  }
+
+  private String extractProvinceName(GeographicZoneDto zone) {
+    String result = "-";
+    if (zone != null) {
+      if (zone.getLevel().getLevelNumber() > PROVINCE_LEVEL) {
+        result = extractProvinceName(zone.getParent());
+      } else if (zone.getLevel().getLevelNumber().equals(PROVINCE_LEVEL)) {
+        result = zone.getName();
+      }
+    }
+    return result;
+  }
+
+  private String extractRegionName(GeographicZoneDto zone) {
+    String result = "-";
+    if (zone != null && zone.getLevel().getLevelNumber().equals(REGION_LEVEL)) {
+      result = zone.getName();
+    }
+    return result;
   }
 
   private long getCount(List<StockCardDto> stockCards, Function<StockCardDto, String> mapper) {
