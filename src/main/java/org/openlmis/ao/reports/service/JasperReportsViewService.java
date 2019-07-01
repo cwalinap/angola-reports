@@ -35,6 +35,7 @@ import org.openlmis.ao.reports.service.referencedata.FacilityReferenceDataServic
 import org.openlmis.ao.reports.service.referencedata.LotReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.OrderableReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.PeriodReferenceDataService;
+import org.openlmis.ao.reports.service.referencedata.ProgramReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.UserReferenceDataService;
 import org.openlmis.ao.reports.service.stockmanagement.StockCardStockmanagementService;
 import org.openlmis.ao.reports.service.stockmanagement.StockCardV2StockSummariesService;
@@ -132,6 +133,9 @@ public class JasperReportsViewService {
 
   @Autowired
   private LotReferenceDataService lotReferenceDataService;
+
+  @Autowired
+  private ProgramReferenceDataService programReferenceDataService;
 
   @Value("${dateFormat}")
   private String dateFormat;
@@ -354,6 +358,7 @@ public class JasperReportsViewService {
             wrappedStockCardDto.getContent());
     FacilityDto facilityDto = getReferencedFacility(parameters);
 
+    parameters.put("program", getProgramName(parameters));
     parameters.put(FACILITY, facilityDto);
     parameters.put("province", extractProvinceName(facilityDto.getGeographicZone()));
     parameters.put("region", extractRegionName(facilityDto.getGeographicZone()));
@@ -412,6 +417,11 @@ public class JasperReportsViewService {
   private FacilityDto getReferencedFacility(Map<String, Object> parameters) {
     return facilityReferenceDataService
             .findOne(UUID.fromString(parameters.get(FACILITY_ID).toString()));
+  }
+
+  private String getProgramName(Map<String, Object> parameters) {
+    return programReferenceDataService
+            .findOne(UUID.fromString(parameters.get(PROGRAM_ID).toString())).getName();
   }
 
   private List<FullStockCardSummaryV2Dto> extractFullSummaries(
