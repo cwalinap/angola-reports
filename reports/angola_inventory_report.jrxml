@@ -395,7 +395,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                         <font isBold="true"/>
                         <paragraph leftIndent="5"/>
                     </textElement>
-                    <text><![CDATA[HTMLUnidade de Saúde:]]></text>
+                    <text><![CDATA[Unidade de Saúde:]]></text>
                 </staticText>
                 <staticText>
                     <reportElement stretchType="NoStretch" x="380" y="80" width="174" height="20" uuid="4688a175-1b22-427a-be2b-a143fd250049">
