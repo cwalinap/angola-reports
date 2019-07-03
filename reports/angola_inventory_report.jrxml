@@ -296,16 +296,6 @@
                     </textElement>
                     <text><![CDATA[Município:]]></text>
                 </staticText>
-                <textField evaluationTime="Report">
-                    <reportElement x="510" y="0" width="45" height="20" uuid="ebc06d42-8529-4c39-9d2f-1c1488e6a088"/>
-                    <textElement textAlignment="Left"/>
-                    <textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
-                </textField>
-                <textField>
-                    <reportElement x="430" y="0" width="80" height="20" uuid="dcff0142-2f6d-4901-986d-7d07ffc9f98d"/>
-                    <textElement textAlignment="Right"/>
-                    <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
-                </textField>
                 <image>
                     <reportElement x="0" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
                     <imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
@@ -346,7 +336,7 @@
                     <text><![CDATA[Trimestre:]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="70" y="0" width="150" height="50" uuid="a44af635-50d7-4020-a40f-8229f5c79cef"/>
+                    <reportElement x="60" y="0" width="160" height="60" uuid="a44af635-50d7-4020-a40f-8229f5c79cef"/>
                     <textElement textAlignment="Left" verticalAlignment="Middle">
                         <font size="8"/>
                     </textElement>
@@ -477,16 +467,6 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                     </textElement>
                     <text><![CDATA[Município:]]></text>
                 </staticText>
-                <textField evaluationTime="Report">
-                    <reportElement x="510" y="0" width="45" height="20" uuid="ebc06d42-8529-4c39-9d2f-1c1488e6a088"/>
-                    <textElement textAlignment="Left"/>
-                    <textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
-                </textField>
-                <textField>
-                    <reportElement x="430" y="0" width="80" height="20" uuid="dcff0142-2f6d-4901-986d-7d07ffc9f98d"/>
-                    <textElement textAlignment="Right"/>
-                    <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
-                </textField>
                 <image>
                     <reportElement x="0" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
                     <imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
@@ -527,7 +507,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                     <text><![CDATA[Trimestre:]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="70" y="0" width="150" height="50" uuid="a44af635-50d7-4020-a40f-8229f5c79cef"/>
+                    <reportElement x="60" y="0" width="160" height="60" uuid="a44af635-50d7-4020-a40f-8229f5c79cef"/>
                     <textElement textAlignment="Left" verticalAlignment="Middle">
                         <font size="8"/>
                     </textElement>
@@ -915,4 +895,18 @@ stock]]></text>
             </componentElement>
         </band>
     </detail>
+    <pageFooter>
+        <band height="50">
+            <textField evaluationTime="Report">
+                <reportElement x="510" y="30" width="45" height="20" uuid="ebc06d42-8529-4c39-9d2f-1c1488e6a088"/>
+                <textElement textAlignment="Left"/>
+                <textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="430" y="30" width="80" height="20" uuid="dcff0142-2f6d-4901-986d-7d07ffc9f98d"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
 </jasperReport>
