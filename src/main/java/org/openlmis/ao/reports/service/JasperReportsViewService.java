@@ -137,6 +137,9 @@ public class JasperReportsViewService {
   @Autowired
   private ProgramReferenceDataService programReferenceDataService;
 
+  @Autowired
+  private UsersReportViewService usersReportViewService;
+
   @Value("${dateFormat}")
   private String dateFormat;
 
@@ -252,6 +255,21 @@ public class JasperReportsViewService {
     parameters.put(DECIMAL_FORMAT, createDecimalFormat());
 
     return new ModelAndView(jasperView, parameters);
+  }
+
+  /**
+   * Generate users report.
+   *
+   * @param jasperView generic jasper report view
+   * @param parameters template parameters populated with values from the request
+   * @return generated users report.
+   */
+  public ModelAndView getUsersReportView(JasperReportsMultiFormatView jasperView,
+                                             Map<String, Object> parameters) {
+    parameters.put(DATE_FORMAT, dateFormat);
+    parameters.put(DECIMAL_FORMAT, createDecimalFormat());
+
+    return usersReportViewService.getReportView(jasperView, parameters);
   }
 
   /**

@@ -7,6 +7,7 @@ public class ReportTypes {
   public static final String CONSISTENCY_REPORT = "Consistency Report";
   public static final String PROOF_OF_DELIVERY_PRINT = "Proof of Delivery Print";
   public static final String INVENTORY_REPORT = "Inventory Report";
+  public static final String USERS_REPORT = "Users Report";
 
   protected ReportTypes() {
     throw new UnsupportedOperationException();

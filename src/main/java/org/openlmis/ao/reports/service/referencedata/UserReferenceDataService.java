@@ -1,18 +1,20 @@
 package org.openlmis.ao.reports.service.referencedata;
 
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.ao.reports.dto.external.DetailedRoleAssignmentDto;
+import org.openlmis.ao.reports.dto.external.ProgramDto;
+import org.openlmis.ao.reports.dto.external.ResultDto;
+import org.openlmis.ao.reports.dto.external.UserDto;
+import org.openlmis.ao.utils.RequestParameters;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import org.openlmis.ao.reports.dto.external.ResultDto;
-import org.openlmis.ao.reports.dto.external.UserDto;
-import org.openlmis.ao.utils.RequestParameters;
 
 @Service
 public class UserReferenceDataService extends BaseReferenceDataService<UserDto> {
@@ -44,6 +46,43 @@ public class UserReferenceDataService extends BaseReferenceDataService<UserDto> 
 
     Page<UserDto> users = getPage("search", RequestParameters.init(), requestBody);
     return users.getContent().isEmpty() ? null : users.getContent().get(0);
+  }
+
+  public List<UserDto> findAll() {
+    Page<UserDto> users = getPage("search", RequestParameters.init(), new HashMap<>());
+    return users.getContent().isEmpty() ? null : users.getContent();
+  }
+
+  /**
+   * Get all programs with specified filters.
+   *
+   * @param facilityId UUID of the home facility.
+   * @param username username of the user, or its part.
+   * @return a list of users.
+   */
+  public List<UserDto> search(String facilityId, String username) {
+    Map<String, String> payload = new HashMap<>();
+    if (StringUtils.isNotEmpty(facilityId)) {
+      payload.put("homeFacilityId", facilityId);
+    }
+    if (StringUtils.isNotEmpty(username)) {
+      payload.put("username", username);
+    }
+
+    Page<UserDto> users = getPage("search", RequestParameters.init(),
+            payload, HttpMethod.POST, UserDto.class);
+    return users.getContent().isEmpty() ? new ArrayList<>() : users.getContent();
+  }
+
+  /**
+   * Get all programs assigned to the specified user.
+   *
+   * @param user UUID of the user.
+   * @return a list of programs.
+   */
+  public List<ProgramDto> findProgramsForUser(String user) {
+    return findAll(user + "/programs", RequestParameters.init(), null,
+            HttpMethod.GET, ProgramDto[].class);
   }
 
   /**
