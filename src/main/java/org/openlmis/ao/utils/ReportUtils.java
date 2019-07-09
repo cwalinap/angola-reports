@@ -25,6 +25,14 @@ public final class ReportUtils {
   }
 
   /**
+   * Get string value of the parameter, or an empty string if null.
+   */
+  public static String getStringParameter(Map<String, Object> parameters, String key) {
+    return parameters.get(key) == null
+            ? "" : parameters.get(key).toString();
+  }
+
+  /**
    * Set parameters of rendered pdf report.
    */
   public static Map<String, Object> createParametersMap() {

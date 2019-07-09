@@ -56,15 +56,11 @@ public class UserReferenceDataService extends BaseReferenceDataService<UserDto> 
   /**
    * Get all programs with specified filters.
    *
-   * @param facilityId UUID of the home facility.
    * @param username username of the user, or its part.
    * @return a list of users.
    */
-  public List<UserDto> search(String facilityId, String username) {
+  public List<UserDto> search(String username) {
     Map<String, String> payload = new HashMap<>();
-    if (StringUtils.isNotEmpty(facilityId)) {
-      payload.put("homeFacilityId", facilityId);
-    }
     if (StringUtils.isNotEmpty(username)) {
       payload.put("username", username);
     }

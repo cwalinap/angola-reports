@@ -4,12 +4,13 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openlmis.ao.reports.dto.external.DetailedRoleAssignmentDto;
-import org.openlmis.ao.reports.dto.external.FacilityDto;
+import org.openlmis.ao.reports.dto.external.RightAssignmentDto;
+import org.openlmis.ao.reports.dto.external.SupervisoryNodeDto;
 import org.openlmis.ao.reports.dto.external.UserContactDetailsDto;
 import org.openlmis.ao.reports.dto.external.UserDto;
 import org.openlmis.ao.reports.dto.external.UserInfoDto;
-import org.openlmis.ao.reports.service.referencedata.FacilityReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.ProgramReferenceDataService;
+import org.openlmis.ao.reports.service.referencedata.SupervisoryNodeReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.UserContactDetailsReferenceDataService;
 import org.openlmis.ao.reports.service.referencedata.UserReferenceDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.contains;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.openlmis.ao.utils.ReportUtils.getStringParameter;
+
 @Service
 public class UsersReportViewService implements ConcreteReportView {
 
@@ -31,7 +36,7 @@ public class UsersReportViewService implements ConcreteReportView {
   private UserReferenceDataService userReferenceDataService;
 
   @Autowired
-  private FacilityReferenceDataService facilityReferenceDataService;
+  private SupervisoryNodeReferenceDataService supervisoryNodeReferenceDataService;
 
   @Autowired
   private UserContactDetailsReferenceDataService userContactDetailsReferenceDataService;
@@ -41,96 +46,138 @@ public class UsersReportViewService implements ConcreteReportView {
 
   private static final String NO_DATA = "";
   private static final String ALL = "Todos";
-  private static final String FACILITY_ID = "facilityId";
+  private static final String NODE_ID = "nodeId";
+  private static final String ROLE_SEPARATOR = "+";
 
   @Override
   public ModelAndView getReportView(JasperReportsMultiFormatView jasperView,
                                     Map<String, Object> parameters) {
     List<UserDto> users = getFilteredUsers(parameters);
 
-    String acceptedRole = parameters.get("roleName") == null
-            ? "" : parameters.get("roleName").toString();
-    String acceptedProgramId = parameters.get("programId") == null
-            ? "" : parameters.get("programId").toString();
-    Map<String, String> programsMap = getProgramsMap(acceptedProgramId);
+    String allowedRole = getStringParameter(parameters, "roleName");
+    String allowedProgramId = getStringParameter(parameters, "programId");
+    String allowedEmail = getStringParameter(parameters, "email");
+    String allowedNodeId = getStringParameter(parameters, NODE_ID);
+    Map<String, String> programsMap = getProgramsMap(allowedProgramId);
 
     List<UserInfoDto> data = new ArrayList<>();
     users.forEach(user -> {
       //by default, no roles will be returned, so we have to fetch them manually
-      Map<String, List<String>> rightAssignments =
-              getRightAssignments(user, acceptedRole, acceptedProgramId);
+      Map<String, RightAssignmentDto> rightAssignments =
+              getRightAssignments(user, allowedRole, allowedProgramId, allowedNodeId);
       UserContactDetailsDto contactDetails = getContactDetails(user);
-      String facility = getFacilityName(user);
 
-      if (CollectionUtils.isNotEmpty(rightAssignments.entrySet())) {
-        data.addAll(generateUserInfo(user, programsMap, rightAssignments,
-                contactDetails, facility));
-      } else if (acceptedRole.isEmpty()) {
-        data.add(new UserInfoDto(user, facility, NO_DATA, contactDetails, NO_DATA));
+      if (isEmailAllowed(allowedEmail, contactDetails)) {
+        if (CollectionUtils.isNotEmpty(rightAssignments.entrySet())) {
+          data.addAll(generateUserInfo(user, programsMap, rightAssignments,
+                  contactDetails));
+        } else if (allowedRole.isEmpty()) {
+          data.add(new UserInfoDto(user, NO_DATA, NO_DATA, contactDetails, NO_DATA));
+        }
       }
     });
 
-    String program = programsMap.get(acceptedProgramId) == null
-            ? ALL : programsMap.get(acceptedProgramId);
-    String node = parameters.get(FACILITY_ID) == null
-            ? ALL : facilityReferenceDataService.findOne(
-                    UUID.fromString(parameters.get(FACILITY_ID).toString())).getName();
-    String role = acceptedRole.isEmpty() ? ALL : acceptedRole;
+    String program = programsMap.get(allowedProgramId) == null
+            ? ALL : programsMap.get(allowedProgramId);
+    String node = parameters.get(NODE_ID) == null
+            ? ALL : supervisoryNodeReferenceDataService.findOne(
+                    UUID.fromString(parameters.get(NODE_ID).toString())).getName();
+    String role = allowedRole.isEmpty() ? ALL : allowedRole;
     parameters.put(DATASOURCE, new JRBeanCollectionDataSource(data));
+    parameters.put("users", data);
     parameters.put("node", node);
     parameters.put("program", program);
     parameters.put("role", role);
+
     return new ModelAndView(jasperView, parameters);
   }
 
+  /**
+   * Transform params to user-friendly form.
+   *
+   * @param parameters template parameters populated with values from the request
+   * @return params used to generate filename with proper names instead of ids
+   */
+  public List<Object> getFilenameValues(Map<String, Object> parameters) {
+    List<Object> result = new ArrayList<>();
+    String programId = getStringParameter(parameters, "programId");
+    String nodeId = getStringParameter(parameters, NODE_ID);
+
+    if (StringUtils.isNotEmpty(nodeId)) {
+      result.add(supervisoryNodeReferenceDataService
+              .findOne(UUID.fromString(nodeId)).getName());
+    }
+
+    if (StringUtils.isNotEmpty(programId)) {
+      result.add(programReferenceDataService
+              .findOne(UUID.fromString(programId)).getName());
+    }
+
+    result.add(getStringParameter(parameters, "roleName"));
+    result.add(getStringParameter(parameters, "firstName"));
+    result.add(getStringParameter(parameters, "lastName"));
+    result.add(getStringParameter(parameters, "username"));
+    result.add(getStringParameter(parameters, "email"));
+    return result.stream().filter(x -> StringUtils.isNotEmpty(x.toString()))
+            .collect(Collectors.toList());
+  }
+
+  private boolean isEmailAllowed(String allowedEmail, UserContactDetailsDto contactDetails) {
+    if (StringUtils.isBlank(allowedEmail)) {
+      return true;
+    } else {
+      return contactDetails != null && contactDetails.getEmailDetails() != null
+              && containsIgnoreCase(contactDetails.getEmailDetails().getEmail(), allowedEmail);
+    }
+  }
+
   private List<UserInfoDto> generateUserInfo(UserDto user, Map<String, String> programsMap,
-                                             Map<String, List<String>> rightAssignments,
-                                             UserContactDetailsDto contactDetails,
-                                             String facility) {
+                                             Map<String, RightAssignmentDto> rightAssignmentsMap,
+                                             UserContactDetailsDto contactDetails) {
     List<UserInfoDto> result = new ArrayList<>();
-    rightAssignments.forEach((programId, roles) -> {
+    rightAssignmentsMap.forEach((key, right) -> {
+      String programId = key.substring(0, key.indexOf(ROLE_SEPARATOR));
       String program = "";
       if (StringUtils.isNotEmpty(programId)) {
         program = programsMap.get(programId) == null
                 ? NO_DATA : programsMap.get(programId);
       }
-      result.add(new UserInfoDto(user, facility, program,
-              contactDetails, buildRightAccessInfo(program, roles)));
+      String supervisoryNode = getSupervisoryNodeName(right.getSupervisoryNodeId());
+      result.add(new UserInfoDto(user, supervisoryNode, program,
+              contactDetails, buildRightAccessInfo(program, right.getRoles())));
     });
+
+    result.sort(UserInfoDto::compareTo);
     return result;
   }
 
   private List<UserDto> getFilteredUsers(Map<String, Object> parameters) {
-    String nodeId = parameters.get(FACILITY_ID) == null
-            ? "" : parameters.get(FACILITY_ID).toString();
-    String username = parameters.get("username") == null
-            ? "" : parameters.get("username").toString();
+    String username = getStringParameter(parameters, "username");
+    List<UserDto> users = userReferenceDataService.search(username);
 
-    List<UserDto> users = userReferenceDataService.search(nodeId, username);
-
-    String firstName = parameters.get("firstName") == null
-            ? "" : parameters.get("firstName").toString();
-    String lastName = parameters.get("lastName") == null
-            ? "" : parameters.get("lastName").toString();
+    String firstName = getStringParameter(parameters, "firstName");
+    String lastName = getStringParameter(parameters, "lastName");
 
     return users.stream().filter(user ->
-            user.getFirstName().contains(firstName) && user.getLastName().contains(lastName))
+            containsIgnoreCase(user.getFirstName(), firstName)
+                    && containsIgnoreCase(user.getLastName(), lastName))
             .collect(Collectors.toList());
   }
 
-  private Map<String, String> getProgramsMap(String acceptedProgramId) {
+  private Map<String, String> getProgramsMap(String allowedProgramId) {
     Map<String, String> result = new HashMap<>();
 
     programReferenceDataService.findAll().stream()
-            .filter(p -> p.getId().toString().contains(acceptedProgramId))
+            .filter(p -> contains(p.getId().toString(), allowedProgramId))
             .forEach(program -> result.put(program.getId().toString(), program.getName()));
 
     return result;
   }
 
-  private Map<String, List<String>> getRightAssignments(UserDto user, String acceptedRole,
-                                                      String acceptedProgramId) {
-    Map<String, List<String>> result = new HashMap<>();
+  private Map<String, RightAssignmentDto> getRightAssignments(UserDto user, String allowedRole,
+                                                        String allowedProgramId,
+                                                        String allowedNodeId) {
+    Map<String, RightAssignmentDto> result = new HashMap<>();
 
     List<DetailedRoleAssignmentDto> roles = userReferenceDataService
             .getUserRightsAndRoles(user.getId());
@@ -138,17 +185,21 @@ public class UsersReportViewService implements ConcreteReportView {
     roles.forEach(assignment -> {
       String programId = assignment.getProgramId() == null
               ? "" : assignment.getProgramId().toString();
-      if (assignment.getRole().getName().contains(acceptedRole)
-          && programId.contains(acceptedProgramId)) {
-        if (result.containsKey(programId)) {
-          result.get(programId).add(assignment.getRole().getName());
+      String nodeId = assignment.getSupervisoryNodeId() == null
+              ? "" : assignment.getSupervisoryNodeId().toString();
+      String key = programId + ROLE_SEPARATOR + nodeId;
+      if (containsIgnoreCase(assignment.getRole().getName(), allowedRole)
+              && contains(programId, allowedProgramId)
+              && contains(nodeId, allowedNodeId)) {
+        if (result.containsKey(key)) {
+          result.get(key).getRoles().add(assignment.getRole().getName());
         } else {
-          result.put(programId, new ArrayList<>());
-          result.get(programId).add(assignment.getRole().getName());
+          result.put(key, new RightAssignmentDto(
+                  new ArrayList<>(), assignment.getSupervisoryNodeId()));
+          result.get(key).getRoles().add(assignment.getRole().getName());
         }
       }
     });
-
     return result;
   }
 
@@ -156,10 +207,11 @@ public class UsersReportViewService implements ConcreteReportView {
     return userContactDetailsReferenceDataService.findOne(user.getId());
   }
 
-  private String getFacilityName(UserDto user) {
-    FacilityDto facility = user.getHomeFacilityId() == null
-            ? null : facilityReferenceDataService.findOne(user.getHomeFacilityId());
-    return facility == null ? NO_DATA : facility.getName();
+  private String getSupervisoryNodeName(UUID supervisoryNodeId) {
+    SupervisoryNodeDto supervisoryNode = supervisoryNodeId == null
+            ? null : supervisoryNodeReferenceDataService.findOne(
+                    supervisoryNodeId);
+    return supervisoryNode == null ? NO_DATA : supervisoryNode.getName();
   }
 
   private String buildRightAccessInfo(String program, List<String> roles) {

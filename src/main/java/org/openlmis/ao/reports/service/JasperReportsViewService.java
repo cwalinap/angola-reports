@@ -87,6 +87,7 @@ import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_JASPER_FILE_FORMAT;
 import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_CLASS_NOT_FOUND;
 import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_IO;
 import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.USERS_REPORT;
 
 @Service
 public class JasperReportsViewService {
@@ -419,6 +420,8 @@ public class JasperReportsViewService {
           (period != null) ? period.getName() : "",
           order.getFacility().getName()
       );
+    } else if (USERS_REPORT.equals(templateType)) {
+      values = usersReportViewService.getFilenameValues(params);
     }
     // add all the parts to the filename and separate them by "_"
     for (Object value : values) {

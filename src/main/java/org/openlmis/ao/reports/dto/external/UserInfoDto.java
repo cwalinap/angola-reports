@@ -2,6 +2,8 @@ package org.openlmis.ao.reports.dto.external;
 
 import lombok.Data;
 
+import java.util.Comparator;
+
 @Data
 public class UserInfoDto {
 
@@ -35,6 +37,21 @@ public class UserInfoDto {
     this.isEmailVerified = isEmailVerified(contactDetails);
     this.phone = getPhoneNumber(contactDetails);
     this.rightAccess = rightAccess;
+  }
+
+  /**
+   * Compares objects by supervisory nodes and programs.
+   *
+   * @param other - the object to be compared with
+   * @return result of the comparision
+   */
+  public int compareTo(UserInfoDto other) {
+    Comparator<String> nullSafeStringComparator = Comparator
+            .nullsFirst(String::compareToIgnoreCase);
+    Comparator<UserInfoDto> comparator = Comparator
+            .comparing(UserInfoDto::getSupervisoryNode, nullSafeStringComparator)
+            .thenComparing(UserInfoDto::getProgram, nullSafeStringComparator);
+    return comparator.compare(this, other);
   }
 
   private String getEmail(UserContactDetailsDto contactDetails) {
