@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facility_consumption" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
+    <property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="388"/>
+    <property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="603"/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
+    <property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+    <property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+    <property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="false"/>
+    <property name="net.sf.jasperreports.export.csv.one.page.per.sheet" value="false"/>
+    <property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+    <property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+    <property name="net.sf.jasperreports.export.csv.remove.empty.space.between.rows" value="true"/>
+    <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
+    <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.group.1" value="Product Group"/>
+    <property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+    <property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="title"/>
+    <property name="net.sf.jasperreports.export.xls.exclude.origin.band.4" value="summary"/>
+    <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.3" value="columnHeader"/>
+    <property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="groupHeader"/>
+    <property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.group.1" value="Product Group"/>
+    <property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
+    <property name="net.sf.jasperreports.export.csv.exclude.origin.band.3" value="title"/>
+    <property name="net.sf.jasperreports.export.csv.exclude.origin.band.4" value="summary"/>
+    <property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.3" value="columnHeader"/>
+    <property name="ireport.zoom" value="2.1435888100000016"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="facilityName" class="java.lang.String"/>
+    <parameter name="programId" class="java.lang.String"/>
+    <parameter name="productId" class="java.lang.String"/>
+    <parameter name="geographicZoneId" class="java.lang.String"/>
+    <parameter name="firstPeriodEnd" class="java.lang.String"/>
+    <parameter name="lastPeriodEnd" class="java.lang.String"/>
+    <queryString language="plsql">
+        <![CDATA[select
+	line_items.totalconsumedquantity as productConsumption,
+	periods.name as periodName,
+	facilities.name as facilityName,
+	orderables.code as productCode,
+	orderables.fullproductname as productName
+from
+	requisition.requisition_line_items as line_items
+inner join requisition.requisitions as requisitions on
+	requisitions.id = requisitionid
+inner join referencedata.facilities as facilities on
+	facilities.id = requisitions.facilityid
+inner join referencedata.processing_periods as periods on
+	periods.id = requisitions.processingperiodid
+inner join referencedata.orderables as orderables on
+	orderables.id = line_items.orderableid
+where
+	($P{facilityName} is null
+	or facilities.name = $P{facilityName})
+	and ($P{programId} is null
+	or requisitions.programid = $P{programId}::uuid)
+	and ($P{productId} is null
+	or orderables.id = $P{productId}::uuid)
+	and ($P{geographicZoneId} is null
+	or facilities.geographiczoneid = $P{geographicZoneId}::uuid)
+	and ($P{firstPeriodEnd} is null
+	or periods.endDate >= to_date($P{firstPeriodEnd},'YYYY-MM-DD'))
+	and ($P{lastPeriodEnd} is null
+	or periods.endDate <= to_date($P{lastPeriodEnd},'YYYY-MM-DD'))
+	and requisitions.emergency = false
+order by facilityName, periodName, productName]]>
+    </queryString>
+    <field name="periodName" class="java.lang.String"/>
+    <field name="facilityName" class="java.lang.String"/>
+    <field name="productCode" class="java.lang.String"/>
+    <field name="productName" class="java.lang.String"/>
+    <field name="productConsumption" class="java.lang.String"/>
+    <variable name="PercentAndNumberFormat" class="java.lang.String">
+        <variableExpression><![CDATA["%1$.0f%%"]]></variableExpression>
+        <initialValueExpression><![CDATA["%.0f%%"]]></initialValueExpression>
+    </variable>
+    <group name="pdfAndHtmlHeader">
+        <groupHeader>
+            <band height="80" splitType="Stretch">
+                <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+                <printWhenExpression><![CDATA[$V{REPORT_COUNT} == 0 && Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+                <image>
+                    <reportElement x="0" y="0" width="50" height="50" uuid="b1e99fe4-7b6a-4431-a3e8-4c9aa0ded509"/>
+                    <imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
+                </image>
+                <staticText>
+                    <reportElement x="210" y="0" width="345" height="50" uuid="ec1d4489-af0a-4546-823e-8945850d94b0"/>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="24" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Consumos por Instituição]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="60" y="0" width="150" height="60" uuid="34ca8888-cd88-4e37-b021-dfd275eda901"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[REPÚBLICA DE ANGOLA
+MINISTÉRIO DA SAÚDE
+DIRECÇÃO NACIONAL DE MEDICAMENTOS E EQUIPAMENTOS
+PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+    </group>
+    <group name="csvAndXlsHeader">
+        <groupHeader>
+            <band height="64">
+                <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                <printWhenExpression><![CDATA[$V{REPORT_COUNT} == 0 && Arrays.asList("csv", "xls").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+                <staticText>
+                    <reportElement x="0" y="0" width="200" height="15" uuid="2ebe95a1-27cc-45b6-86c0-4fe603b2a68c"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                    <text><![CDATA[Unidade de Saúde]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="200" y="0" width="100" height="15" uuid="e6b5e990-9d52-4bc4-addd-e0d12a9e0545">
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                    <text><![CDATA[Nome do Período]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="300" y="0" width="80" height="15" uuid="e50f5e30-bc3e-48c6-a0cd-5fc2c4549f7a"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                    <text><![CDATA[Código]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="380" y="0" width="270" height="15" uuid="41672a04-8b3f-4edb-9755-9ab38e5f5084"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                    <text><![CDATA[Nome]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="650" y="0" width="80" height="15" uuid="5d8a3b43-4b11-4b19-bf7d-9c6491fb978f"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                    <text><![CDATA[Consumos]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+    </group>
+    <group name="pdfAndHtmlDetailsHeader" isReprintHeaderOnEachPage="true">
+        <groupExpression><![CDATA[$F{facilityName} + $F{periodName}]]></groupExpression>
+        <groupHeader>
+            <band height="30">
+                <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+                <printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+                <frame>
+                    <reportElement x="0" y="0" width="555" height="30" uuid="752cc625-8c16-4ea1-95cc-255c4d9ae9d5"/>
+                    <staticText>
+                        <reportElement mode="Opaque" x="0" y="40" width="80" height="20" backcolor="#3D9297" uuid="77a39773-bbf9-40c4-93ea-34efe2cf5d15">
+                            <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                            <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+                        </reportElement>
+                        <textElement textAlignment="Left" verticalAlignment="Middle">
+                            <font size="9"/>
+                            <paragraph firstLineIndent="2" leftIndent="2"/>
+                        </textElement>
+                        <text><![CDATA[Código]]></text>
+                    </staticText>
+                    <staticText>
+                        <reportElement mode="Opaque" x="80" y="40" width="400" height="20" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
+                        <textElement textAlignment="Left" verticalAlignment="Middle">
+                            <font size="9"/>
+                            <paragraph leftIndent="2"/>
+                        </textElement>
+                        <text><![CDATA[Nome]]></text>
+                    </staticText>
+                    <staticText>
+                        <reportElement mode="Opaque" x="480" y="40" width="75" height="20" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
+                        <box>
+                            <rightPen lineWidth="1.0" lineColor="#3D9297"/>
+                        </box>
+                        <textElement textAlignment="Left" verticalAlignment="Middle">
+                            <font size="9"/>
+                            <paragraph leftIndent="2"/>
+                        </textElement>
+                        <text><![CDATA[Consumos]]></text>
+                    </staticText>
+                    <textField>
+                        <reportElement mode="Opaque" x="0" y="20" width="280" height="20" backcolor="#3D9297" uuid="0be718d4-6c32-43b7-852b-65a884081687">
+                            <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                            <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+                            <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                        </reportElement>
+                        <textElement textAlignment="Left" verticalAlignment="Middle">
+                            <font size="9"/>
+                            <paragraph firstLineIndent="2" leftIndent="2"/>
+                        </textElement>
+                        <textFieldExpression><![CDATA["Unidade de Saúde: " + ($F{facilityName} == null ? "-" : $F{facilityName})]]></textFieldExpression>
+                    </textField>
+                    <textField>
+                        <reportElement mode="Opaque" x="280" y="20" width="275" height="20" backcolor="#3D9297" uuid="bba7dc86-41f1-43d0-9d50-4918f9b87146">
+                            <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                            <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+                            <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                        </reportElement>
+                        <box>
+                            <rightPen lineWidth="1.0" lineColor="#3D9297"/>
+                        </box>
+                        <textElement textAlignment="Left" verticalAlignment="Middle">
+                            <font size="9"/>
+                            <paragraph firstLineIndent="2" leftIndent="2"/>
+                        </textElement>
+                        <textFieldExpression><![CDATA["Nome do Período: " + ($F{periodName} == null ? "-" : $F{periodName})]]></textFieldExpression>
+                    </textField>
+                </frame>
+            </band>
+        </groupHeader>
+    </group>
+    <detail>
+        <band height="20">
+            <printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="80" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                    <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+                </reportElement>
+                <box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
+                    <pen lineWidth="0.0"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D1D1D1"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                    <paragraph firstLineIndent="2" leftIndent="0" spacingBefore="0" spacingAfter="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="80" y="0" width="400" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                    <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                </reportElement>
+                <box topPadding="4" leftPadding="0" bottomPadding="4" rightPadding="2">
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D1D1D1"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                    <paragraph leftIndent="0" spacingBefore="0" spacingAfter="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="0" width="75" height="20" backcolor="#EBEBEB" uuid="8cc6afbe-f92c-41d3-b6de-2569c774463b">
+                    <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                </reportElement>
+                <box topPadding="4" leftPadding="0" bottomPadding="4" rightPadding="2">
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D1D1D1"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                    <paragraph leftIndent="0" spacingBefore="0" spacingAfter="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{productConsumption} == null ? "-" : $F{productConsumption}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="20">
+            <printWhenExpression><![CDATA[Arrays.asList("csv", "xls").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="200" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                    <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+                </reportElement>
+                <box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
+                    <pen lineWidth="0.0"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D1D1D1"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                    <paragraph firstLineIndent="2" leftIndent="0" spacingBefore="0" spacingAfter="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="200" y="0" width="100" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                    <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+                </reportElement>
+                <box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
+                    <pen lineWidth="0.0"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D1D1D1"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                    <paragraph firstLineIndent="2" leftIndent="0" spacingBefore="0" spacingAfter="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{periodName}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="300" y="0" width="80" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                    <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+                </reportElement>
+                <box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
+                    <pen lineWidth="0.0"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D1D1D1"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                    <paragraph firstLineIndent="2" leftIndent="0" spacingBefore="0" spacingAfter="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="380" y="0" width="270" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                    <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                </reportElement>
+                <box topPadding="4" leftPadding="0" bottomPadding="4" rightPadding="2">
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D1D1D1"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                    <paragraph leftIndent="0" spacingBefore="0" spacingAfter="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="650" y="0" width="80" height="20" backcolor="#EBEBEB" uuid="8cc6afbe-f92c-41d3-b6de-2569c774463b">
+                    <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                </reportElement>
+                <box topPadding="4" leftPadding="0" bottomPadding="4" rightPadding="2">
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D1D1D1"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                    <paragraph leftIndent="0" spacingBefore="0" spacingAfter="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{productConsumption} == null ? "-" : $F{productConsumption}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="50">
+            <textField evaluationTime="Report">
+                <reportElement x="510" y="30" width="45" height="20" uuid="ebc06d42-8529-4c39-9d2f-1c1488e6a088"/>
+                <textElement textAlignment="Left"/>
+                <textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="430" y="30" width="80" height="20" uuid="dcff0142-2f6d-4901-986d-7d07ffc9f98d"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>
