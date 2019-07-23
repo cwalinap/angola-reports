@@ -66,7 +66,7 @@ where
 	and ($P{lastPeriodEnd} is null
 	or periods.endDate <= to_date($P{lastPeriodEnd},'YYYY-MM-DD'))
 	and requisitions.emergency = false
-order by facilityName, periodName, productName]]>
+order by periodName, facilityName, productName]]>
     </queryString>
     <field name="periodName" class="java.lang.String"/>
     <field name="facilityName" class="java.lang.String"/>
@@ -87,14 +87,14 @@ order by facilityName, periodName, productName]]>
                     <imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
                 </image>
                 <staticText>
-                    <reportElement x="210" y="0" width="345" height="50" uuid="ec1d4489-af0a-4546-823e-8945850d94b0"/>
+                    <reportElement x="0" y="40" width="555" height="30" uuid="ec1d4489-af0a-4546-823e-8945850d94b0"/>
                     <textElement textAlignment="Center" verticalAlignment="Top">
                         <font size="24" isBold="true"/>
                     </textElement>
                     <text><![CDATA[Consumos por Instituição]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="60" y="0" width="150" height="60" uuid="34ca8888-cd88-4e37-b021-dfd275eda901"/>
+                    <reportElement x="60" y="0" width="320" height="40" uuid="34ca8888-cd88-4e37-b021-dfd275eda901"/>
                     <textElement textAlignment="Left" verticalAlignment="Middle">
                         <font size="8"/>
                     </textElement>
@@ -124,17 +124,17 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                     <text><![CDATA[Nome do Período]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="300" y="0" width="80" height="15" uuid="e50f5e30-bc3e-48c6-a0cd-5fc2c4549f7a"/>
+                    <reportElement x="300" y="0" width="100" height="15" uuid="e50f5e30-bc3e-48c6-a0cd-5fc2c4549f7a"/>
                     <textElement textAlignment="Center" verticalAlignment="Middle"/>
-                    <text><![CDATA[Código]]></text>
+                    <text><![CDATA[Código do Producto]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="380" y="0" width="270" height="15" uuid="41672a04-8b3f-4edb-9755-9ab38e5f5084"/>
+                    <reportElement x="400" y="0" width="270" height="15" uuid="41672a04-8b3f-4edb-9755-9ab38e5f5084"/>
                     <textElement textAlignment="Center" verticalAlignment="Middle"/>
-                    <text><![CDATA[Nome]]></text>
+                    <text><![CDATA[Nome do Producto]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="650" y="0" width="80" height="15" uuid="5d8a3b43-4b11-4b19-bf7d-9c6491fb978f"/>
+                    <reportElement x="670" y="0" width="80" height="15" uuid="5d8a3b43-4b11-4b19-bf7d-9c6491fb978f"/>
                     <textElement textAlignment="Center" verticalAlignment="Middle"/>
                     <text><![CDATA[Consumos]]></text>
                 </staticText>
@@ -150,7 +150,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                 <frame>
                     <reportElement x="0" y="0" width="555" height="30" uuid="752cc625-8c16-4ea1-95cc-255c4d9ae9d5"/>
                     <staticText>
-                        <reportElement mode="Opaque" x="0" y="40" width="80" height="20" backcolor="#3D9297" uuid="77a39773-bbf9-40c4-93ea-34efe2cf5d15">
+                        <reportElement mode="Opaque" x="0" y="40" width="100" height="20" backcolor="#3D9297" uuid="77a39773-bbf9-40c4-93ea-34efe2cf5d15">
                             <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
                             <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
                         </reportElement>
@@ -158,15 +158,15 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                             <font size="9"/>
                             <paragraph firstLineIndent="2" leftIndent="2"/>
                         </textElement>
-                        <text><![CDATA[Código]]></text>
+                        <text><![CDATA[Código do Producto]]></text>
                     </staticText>
                     <staticText>
-                        <reportElement mode="Opaque" x="80" y="40" width="400" height="20" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
+                        <reportElement mode="Opaque" x="100" y="40" width="380" height="20" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
                         <textElement textAlignment="Left" verticalAlignment="Middle">
                             <font size="9"/>
                             <paragraph leftIndent="2"/>
                         </textElement>
-                        <text><![CDATA[Nome]]></text>
+                        <text><![CDATA[Nome do Producto]]></text>
                     </staticText>
                     <staticText>
                         <reportElement mode="Opaque" x="480" y="40" width="75" height="20" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
@@ -214,7 +214,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
         <band height="20">
             <printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.get("format"))]]></printWhenExpression>
             <textField isStretchWithOverflow="true">
-                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="80" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="100" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
                     <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
                     <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
                     <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
@@ -234,7 +234,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                 <textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true">
-                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="80" y="0" width="400" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="100" y="0" width="380" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
                     <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
                     <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
                     <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -313,7 +313,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                 <textFieldExpression><![CDATA[$F{periodName}]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true">
-                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="300" y="0" width="80" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="300" y="0" width="100" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
                     <property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
                     <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
                     <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
@@ -333,7 +333,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                 <textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true">
-                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="380" y="0" width="270" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="400" y="0" width="270" height="20" backcolor="#EBEBEB" uuid="05b80422-e817-4738-ade5-8224822385fb">
                     <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
                     <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
                     <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -351,7 +351,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                 <textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true">
-                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="650" y="0" width="80" height="20" backcolor="#EBEBEB" uuid="8cc6afbe-f92c-41d3-b6de-2569c774463b">
+                <reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="670" y="0" width="80" height="20" backcolor="#EBEBEB" uuid="8cc6afbe-f92c-41d3-b6de-2569c774463b">
                     <property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
                     <property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
                     <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
