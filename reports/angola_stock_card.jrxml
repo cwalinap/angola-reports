@@ -265,7 +265,7 @@
 				<textFieldExpression><![CDATA[$F{orderable}.getFullProductName()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement x="70" y="40" width="88" height="10" uuid="40f09f1a-ba6b-4bcc-ad3a-0bffbbb8d984">
+				<reportElement x="80" y="40" width="90" height="10" uuid="40f09f1a-ba6b-4bcc-ad3a-0bffbbb8d984">
 					<printWhenExpression><![CDATA[$P{hasLot}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -274,17 +274,17 @@
 				<textFieldExpression><![CDATA[$F{lot}.getLotCode()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="40" width="55" height="10" uuid="4024885e-f119-4a2f-b74c-98624c2ebb3d">
+				<reportElement x="10" y="40" width="70" height="10" uuid="4024885e-f119-4a2f-b74c-98624c2ebb3d">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<printWhenExpression><![CDATA[$P{hasLot}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Lot number:]]></text>
+				<text><![CDATA[Número de Lote:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="170" y="40" width="70" height="10" uuid="c8c868e7-79a6-4fd7-af28-8bb754be0c2d">
+				<reportElement x="170" y="40" width="80" height="10" uuid="c8c868e7-79a6-4fd7-af28-8bb754be0c2d">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -293,10 +293,10 @@
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Expiry date:]]></text>
+				<text><![CDATA[Data de Validade:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="240" y="40" width="90" height="10" uuid="ac3309ea-58c8-4931-a9c2-8af93b151edb">
+				<reportElement x="250" y="40" width="80" height="10" uuid="ac3309ea-58c8-4931-a9c2-8af93b151edb">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<printWhenExpression><![CDATA[$P{hasLot}]]></printWhenExpression>
