@@ -149,9 +149,9 @@ public class RequisitionDto {
     //this means that configuration of OLMIS needs to be checked and updated
     return Comparator.comparingInt((RequisitionLineItemDto requisitionLineItemDto) ->
                 requisitionLineItemDto.getOrderable().getPrograms().stream().findFirst().get()
-                  .getOrderableCategoryDisplayOrder()).thenComparing(
-                      requisitionLineItemDto -> 
-                          requisitionLineItemDto.getOrderable().getFullProductName());
+                  .getOrderableCategoryDisplayOrder()).thenComparing((reqLineItemDto, 
+                    reqLineItemDto2) -> reqLineItemDto.getOrderable().getFullProductName()
+                      .compareToIgnoreCase(reqLineItemDto2.getOrderable().getFullProductName()));
   }
   
 }
