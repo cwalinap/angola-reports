@@ -146,9 +146,14 @@ public class RequisitionDto {
   private Comparator<RequisitionLineItemDto> compareByOrderableCategoryDisplayOrder() {
     //We are aware of potentially NPE here but if the exception will be thrown
     //this means that configuration of OLMIS needs to be checked and updated
-    return Comparator.comparingInt(
-        reqLineItemDto -> reqLineItemDto.getOrderable().getPrograms().stream().findFirst().get()
+    Comparator<RequisitionLineItemDto> comparator = Comparator.comparing(requisitionLineItemDto ->
+        requisitionLineItemDto.getOrderable().getPrograms().stream().findFirst().get()
             .getOrderableCategoryDisplayOrder());
+
+    comparator.thenComparing(
+        requisitionLineItemDto -> requisitionLineItemDto.getOrderable().getFullProductName());
+    
+    return comparator;
   }
   
 }
