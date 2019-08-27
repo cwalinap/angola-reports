@@ -87,6 +87,7 @@ public class RequisitionDto {
             .filter(line -> !line.getSkipped())
             .filter(line -> !line.isNonFullSupply(program))
             .sorted(compareByOrderableCategoryDisplayOrder())
+            
             .collect(Collectors.toList());
   }
 
@@ -146,14 +147,10 @@ public class RequisitionDto {
   private Comparator<RequisitionLineItemDto> compareByOrderableCategoryDisplayOrder() {
     //We are aware of potentially NPE here but if the exception will be thrown
     //this means that configuration of OLMIS needs to be checked and updated
-    Comparator<RequisitionLineItemDto> comparator = Comparator.comparing(requisitionLineItemDto ->
+    return Comparator.comparingInt((RequisitionLineItemDto requisitionLineItemDto) ->
         requisitionLineItemDto.getOrderable().getPrograms().stream().findFirst().get()
-            .getOrderableCategoryDisplayOrder());
-
-    comparator.thenComparing(
+            .getOrderableCategoryDisplayOrder()).thenComparing(
         requisitionLineItemDto -> requisitionLineItemDto.getOrderable().getFullProductName());
-    
-    return comparator;
   }
   
 }
