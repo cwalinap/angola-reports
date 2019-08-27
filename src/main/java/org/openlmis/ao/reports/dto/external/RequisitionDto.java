@@ -2,6 +2,7 @@ package org.openlmis.ao.reports.dto.external;
 
 import static org.openlmis.ao.utils.CurrencyConfig.currencyCode;
 
+import java.util.Comparator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -85,6 +86,7 @@ public class RequisitionDto {
     return this.requisitionLineItems.stream()
             .filter(line -> !line.getSkipped())
             .filter(line -> !line.isNonFullSupply(program))
+            .sorted(compareByOrderableCategoryDisplayName())
             .collect(Collectors.toList());
   }
 
@@ -97,6 +99,7 @@ public class RequisitionDto {
     return this.requisitionLineItems.stream()
             .filter(line -> !line.getSkipped())
             .filter(line -> line.isNonFullSupply(program))
+            .sorted(compareByOrderableCategoryDisplayName())
             .collect(Collectors.toList());
   }
 
@@ -139,4 +142,15 @@ public class RequisitionDto {
 
     return money.orElse(defaultValue);
   }
+
+  private Comparator<RequisitionLineItemDto> compareByOrderableCategoryDisplayName() {
+    //We are aware of potentially NPE here but if the exception will be thrown
+    //this means that configuration of OLMIS needs to be checked and updated
+    return (reqLineItemDto, reqLineItemDto2) ->
+        reqLineItemDto.getOrderable().getPrograms().stream().findFirst().get()
+            .getOrderableCategoryDisplayName().compareToIgnoreCase(
+            reqLineItemDto2.getOrderable().getPrograms().stream().findFirst().get()
+                .getOrderableCategoryDisplayName());
+  }
+  
 }
