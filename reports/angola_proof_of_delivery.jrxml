@@ -532,7 +532,7 @@ ORDER BY
 				<textElement>
 					<font size="14" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Comprovativo de Entrega " + $F{programname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Guia de Remessa " + $F{programname}]]></textFieldExpression>
 			</textField>
 			<frame>
 				<reportElement x="0" y="30" width="800" height="65" uuid="7eb68997-e2c7-4b99-a497-6e69aa52ee81">
