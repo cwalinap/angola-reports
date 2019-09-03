@@ -92,8 +92,7 @@
                     </textElement>
                     <text><![CDATA[República de Angola
 MINISTÉRIO DA SAÚDE
-GABINETE DE TECNOLOGIA DE INFORMAÇÃO
-GABINETE DE ESTUDOS PLANEAMENTO E ESTATÍSTICA]]></text>
+GABINETE DE TECNOLOGIA DE INFORMAÇÃO]]></text>
                 </staticText>
                 <image>
                     <reportElement x="252" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
@@ -121,8 +120,7 @@ GABINETE DE ESTUDOS PLANEAMENTO E ESTATÍSTICA]]></text>
                     </textElement>
                     <text><![CDATA[República de Angola
 MINISTÉRIO DA SAÚDE
-GABINETE DE TECNOLOGIA DE INFORMAÇÃO
-GABINETE DE ESTUDOS PLANEAMENTO E ESTATÍSTICA]]></text>
+GABINETE DE TECNOLOGIA DE INFORMAÇÃO]]></text>
                 </staticText>
                 <image>
                     <reportElement x="252" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
