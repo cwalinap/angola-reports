@@ -76,6 +76,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.io.File.createTempFile;
 import static java.util.Collections.singletonList;
@@ -373,16 +374,17 @@ public class JasperReportsViewService {
 
     WrappedStockCardV2Dto wrappedStockCardDto = stockCardV2StockSummariesService
             .findOne("", requestParameters);
-    List<FullStockCardSummaryV2Dto> fullSummaries = extractFullSummaries(
-            wrappedStockCardDto.getContent());
+    List<FullStockCardSummaryV2Dto> fullNonEmptySummaries = extractFullSummaries(
+            wrappedStockCardDto.getContent()).stream().filter(sc -> sc.getStockOnHand() != null)
+            .collect(Collectors.toList());
     FacilityDto facilityDto = getReferencedFacility(parameters);
 
     parameters.put("program", getProgramName(parameters));
     parameters.put(FACILITY, facilityDto);
     parameters.put("province", extractProvinceName(facilityDto.getGeographicZone()));
     parameters.put("region", extractRegionName(facilityDto.getGeographicZone()));
-    parameters.put(DATASOURCE, new JRBeanCollectionDataSource(fullSummaries));
-    parameters.put("stockCardSummaries", fullSummaries);
+    parameters.put(DATASOURCE, new JRBeanCollectionDataSource(fullNonEmptySummaries));
+    parameters.put("stockCardSummaries", fullNonEmptySummaries);
     parameters.put(DATE_FORMAT, dateFormat);
     parameters.put(DECIMAL_FORMAT, createDecimalFormat());
     if (parameters.get("format").toString().equals("html")) {
