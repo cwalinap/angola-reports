@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.contains;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.openlmis.ao.utils.ReportUtils.getStringParameter;
 
 @Service
@@ -190,7 +191,8 @@ public class UsersReportViewService implements ConcreteReportView {
       String key = programId + ROLE_SEPARATOR + nodeId;
       if (containsIgnoreCase(assignment.getRole().getName(), allowedRole)
               && contains(programId, allowedProgramId)
-              && contains(nodeId, allowedNodeId)) {
+              && contains(nodeId, allowedNodeId) 
+          && (isNotBlank(nodeId) && isNotBlank(allowedNodeId))) {
         if (result.containsKey(key)) {
           result.get(key).getRoles().add(assignment.getRole().getName());
         } else {
