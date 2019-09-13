@@ -31,7 +31,6 @@ public class PermissionService {
   public static final UUID USER_REPORT_TEMPLATE_ID =
           UUID.fromString("e1a2f89c-fa5e-40a6-bd1a-b43fdd570eb1");
   public static final String REQUISITION_VIEW = "REQUISITION_VIEW";
-  public static final String STOCK_CARDS_VIEW = "STOCK_CARDS_VIEW";
 
   @Autowired
   private AuthenticationHelper authenticationHelper;
@@ -79,16 +78,6 @@ public class PermissionService {
   public void canViewRequisition(RequisitionDto requisition) {
     checkPermission(REQUISITION_VIEW, requisition.getProgram().getId(),
             requisition.getFacility().getId(), null);
-  }
-
-  /**
-   * Checks if current user has permission to view stock card.
-   *
-   * @param programId  program id.
-   * @param facilityId facility id.
-   */
-  public void canViewStockCard(UUID programId, UUID facilityId) {
-    hasPermission(STOCK_CARDS_VIEW, programId, facilityId, null);
   }
 
   public void canViewOrders() {
