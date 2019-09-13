@@ -1,25 +1,23 @@
 package org.openlmis.ao.reports.service;
 
-import static org.openlmis.ao.reports.i18n.PermissionMessageKeys.ERROR_NO_PERMISSION;
-
 import org.openlmis.ao.reports.dto.external.DetailedRoleAssignmentDto;
 import org.openlmis.ao.reports.dto.external.RequisitionDto;
+import org.openlmis.ao.reports.dto.external.ResultDto;
+import org.openlmis.ao.reports.dto.external.RightDto;
+import org.openlmis.ao.reports.dto.external.UserDto;
 import org.openlmis.ao.reports.exception.PermissionMessageException;
 import org.openlmis.ao.reports.service.referencedata.UserReferenceDataService;
+import org.openlmis.ao.utils.AuthenticationHelper;
+import org.openlmis.ao.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
-import org.openlmis.ao.reports.dto.external.ResultDto;
-import org.openlmis.ao.reports.dto.external.RightDto;
-import org.openlmis.ao.reports.dto.external.UserDto;
-import org.openlmis.ao.utils.AuthenticationHelper;
-import org.openlmis.ao.utils.Message;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import static org.openlmis.ao.reports.i18n.PermissionMessageKeys.ERROR_NO_PERMISSION;
 
 @Service
 @SuppressWarnings("PMD.TooManyMethods")
@@ -27,8 +25,11 @@ public class PermissionService {
   public static final String REPORT_TEMPLATES_EDIT = "REPORT_TEMPLATES_EDIT";
   public static final String REPORTS_VIEW = "REPORTS_VIEW";
   public static final String ORDERS_VIEW = "ORDERS_VIEW";
+  public static final String USERS_MANAGE = "USERS_MANAGE";
   public static final UUID ORDER_ID =
           UUID.fromString("9b8726b9-0de6-46eb-b5d0-d035d400a61e");
+  public static final UUID USER_REPORT_TEMPLATE_ID =
+          UUID.fromString("e1a2f89c-fa5e-40a6-bd1a-b43fdd570eb1");
   public static final String REQUISITION_VIEW = "REQUISITION_VIEW";
   public static final String STOCK_CARDS_VIEW = "STOCK_CARDS_VIEW";
 
@@ -44,14 +45,31 @@ public class PermissionService {
 
   /**
    * Check whether the user has REPORTS_VIEW permission.
-   * @param templateId (optional) id of the report; if it equals to Aggregate Orders,
-   *                   the user can have either the ORDERS_VIEW or REPORTS_VIEW permission
+   * @param templateId (optional) id of the report; verify only REPORTS_VIEW permission if null.
+   * @return true if can be viewed, false otherwise.
    */
-  public void canViewReports(UUID templateId) {
-    if (templateId != null && templateId.equals(ORDER_ID)) {
-      canViewReportsOrOrders();
-    } else {
-      checkPermission(REPORTS_VIEW);
+  public boolean canViewReports(UUID templateId) {
+    try {
+      validatePermissionsToViewReports(templateId);
+      return true;
+    } catch (PermissionMessageException ex) {
+      return false;
+    }
+  }
+
+  /**
+   * Check whether the user has REPORTS_VIEW permission, throws an exception otherwise.
+   * @param templateId (optional) id of the report; verify only REPORTS_VIEW permission if null.
+   */
+  public void validatePermissionsToViewReports(UUID templateId) {
+    checkPermission(REPORTS_VIEW);
+    if (templateId == null) {
+      return;
+    }
+    if (templateId.equals(ORDER_ID)) {
+      canViewOrders();
+    } else if (templateId.equals(USER_REPORT_TEMPLATE_ID)) {
+      canMaganeUsers();
     }
   }
 
@@ -73,8 +91,12 @@ public class PermissionService {
     hasPermission(STOCK_CARDS_VIEW, programId, facilityId, null);
   }
 
-  public void canViewReportsOrOrders() {
-    checkAnyPermission(Arrays.asList(REPORTS_VIEW, ORDERS_VIEW));
+  public void canViewOrders() {
+    checkPermission(ORDERS_VIEW);
+  }
+
+  public void canMaganeUsers() {
+    checkPermission(USERS_MANAGE);
   }
 
   private void checkPermission(String rightName) {

@@ -1,5 +1,23 @@
 package org.openlmis.ao.reports.web;
 
+import guru.nidi.ramltester.junit.RamlMatchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.openlmis.ao.reports.domain.JasperTemplate;
+import org.openlmis.ao.reports.dto.JasperTemplateDto;
+import org.openlmis.ao.reports.exception.JasperReportViewException;
+import org.openlmis.ao.reports.repository.JasperTemplateRepository;
+import org.openlmis.ao.reports.service.JasperReportsViewService;
+import org.openlmis.ao.reports.service.PermissionService;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -9,25 +27,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
-
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
-import guru.nidi.ramltester.junit.RamlMatchers;
-import org.openlmis.ao.reports.domain.JasperTemplate;
-import org.openlmis.ao.reports.dto.JasperTemplateDto;
-import org.openlmis.ao.reports.exception.JasperReportViewException;
-import org.openlmis.ao.reports.repository.JasperTemplateRepository;
-import org.openlmis.ao.reports.service.JasperReportsViewService;
 
 @SuppressWarnings("PMD.TooManyMethods")
 public class JasperTemplateControllerIntegrationTest extends BaseWebIntegrationTest {
@@ -42,6 +41,9 @@ public class JasperTemplateControllerIntegrationTest extends BaseWebIntegrationT
   @MockBean
   private JasperReportsViewService jasperReportsViewService;
 
+  @MockBean
+  private PermissionService permissionService;
+
   @Before
   public void setUp() {
     mockUserAuthenticated();
@@ -55,6 +57,7 @@ public class JasperTemplateControllerIntegrationTest extends BaseWebIntegrationT
     JasperTemplate[] templates = { generateTemplate(), generateTemplate(),
             generateTemplate(false) };
     given(jasperTemplateRepository.findAll()).willReturn(Arrays.asList(templates));
+    given(permissionService.canViewReports(any())).willReturn(true);
 
     // when
     JasperTemplateDto[] result = restAssured.given()

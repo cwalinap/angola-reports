@@ -110,11 +110,12 @@ public class JasperTemplateController extends BaseController {
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public List<JasperTemplateDto> getAllTemplates() {
-    permissionService.canViewReports(null);
+    permissionService.validatePermissionsToViewReports(null);
     return JasperTemplateDto.newInstance(jasperTemplateRepository.findAll())
         .stream()
         // filter out templates that shouldn't be displayed
         .filter(JasperTemplateDto::getIsDisplayed)
+        .filter(report -> permissionService.canViewReports(report.getId()))
         .collect(Collectors.toList());
   }
 
@@ -128,7 +129,7 @@ public class JasperTemplateController extends BaseController {
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public JasperTemplateDto getTemplate(@PathVariable("id") UUID templateId) {
-    permissionService.canViewReports(templateId);
+    permissionService.validatePermissionsToViewReports(templateId);
     JasperTemplate jasperTemplate =
         jasperTemplateRepository.findOne(templateId);
     if (jasperTemplate == null) {
@@ -172,7 +173,7 @@ public class JasperTemplateController extends BaseController {
                                      @PathVariable("format") String format)
       throws JasperReportViewException {
 
-    permissionService.canViewReports(templateId);
+    permissionService.validatePermissionsToViewReports(templateId);
 
     JasperTemplate template = jasperTemplateRepository.findOne(templateId);
 
