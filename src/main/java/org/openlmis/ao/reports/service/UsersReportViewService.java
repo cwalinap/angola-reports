@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.contains;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.openlmis.ao.utils.ReportUtils.getStringParameter;
 
