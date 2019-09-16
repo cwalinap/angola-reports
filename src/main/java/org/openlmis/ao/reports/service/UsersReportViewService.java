@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.contains;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.openlmis.ao.utils.ReportUtils.getStringParameter;
 
@@ -71,8 +72,8 @@ public class UsersReportViewService implements ConcreteReportView {
       if (isEmailAllowed(allowedEmail, contactDetails)) {
         if (CollectionUtils.isNotEmpty(rightAssignments.entrySet())) {
           data.addAll(generateUserInfo(user, programsMap, rightAssignments,
-                  contactDetails));
-        } else if (allowedRole.isEmpty()) {
+                  contactDetails)); 
+        } else if (allowedRole.isEmpty() && allowedNodeId.isEmpty()) {
           data.add(new UserInfoDto(user, NO_DATA, NO_DATA, contactDetails, NO_DATA));
         }
       }
