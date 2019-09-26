@@ -259,7 +259,7 @@ GABINETE DE TECNOLOGIA DE INFORMAÇÃO]]></text>
                         <text><![CDATA[Email]]></text>
                     </staticText>
                     <staticText>
-                        <reportElement mode="Opaque" x="280" y="0" width="55" height="30" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
+                        <reportElement mode="Opaque" x="280" y="0" width="50" height="30" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
                         <textElement textAlignment="Center" verticalAlignment="Middle">
                             <font size="8"/>
                             <paragraph leftIndent="2"/>
@@ -267,7 +267,7 @@ GABINETE DE TECNOLOGIA DE INFORMAÇÃO]]></text>
                         <text><![CDATA[Email Verificado]]></text>
                     </staticText>
                     <staticText>
-                        <reportElement mode="Opaque" x="335" y="0" width="100" height="30" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
+                        <reportElement mode="Opaque" x="330" y="0" width="100" height="30" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
                         <textElement textAlignment="Center" verticalAlignment="Middle">
                             <font size="8"/>
                             <paragraph leftIndent="2"/>
@@ -275,7 +275,7 @@ GABINETE DE TECNOLOGIA DE INFORMAÇÃO]]></text>
                         <text><![CDATA[Nós de Supervisão]]></text>
                     </staticText>
                     <staticText>
-                        <reportElement mode="Opaque" x="435" y="0" width="125" height="30" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
+                        <reportElement mode="Opaque" x="430" y="0" width="125" height="30" backcolor="#3D9297" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377"/>
                         <textElement textAlignment="Center" verticalAlignment="Middle">
                             <font size="8"/>
                             <paragraph leftIndent="2"/>
