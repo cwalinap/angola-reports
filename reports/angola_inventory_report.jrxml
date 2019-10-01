@@ -902,7 +902,7 @@ stock]]></text>
             <textField evaluationTime="Report">
                 <reportElement x="105" y="0" width="450" height="20" uuid="dcff0142-2f6d-4901-986d-7d07ffc9f98d"/>
                 <textElement textAlignment="Right"/>
-                <textFieldExpression><![CDATA[$P{signature} == null ? $P{user} : $P{signature} + " | " + $P{user}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$P{signature} == null ? $P{user} : $P{user} + " | " + $P{signature}]]></textFieldExpression>
             </textField>
             <textField evaluationTime="Report">
                 <reportElement x="510" y="30" width="45" height="20" uuid="ebc06d42-8529-4c39-9d2f-1c1488e6a088"/>
