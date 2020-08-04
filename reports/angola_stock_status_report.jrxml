@@ -245,7 +245,7 @@ ORDER BY referencedata.facilities.name DESC,
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<paragraph lineSpacing="Single" lineSpacingSize="1.0" spacingAfter="0"/>
 					</textElement>
-					<text><![CDATA[Meses de Estoque]]></text>
+					<text><![CDATA[Meses de Stock]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="320" y="20" width="120" height="40" uuid="a1d70b38-1b5f-4c33-8226-7c4d24adab9c">
@@ -315,7 +315,7 @@ ORDER BY referencedata.facilities.name DESC,
 			</textField>
 			<textField>
 				<reportElement x="0" y="100" width="140" height="20" uuid="bcbebeb1-9779-44a1-85c6-e6ace61cda27"/>
-				<textFieldExpression><![CDATA[($P{district} == null) ? "All" : $P{district}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{district} == null) ? "Todos" : $P{district}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="80" width="140" height="20" uuid="ef29af37-a2a5-4f68-b2ee-c6440393385d"/>
@@ -481,7 +481,7 @@ ORDER BY referencedata.facilities.name DESC,
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<paragraph lineSpacing="Single" lineSpacingSize="1.0" spacingAfter="0"/>
 				</textElement>
-				<text><![CDATA[Meses de Estoque]]></text>
+				<text><![CDATA[Meses de Stock]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="315" y="0" width="80" height="15" uuid="2cf984d1-9b5f-4b00-b148-16b798e15f1d">
