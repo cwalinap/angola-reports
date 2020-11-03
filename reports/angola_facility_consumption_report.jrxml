@@ -30,11 +30,34 @@
     <property name="ireport.y" value="0"/>
     <parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
     <parameter name="facilityName" class="java.lang.String"/>
-    <parameter name="programId" class="java.lang.String"/>
+    <parameter name="program" class="java.lang.String" nestedType="java.lang.String">
+        <property name="displayName" value="Program Name"/>
+        <property name="selectExpression" value="/api/reports/programs"/>
+        <property name="selectProperty" value="name"/>
+        <property name="displayProperty" value="name"/>
+    </parameter>
+    <parameter name="programUpdated" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{program}.replaceAll(";",",")]]></defaultValueExpression>
+    </parameter>
+    <parameter name="programList" class="java.util.ArrayList" nestedType="java.lang.String">
+        <defaultValueExpression><![CDATA[new ArrayList(Arrays.asList($P{programUpdated}.split("\\s*,\\s*")));]]></defaultValueExpression>
+    </parameter>
     <parameter name="productId" class="java.lang.String"/>
     <parameter name="geographicZoneId" class="java.lang.String"/>
-    <parameter name="firstPeriodEnd" class="java.lang.String"/>
-    <parameter name="lastPeriodEnd" class="java.lang.String"/>
+    <parameter name="periodStartDate" class="java.lang.String">
+        <property name="displayName" value="Period Start Date"/>
+        <property name="selectExpression" value="/api/reports/processingPeriods"/>
+        <property name="selectProperty" value="name"/>
+        <property name="displayProperty" value="name"/>
+        <property name="required" value="false"/>
+    </parameter>
+    <parameter name="periodEndDate" class="java.lang.String">
+        <property name="displayName" value="Period End Date"/>
+        <property name="selectExpression" value="/api/reports/processingPeriods"/>
+        <property name="displayProperty" value="name"/>
+        <property name="selectProperty" value="name"/>
+        <property name="required" value="false"/>
+    </parameter>
     <queryString language="plsql">
         <![CDATA[select
 	line_items.totalconsumedquantity as productConsumption,
@@ -43,7 +66,8 @@
 	orderables.code as productCode,
 	orderables.fullproductname as productName,
 	lot.lotcode as lotCode,
-	lot.expirationdate as lotExpirationdate
+	lot.expirationdate as lotExpirationdate,
+	programs.name as programName
 from
 	requisition.requisition_line_items as line_items
 inner join requisition.requisitions as requisitions on
@@ -52,6 +76,7 @@ inner join referencedata.facilities as facilities on
 	facilities.id = requisitions.facilityid
 inner join referencedata.processing_periods as periods on
 	periods.id = requisitions.processingperiodid
+inner join referencedata.programs as programs on programs.id = requisitions.programid
 inner join referencedata.orderables as orderables on
 	orderables.id = line_items.orderableid
 inner join referencedata.orderable_identifiers as orderable_identifier on
@@ -62,16 +87,16 @@ right join referencedata.lots as lot on
 where
 	($P{facilityName} is null
 	or facilities.name = $P{facilityName})
-	and ($P{programId} is null
-	or requisitions.programid = $P{programId}::uuid)
+	and ($P{program} is null
+	or $X{IN, programs.name, programList})
 	and ($P{productId} is null
 	or orderables.id = $P{productId}::uuid)
 	and ($P{geographicZoneId} is null
 	or facilities.geographiczoneid = $P{geographicZoneId}::uuid)
-	and ($P{firstPeriodEnd} is null
-	or periods.endDate >= to_date($P{firstPeriodEnd},'YYYY-MM-DD'))
-	and ($P{lastPeriodEnd} is null
-	or periods.endDate <= to_date($P{lastPeriodEnd},'YYYY-MM-DD'))
+	and ($P{periodStartDate} is null
+	or periods.startdate >= $P{periodStartDate}::date)
+	and ($P{periodEndDate} is null
+	or periods.enddate <= $P{periodEndDate}::date)
 	and requisitions.emergency = false
 order by periodName, facilityName, productName, lotCode]]>
     </queryString>
@@ -82,13 +107,15 @@ order by periodName, facilityName, productName, lotCode]]>
     <field name="lotCode" class="java.lang.String"/>
     <field name="lotExpirationdate" class="java.lang.String"/>
     <field name="productConsumption" class="java.lang.String"/>
+    <field name="programName" class="java.lang.String"/>
     <variable name="PercentAndNumberFormat" class="java.lang.String">
         <variableExpression><![CDATA["%1$.0f%%"]]></variableExpression>
         <initialValueExpression><![CDATA["%.0f%%"]]></initialValueExpression>
     </variable>
-    <group name="pdfAndHtmlHeader">
+    <group name="pdfAndHtmlHeader" isStartNewPage="true" keepTogether="true">
+        <groupExpression><![CDATA[$F{periodName}]]></groupExpression>
         <groupHeader>
-            <band height="80" splitType="Stretch">
+            <band height="120" splitType="Stretch">
                 <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                 <printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
                 <image>
@@ -112,6 +139,28 @@ MINISTÉRIO DA SAÚDE
 DIRECÇÃO NACIONAL DE MEDICAMENTOS E EQUIPAMENTOS
 PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                 </staticText>
+                <staticText>
+                    <reportElement x="20" y="80" width="200" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Período do Relatório:]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="20" y="100" width="200" height="20" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
+                    <textFieldExpression><![CDATA[$F{periodName}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="220" y="80" width="220" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Programa:]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="220" y="100" width="400" height="20" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
+                    <textFieldExpression><![CDATA[($P{program} == null) ? "Todos" : $P{programUpdated}]]></textFieldExpression>
+                </textField>
             </band>
         </groupHeader>
     </group>
@@ -153,7 +202,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                     <text><![CDATA[Lote]]></text>
                 </staticText>
                 <staticText>
-                    <reportElement x="380" y="0" width="85" height="15" uuid="41672a04-8b3f-4edb-9755-9ab38e5f5084"/>
+                    <reportElement x="380" y="0" width="100" height="15" uuid="41672a04-8b3f-4edb-9755-9ab38e5f5084"/>
                     <textElement textAlignment="Center" verticalAlignment="Middle"/>
                     <text><![CDATA[Data de validade]]></text>
                 </staticText>
@@ -469,7 +518,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                         <font size="8"/>
                         <paragraph firstLineIndent="2" leftIndent="0" spacingBefore="0" spacingAfter="0"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{lotExpirationdate}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[($F{lotExpirationdate} == null) ? "-" : $F{lotExpirationdate}]]></textFieldExpression>
                 </textField>
             </band>
             <band height="20">
@@ -512,7 +561,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
                         <font size="8"/>
                         <paragraph firstLineIndent="2" leftIndent="0" spacingBefore="0" spacingAfter="0"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{lotExpirationdate}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[($F{lotExpirationdate} == null) ? "-" : $F{lotExpirationdate}]]></textFieldExpression>
                 </textField>
             </band>
         </groupHeader>
