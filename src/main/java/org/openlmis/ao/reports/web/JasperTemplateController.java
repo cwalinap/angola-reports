@@ -37,7 +37,6 @@ import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_TEMPLATE_NOT_FOUND;
 import static org.openlmis.ao.reports.web.ReportTypes.CONSISTENCY_REPORT;
@@ -111,12 +110,8 @@ public class JasperTemplateController extends BaseController {
   @ResponseBody
   public List<JasperTemplateDto> getAllTemplates() {
     permissionService.validatePermissionsToViewReports(null);
-    return JasperTemplateDto.newInstance(jasperTemplateRepository.findAll())
-        .stream()
-        // filter out templates that shouldn't be displayed
-        .filter(JasperTemplateDto::getIsDisplayed)
-        .filter(report -> permissionService.canViewReports(report.getId()))
-        .collect(Collectors.toList());
+    // filter out templates that shouldn't be displayed
+    return JasperTemplateDto.newInstance(jasperTemplateRepository.findByIsDisplayed(true));
   }
 
   /**
