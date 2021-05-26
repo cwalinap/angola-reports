@@ -36,6 +36,11 @@ public class CustomSortDeserializer extends JsonDeserializer<Sort> {
           obj.get("property").asText());
       index++;
     }
+
+    if (orders.length == 0) {
+      return null;
+    }
+
     Sort sort = new Sort(orders);
     return sort;
   }

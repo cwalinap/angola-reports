@@ -1,18 +1,19 @@
 package org.openlmis.ao.utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * PageImplRepresentation offers a convenient substitute for PageImpl.
  * Because the former lacks a default constructor, it is inconvenient to
  * deserialize. PageImplRepresentation may be used in its stead.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PageImplRepresentation<T> extends PageImpl<T> {
 
   private static final long serialVersionUID = 1L;
