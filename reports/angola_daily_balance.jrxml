@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="adjustments_summary_district" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily_balance" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="angola/AngolaTest.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="AngolaDataAdapter.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
@@ -75,10 +75,10 @@
 		<property name="displayProperty" value="name"/>
 		<property name="required" value="true"/>
 	</parameter>
-	<parameter name="programUpdated" class="java.lang.String">
+	<parameter name="programUpdated" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{program}.replaceAll(";",",")]]></defaultValueExpression>
 	</parameter>
-	<parameter name="programList" class="java.util.ArrayList" nestedType="java.lang.String">
+	<parameter name="programList" class="java.util.ArrayList" nestedType="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[new ArrayList(Arrays.asList($P{programUpdated}.split("\\s*,\\s*")));]]></defaultValueExpression>
 	</parameter>
 	<parameter name="occurreddate" class="java.lang.String"/>
@@ -108,10 +108,10 @@ FROM
 	JOIN referencedata.facilities AS facilities ON facilities.id = stock_events.facilityid
 	JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
 WHERE
-	$X{IN, programs.name, programList}
+	($P{program} IS NULL OR $X{IN, programs.name, programList})
 	AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
 	AND ($P{productId} IS NULL OR products.id = $P{productId}::uuid)
-	AND ($P{occurreddateParsed}::date IS NULL OR line_items.occurreddate = $P{occurreddateParsed}::date)
+	AND ($P{occurreddate} IS NULL OR line_items.occurreddate = $P{occurreddateParsed}::date)
 GROUP BY productname, origin, destination]]>
 	</queryString>
 	<field name="productname" class="java.lang.String"/>
@@ -189,7 +189,7 @@ GROUP BY productname, origin, destination]]>
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="5" y="0" width="155" height="30" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
+					<reportElement x="5" y="0" width="175" height="30" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -198,23 +198,24 @@ GROUP BY productname, origin, destination]]>
 					<text><![CDATA[Origem]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="160" y="0" width="150" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
+					<reportElement x="185" y="0" width="120" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Destino]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="310" y="0" width="160" height="30" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
+					<reportElement x="310" y="0" width="185" height="30" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Producto]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="470" y="0" width="85" height="30" uuid="2e82c1f1-cc66-4ec0-b712-3a474db89cfd">
-						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<reportElement x="495" y="0" width="60" height="30" uuid="2e82c1f1-cc66-4ec0-b712-3a474db89cfd">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Quantidade
@@ -230,13 +231,13 @@ Movimentada]]></text>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<rectangle>
-					<reportElement x="0" y="0" width="555" height="30" backcolor="#F0F0F0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="555" height="30" backcolor="#F0F0F0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
 					<graphicElement>
 						<pen lineWidth="0.0"/>
 					</graphicElement>
 				</rectangle>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="310" y="0" width="160" height="30" uuid="eb5409f1-cdfe-481f-a56f-17a78f1d2b6f">
+					<reportElement x="310" y="0" width="185" height="30" uuid="eb5409f1-cdfe-481f-a56f-17a78f1d2b6f">
 						<printWhenExpression><![CDATA[$F{productname} != null]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -245,18 +246,20 @@ Movimentada]]></text>
 					<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="false">
-					<reportElement x="470" y="0" width="85" height="30" uuid="8402f03f-3e3a-42c7-9865-32b6b0dee2ba">
+					<reportElement x="495" y="0" width="55" height="30" uuid="8402f03f-3e3a-42c7-9865-32b6b0dee2ba">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<printWhenExpression><![CDATA[$F{quantity} != null]]></printWhenExpression>
 					</reportElement>
-					<textElement verticalAlignment="Middle">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="160" y="0" width="150" height="30" uuid="bf8ba146-45c8-4ebd-8559-a2c699deb860">
+					<reportElement x="185" y="0" width="120" height="30" uuid="bf8ba146-45c8-4ebd-8559-a2c699deb860">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<printWhenExpression><![CDATA[$F{destination} != null]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -265,7 +268,7 @@ Movimentada]]></text>
 					<textFieldExpression><![CDATA[$F{destination}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="5" y="0" width="155" height="30" uuid="595da585-6415-4491-b206-8fe5a54f62d9">
+					<reportElement x="5" y="0" width="175" height="30" uuid="595da585-6415-4491-b206-8fe5a54f62d9">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
