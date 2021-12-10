@@ -101,7 +101,8 @@ SELECT
 FROM
 	stockmanagement.stock_event_line_items AS line_items
 	JOIN stockmanagement.stock_events AS stock_events ON stock_events.id = line_items.stockeventid
-	JOIN stockmanagement.organizations AS organizations ON organizations.id = line_items.destinationid
+	JOIN stockmanagement.nodes AS nodes ON nodes.id = line_items.destinationid
+	JOIN stockmanagement.organizations AS organizations ON organizations.id = nodes.referenceid
 	JOIN referencedata.programs AS programs ON programs.id = stock_events.programid
 	JOIN referencedata.orderables AS products ON products.id = line_items.orderableid
 	JOIN referencedata.facilities AS facilities ON facilities.id = stock_events.facilityid
