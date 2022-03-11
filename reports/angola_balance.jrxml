@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily_balance" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily_balance" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
@@ -28,6 +28,15 @@
 	<property name="ireport.zoom" value="2.1435888100000016"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -116,30 +125,30 @@ ORDER BY line_items.occurreddate DESC]]>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<textField>
-					<reportElement x="280" y="20" width="120" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
+					<reportElement x="515" y="20" width="155" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
 					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{startDate}.toString())) + " - " + 
 java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{endDate}.toString()))]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement key="" x="430" y="20" width="125" height="20" uuid="eecc1140-a4a9-4bd6-9d4e-4828b52367fe">
+					<reportElement key="" x="670" y="20" width="125" height="20" uuid="eecc1140-a4a9-4bd6-9d4e-4828b52367fe">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
 					<textElement textAlignment="Left"/>
-					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("d - MMM - yy").format(java.time.LocalDate.now());]]></textFieldExpression>
+					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.now());]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="0" y="20" width="140" height="20" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
+					<reportElement x="0" y="20" width="340" height="20" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
 					<textFieldExpression><![CDATA[($P{facility} == null) ? "Todos" : $P{facility}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="0" width="140" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688"/>
+					<reportElement x="0" y="0" width="340" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Instituição:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="" x="430" y="0" width="125" height="20" uuid="1f3fbbaa-0915-4a25-90ab-f5d72944ebe4">
+					<reportElement key="" x="670" y="0" width="125" height="20" uuid="1f3fbbaa-0915-4a25-90ab-f5d72944ebe4">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
@@ -148,21 +157,21 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<text><![CDATA[Data de Impressão:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="280" y="0" width="120" height="20" uuid="e70a3e97-e2d7-49f2-b959-5c42335506e4"/>
+					<reportElement x="515" y="0" width="155" height="20" uuid="e70a3e97-e2d7-49f2-b959-5c42335506e4"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Data dos dados:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="140" y="0" width="140" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
+					<reportElement x="340" y="0" width="140" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Programa:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="140" y="20" width="140" height="20" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
+					<reportElement x="340" y="20" width="140" height="20" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
 					<textFieldExpression><![CDATA[($P{programUpdated} == null) ? "Todas" : $P{programUpdated}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -174,7 +183,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<rectangle>
-					<reportElement x="0" y="0" width="555" height="30" backcolor="#C0C0C0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241">
+					<reportElement x="0" y="0" width="800" height="30" backcolor="#C0C0C0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<graphicElement>
@@ -182,7 +191,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="0" y="0" width="175" height="30" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
+					<reportElement x="0" y="0" width="420" height="30" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -191,21 +200,21 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<text><![CDATA[Produto]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="175" y="0" width="95" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
+					<reportElement x="420" y="0" width="95" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[Creditos]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="270" y="0" width="95" height="30" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
+					<reportElement x="515" y="0" width="95" height="30" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[Debitos]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="460" y="0" width="95" height="30" uuid="2e82c1f1-cc66-4ec0-b712-3a474db89cfd">
+					<reportElement x="705" y="0" width="95" height="30" uuid="2e82c1f1-cc66-4ec0-b712-3a474db89cfd">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -214,7 +223,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<text><![CDATA[Stock Disponivel]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="365" y="0" width="95" height="30" uuid="64cd8ea3-6891-43f0-b596-04ca3a4bac64">
+					<reportElement x="610" y="0" width="95" height="30" uuid="64cd8ea3-6891-43f0-b596-04ca3a4bac64">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
@@ -230,51 +239,86 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<rectangle>
-					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="555" height="30" printWhenGroupChanges="Group1" backcolor="#F0F0F0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="800" height="30" printWhenGroupChanges="Group1" backcolor="#F0F0F0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
 					<graphicElement>
 						<pen lineWidth="0.0"/>
 					</graphicElement>
 				</rectangle>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="270" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="eb5409f1-cdfe-481f-a56f-17a78f1d2b6f"/>
+					<reportElement x="515" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="eb5409f1-cdfe-481f-a56f-17a78f1d2b6f"/>
+					<box>
+						<pen lineColor="#D2D2D2"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[($F{debit} == null) ? "" : $F{debit}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="false">
-					<reportElement x="460" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="8402f03f-3e3a-42c7-9865-32b6b0dee2ba">
+					<reportElement x="705" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="8402f03f-3e3a-42c7-9865-32b6b0dee2ba">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					</reportElement>
+					<box>
+						<pen lineColor="#D2D2D2"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[($F{soh} == null) ? "" : $F{soh}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="175" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="bf8ba146-45c8-4ebd-8559-a2c699deb860">
+					<reportElement x="420" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="bf8ba146-45c8-4ebd-8559-a2c699deb860">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
+					<box>
+						<pen lineColor="#D2D2D2"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[($F{credit} == null) ? "" : $F{credit}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement positionType="Float" x="0" y="0" width="175" height="30" printWhenGroupChanges="Group1" uuid="595da585-6415-4491-b206-8fe5a54f62d9">
+					<reportElement positionType="Float" x="0" y="0" width="420" height="30" printWhenGroupChanges="Group1" uuid="595da585-6415-4491-b206-8fe5a54f62d9">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
+					<box>
+						<pen lineColor="#D2D2D2"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					</box>
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="365" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="20144e2e-60cf-4e49-ac65-e9a8dbf20b5b"/>
+					<reportElement x="610" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="20144e2e-60cf-4e49-ac65-e9a8dbf20b5b"/>
+					<box>
+						<pen lineColor="#D2D2D2"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
@@ -290,7 +334,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 		<band height="80" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="60" width="555" height="20" forecolor="#FFFFFF" backcolor="#787878" uuid="67c6acd7-5312-4a60-8daf-f3258c4a93f6">
+				<reportElement mode="Opaque" x="0" y="60" width="800" height="20" forecolor="#FFFFFF" backcolor="#787878" uuid="67c6acd7-5312-4a60-8daf-f3258c4a93f6">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -300,19 +344,19 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				<text><![CDATA[Balancete]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="141" y="0" width="279" height="39" uuid="af8e209d-cf2a-49a1-8c8a-6213dca400ea"/>
+				<reportElement positionType="FixRelativeToBottom" x="261" y="0" width="279" height="39" uuid="af8e209d-cf2a-49a1-8c8a-6213dca400ea"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18"/>
 				</textElement>
 				<text><![CDATA[Ministério da Saúde de Angola]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="430" y="0" width="80" height="20" uuid="d2a693cf-48f0-4536-bd99-e9d7a04012a8"/>
+				<reportElement x="680" y="0" width="80" height="20" uuid="d2a693cf-48f0-4536-bd99-e9d7a04012a8"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="510" y="0" width="45" height="20" uuid="056de5f4-5e79-4053-97cd-0c52ec9883cf"/>
+				<reportElement x="760" y="0" width="45" height="20" uuid="056de5f4-5e79-4053-97cd-0c52ec9883cf"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
