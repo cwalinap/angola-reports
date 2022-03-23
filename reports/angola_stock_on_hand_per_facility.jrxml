@@ -131,7 +131,7 @@ FROM (
 		JOIN referencedata.programs AS programs ON programs.id = stock_cards.programid 
 		JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
 	where 
-		($P{program} IS NULL OR programs.name = $P{program})
+		($P{program} IS NULL OR $X{IN, programs.name, programList})
 		AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
 		AND ($P{productId} IS NULL OR products.id = $P{productId}::uuid)
 		AND ($P{facility} IS NULL OR facilities.name = $P{facility}::varchar)
