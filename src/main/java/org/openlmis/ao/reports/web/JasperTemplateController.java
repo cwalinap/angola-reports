@@ -1,5 +1,19 @@
 package org.openlmis.ao.reports.web;
 
+import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_TEMPLATE_NOT_FOUND;
+import static org.openlmis.ao.reports.web.ReportTypes.CONSISTENCY_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.INVENTORY_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.PROOF_OF_DELIVERY_PRINT;
+import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_SUMMARY_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.USERS_REPORT;
+
+import java.time.Clock;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRVirtualizationHelper;
 import net.sf.jasperreports.engine.JRVirtualizer;
@@ -31,21 +45,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
-
-import javax.servlet.http.HttpServletRequest;
-import java.time.Clock;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_TEMPLATE_NOT_FOUND;
-import static org.openlmis.ao.reports.web.ReportTypes.CONSISTENCY_REPORT;
-import static org.openlmis.ao.reports.web.ReportTypes.INVENTORY_REPORT;
-import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
-import static org.openlmis.ao.reports.web.ReportTypes.PROOF_OF_DELIVERY_PRINT;
-import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_REPORT;
-import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_SUMMARY_REPORT;
-import static org.openlmis.ao.reports.web.ReportTypes.USERS_REPORT;
 
 @Controller
 @Transactional
@@ -208,8 +207,9 @@ public class JasperTemplateController extends BaseController {
       return jasperReportsViewService.getOrderJasperReportView(jasperView, map);
     } else if (STOCK_CARD_REPORT.equals(templateType)) {
       return jasperReportsViewService.getStockCardReportView(jasperView, map);
-    } else if (STOCK_CARD_SUMMARY_REPORT.equals(templateType)
-            || INVENTORY_REPORT.equals(templateType)) {
+    } else if (STOCK_CARD_SUMMARY_REPORT.equals(templateType)) {
+      return jasperReportsViewService.getStockCardSummaryReportView(jasperView, map);
+    } else if (INVENTORY_REPORT.equals(templateType)) {
       return jasperReportsViewService.getInventoryReportView(jasperView, map);
     } else if (PROOF_OF_DELIVERY_PRINT.equals(templateType)) {
       return jasperReportsViewService.getPodJasperReportView(jasperView, map);

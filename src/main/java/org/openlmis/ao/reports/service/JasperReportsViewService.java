@@ -1,5 +1,44 @@
 package org.openlmis.ao.reports.service;
 
+import static java.io.File.createTempFile;
+import static java.util.Collections.singletonList;
+import static net.sf.jasperreports.engine.export.JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN;
+import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
+import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_FILE_CREATION;
+import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_IO;
+import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_JASPER_FILE_FORMAT;
+import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_CLASS_NOT_FOUND;
+import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_IO;
+import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
+import static org.openlmis.ao.reports.web.ReportTypes.USERS_REPORT;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import net.sf.jasperreports.engine.JRBand;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -9,6 +48,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.ao.reports.domain.JasperTemplate;
 import org.openlmis.ao.reports.dto.RequisitionReportDto;
 import org.openlmis.ao.reports.dto.external.CanFulfillForMeEntryDto;
@@ -49,46 +89,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static java.io.File.createTempFile;
-import static java.util.Collections.singletonList;
-import static net.sf.jasperreports.engine.export.JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN;
-import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
-import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_FILE_CREATION;
-import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_IO;
-import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_JASPER_FILE_FORMAT;
-import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_CLASS_NOT_FOUND;
-import static org.openlmis.ao.reports.i18n.ReportingMessageKeys.ERROR_REPORTING_IO;
-import static org.openlmis.ao.reports.web.ReportTypes.ORDER_REPORT;
-import static org.openlmis.ao.reports.web.ReportTypes.USERS_REPORT;
 
 @Service
 public class JasperReportsViewService {
@@ -366,6 +366,41 @@ public class JasperReportsViewService {
                                                       Map<String, Object> parameters) {
     LocalDate asOfDate = getAsOfDate(parameters);
     parameters.put(AS_OF_DATE, asOfDate);
+    List<String> programs = Arrays.asList(parameters.get(PROGRAM_ID).toString()
+        .replaceAll(";",",").split("\\s*,\\s*"));
+
+    FacilityDto facilityDto = getReferencedFacility(parameters);
+
+    parameters.put("program", getProgramsName(programs));
+    parameters.put(FACILITY, facilityDto);
+    parameters.put("province", extractProvinceName(facilityDto.getGeographicZone()));
+    parameters.put("region", extractRegionName(facilityDto.getGeographicZone()));
+
+    UUID facilityId = UUID.fromString(parameters.get(FACILITY_ID).toString());
+    List<FullStockCardSummaryV2Dto> fullNonEmptySummaries = getFullSummaries(
+        asOfDate, facilityId, programs);
+    parameters.put(DATASOURCE, new JRBeanCollectionDataSource(fullNonEmptySummaries));
+    parameters.put("stockCardSummaries", fullNonEmptySummaries);
+    parameters.put(DATE_FORMAT, dateFormat);
+    parameters.put(DECIMAL_FORMAT, createDecimalFormat());
+    if (parameters.get("format").toString().equals("html")) {
+      parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+    }
+
+    return new ModelAndView(jasperView, parameters);
+  }
+
+  /**
+   * Generate stock card summary report.
+   *
+   * @param jasperView jasper template
+   * @param parameters template parameters populated with values from the request
+   * @return generated stock card summary report.
+   */
+  public ModelAndView getStockCardSummaryReportView(JasperReportsMultiFormatView jasperView,
+      Map<String, Object> parameters) {
+    LocalDate asOfDate = getAsOfDate(parameters);
+    parameters.put(AS_OF_DATE, asOfDate);
     RequestParameters requestParameters = RequestParameters
             .init()
             .set(PROGRAM_ID, UUID.fromString(parameters.get(PROGRAM_ID).toString()))
@@ -447,6 +482,16 @@ public class JasperReportsViewService {
             .findOne(UUID.fromString(parameters.get(PROGRAM_ID).toString())).getName();
   }
 
+  private String getProgramsName(List<String> programs) {
+    List<String> programNames = new ArrayList<>();
+    programs.forEach(program -> {
+      UUID programId = UUID.fromString(program.trim());
+      programNames.add(programReferenceDataService.findOne(programId).getName());
+    });
+
+    return StringUtils.join(programNames, ", ");
+  }
+
   private List<FullStockCardSummaryV2Dto> extractFullSummaries(
           List<StockCardSummaryV2Dto> summaries) {
     List<FullStockCardSummaryV2Dto> result = new ArrayList<>();
@@ -460,6 +505,70 @@ public class JasperReportsViewService {
       }
     });
     return result;
+  }
+
+  private List<FullStockCardSummaryV2Dto> getFullSummaries(
+      LocalDate asOfDate, UUID facilityId, List<String> programs) {
+    Map<UUID, OrderableDto> orderableDtoMap = new HashMap<>();
+    Map<UUID, LotDto> lotDtoMap = new HashMap<>();
+    Map<UUID, Map<UUID, Integer>> stockOnHandMap = new HashMap<>();
+
+    programs.forEach(program -> {
+      List<FullStockCardSummaryV2Dto> fullNonEmptySummaries = getFullSummaries(
+          asOfDate, facilityId, program);
+      fullNonEmptySummaries.forEach(summary -> {
+        UUID lotId = null;
+        UUID orderableId = summary.getOrderable().getId();
+        orderableDtoMap.put(orderableId, summary.getOrderable());
+        if (summary.getLot() != null) {
+          lotId = summary.getLot().getId();
+          lotDtoMap.put(lotId, summary.getLot());
+        }
+
+        if (stockOnHandMap.containsKey(orderableId)) {
+          Map<UUID, Integer> sohByLot = stockOnHandMap.get(orderableId);
+          if (sohByLot.containsKey(lotId)) {
+            Integer soh = sohByLot.get(lotId) + summary.getStockOnHand();
+            sohByLot.put(lotId, soh);
+          } else {
+            sohByLot.put(lotId, summary.getStockOnHand());
+          }
+        } else {
+          Map<UUID, Integer> sohByLot = new HashMap<>();
+          sohByLot.put(lotId, summary.getStockOnHand());
+          stockOnHandMap.put(orderableId, sohByLot);
+        }
+      });
+    });
+
+    List<FullStockCardSummaryV2Dto> fullStockCardSummaryV2Dtos = new ArrayList<>();
+    stockOnHandMap.forEach((orderableId, sohByLot) -> {
+      sohByLot.forEach((lotId, soh) -> {
+        OrderableDto orderableDto = orderableDtoMap.get(orderableId);
+        LotDto lotDto = lotDtoMap.get(lotId);
+        FullStockCardSummaryV2Dto fullStockCardSummaryV2Dto = new FullStockCardSummaryV2Dto(
+            orderableDto, orderableDto.getDispensable(), lotDto, soh);
+        fullStockCardSummaryV2Dtos.add(fullStockCardSummaryV2Dto);
+      });
+    });
+
+    return fullStockCardSummaryV2Dtos;
+  }
+
+  private List<FullStockCardSummaryV2Dto> getFullSummaries(
+      LocalDate asOfDate, UUID facilityId, String program) {
+    UUID programId = UUID.fromString(program.trim());
+    RequestParameters requestParameters = RequestParameters
+        .init()
+        .set(PROGRAM_ID, programId)
+        .set(FACILITY_ID, facilityId)
+        .set(AS_OF_DATE, asOfDate);
+
+    WrappedStockCardV2Dto wrappedStockCardDto = stockCardV2StockSummariesService
+        .findOne("", requestParameters);
+    return extractFullSummaries(
+        wrappedStockCardDto.getContent()).stream().filter(sc -> sc.getStockOnHand() != null)
+        .collect(Collectors.toList());
   }
 
   private FullStockCardSummaryV2Dto buildFullSummaryFromFulfillEntry(
