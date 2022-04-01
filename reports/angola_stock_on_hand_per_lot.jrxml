@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily_balance" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="false"/>
+	<property name="net.sf.jasperreports.export.csv.one.page.per.sheet" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.csv.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="title"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.4" value="summary"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.3" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.3" value="title"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.4" value="summary"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.3" value="columnHeader"/>
+	<property name="ireport.zoom" value="2.1435888100000016"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="facility" class="java.lang.String">
+		<property name="displayName" value="Facility"/>
+		<property name="selectExpression" value="/api/reports/facilities"/>
+		<property name="selectProperty" value="name"/>
+		<property name="displayProperty" value="name"/>
+		<property name="required" value="false"/>
+	</parameter>
+	<parameter name="district" class="java.lang.String">
+		<property name="displayName" value="District"/>
+		<property name="selectExpression" value="/api/reports/districts"/>
+		<property name="selectProperty" value="name"/>
+		<property name="displayProperty" value="name"/>
+		<property name="required" value="false"/>
+	</parameter>
+	<parameter name="productId" class="java.lang.String">
+		<property name="selectExpression" value="/api/orderables"/>
+		<property name="selectProperty" value="id"/>
+		<property name="displayProperty" value="fullProductName"/>
+		<property name="required" value="false"/>
+	</parameter>
+	<parameter name="program" class="java.lang.String" nestedType="java.lang.String">
+		<property name="displayName" value="Program Name"/>
+		<property name="selectExpression" value="/api/reports/programs"/>
+		<property name="selectProperty" value="name"/>
+		<property name="displayProperty" value="name"/>
+		<property name="required" value="true"/>
+	</parameter>
+	<parameter name="programUpdated" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{program}.replaceAll(";",",")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="programList" class="java.util.ArrayList" nestedType="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new ArrayList(Arrays.asList($P{programUpdated}.split("\\s*,\\s*")));]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.lang.String"/>
+	<parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="timeZone" class="java.lang.String" isForPrompting="false"/>
+	<queryString language="plsql">
+		<![CDATA[WITH RECURSIVE findChildZones AS (
+  SELECT * FROM referencedata.geographic_zones WHERE name = $P{district}::varchar
+  UNION ALL
+  SELECT referencedata.geographic_zones.* FROM referencedata.geographic_zones JOIN findChildZones ON findChildZones.id = referencedata.geographic_zones.parentId)
+SELECT 
+	soh_data.product AS product, 
+	soh_data.program_name as program_name,
+	soh_data.lot_code as lot_code,
+	soh_data.expiry_date as expiry_date,
+	SUM(soh_data.stockonhand) AS quantity
+FROM (
+	SELECT
+		CONCAT_WS(': ',products.code,products.fullproductname) AS product,
+		programs."name" as program_name,
+		lots.lotcode as lot_code,
+		lots.expirationdate as expiry_date,
+		soh.stockonhand AS stockonhand,
+		RANK () OVER (
+		PARTITION BY products.id
+		ORDER BY products.versionnumber DESC) AS product_version_rank,
+		RANK () OVER (
+		PARTITION BY products.id, lots.lotcode 
+		ORDER BY soh.occurreddate desc) AS date_rank
+	FROM
+		stockmanagement.stock_cards AS stock_cards
+		JOIN stockmanagement.calculated_stocks_on_hand AS soh ON soh.stockcardid = stock_cards.id
+		JOIN referencedata.orderables AS products ON products.id = stock_cards.orderableid
+		LEFT JOIN referencedata.lots AS lots ON lots.id = stock_cards.lotid
+		JOIN referencedata.facilities AS facilities ON facilities.id = stock_cards.facilityid
+		JOIN referencedata.programs AS programs ON programs.id = stock_cards.programid 
+		JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
+	where 
+		($P{program} IS NULL OR programs.name = $P{program})
+		AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
+		AND ($P{productId} IS NULL OR products.id = $P{productId}::uuid)
+		AND ($P{facility} IS NULL OR facilities.name = $P{facility}::varchar)
+		AND ($P{date} IS NULL OR soh.occurreddate::varchar <= $P{date}::varchar)
+) AS soh_data
+WHERE soh_data.date_rank = 1 AND soh_data.product_version_rank = 1
+GROUP BY soh_data.lot_code, soh_data.expiry_date, soh_data.product, soh_data.program_name]]>
+	</queryString>
+	<field name="product" class="java.lang.String"/>
+	<field name="quantity" class="java.lang.Integer"/>
+	<field name="program_name" class="java.lang.String"/>
+	<field name="lot_code" class="java.lang.String"/>
+	<field name="expiry_date" class="java.lang.String"/>
+	<group name="Group1" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
+		<groupHeader>
+			<band height="60" splitType="Stretch">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
+				<textField>
+					<reportElement x="560" y="20" width="120" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
+					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{date}.toString()))]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement key="" x="680" y="20" width="125" height="20" uuid="eecc1140-a4a9-4bd6-9d4e-4828b52367fe">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Left"/>
+					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.now());]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="20" width="140" height="20" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
+					<textFieldExpression><![CDATA[($P{district} == null) ? "Todos" : $P{district}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="140" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Zona Geográfica:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement key="" x="680" y="0" width="125" height="20" uuid="1f3fbbaa-0915-4a25-90ab-f5d72944ebe4">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data de Impressão:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="560" y="0" width="120" height="20" uuid="e70a3e97-e2d7-49f2-b959-5c42335506e4"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data dos dados:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="334" y="0" width="226" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Programa:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="334" y="20" width="226" height="40" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
+					<textFieldExpression><![CDATA[($P{programUpdated} == null) ? "Todas" : $P{programUpdated}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="140" y="20" width="194" height="40" uuid="6498481f-e78e-4a33-8a5e-3c43e320c5c2"/>
+					<textFieldExpression><![CDATA[($P{facility} == null) ? "Todas" : $P{facility}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="140" y="0" width="194" height="20" uuid="6489b675-7ad3-46ed-b932-e7d642310449"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Instituição:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Group 2" isReprintHeaderOnEachPage="true">
+		<groupHeader>
+			<band height="30" splitType="Stretch">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
+				<rectangle>
+					<reportElement x="0" y="0" width="805" height="30" backcolor="#C0C0C0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="0" y="0" width="400" height="30" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Produtos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="721" y="0" width="84" height="30" uuid="2e82c1f1-cc66-4ec0-b712-3a474db89cfd">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Stock Disponível]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="400" y="0" width="150" height="30" uuid="9e437e62-503f-4395-a0db-50c686b68a5c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Programa]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="550" y="0" width="80" height="30" uuid="63ae3b5d-a800-4a17-826f-001846290a37">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Lote]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="630" y="0" width="91" height="30" uuid="b29ec69b-9f5a-4937-8e2d-e8c12b6df123">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Data de Validade]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Product Group" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{product}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
+				<rectangle>
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="805" height="30" backcolor="#F0F0F0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement x="0" y="0" width="400" height="30" uuid="595da585-6415-4491-b206-8fe5a54f62d9">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement x="400" y="0" width="150" height="30" uuid="5c6eabd2-7691-482c-8928-d376e9320d02">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{program_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement positionType="FixRelativeToBottom" x="550" y="0" width="80" height="30" uuid="c80ef2b1-0aa9-4943-8fba-8946cfc2cb2a">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{lot_code} == null) ? "No lot defined" : $F{lot_code}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement x="630" y="0" width="91" height="30" uuid="9f919954-870d-445f-968e-01e223e1fc04">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{expiry_date} == null) ? "" : $F{expiry_date}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement x="720" y="0" width="84" height="30" uuid="8402f03f-3e3a-42c7-9865-32b6b0dee2ba">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band height="40" splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="80" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="60" width="805" height="20" forecolor="#FFFFFF" backcolor="#787878" uuid="67c6acd7-5312-4a60-8daf-f3258c4a93f6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stock Disponível (Por Lote)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="261" y="0" width="279" height="39" uuid="af8e209d-cf2a-49a1-8c8a-6213dca400ea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Ministério da Saúde de Angola]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="680" y="0" width="80" height="20" uuid="d2a693cf-48f0-4536-bd99-e9d7a04012a8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="760" y="0" width="45" height="20" uuid="056de5f4-5e79-4053-97cd-0c52ec9883cf"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
+				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+</jasperReport>
