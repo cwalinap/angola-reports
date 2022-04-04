@@ -129,11 +129,10 @@ GROUP BY soh_data.product]]>
 	<field name="quantity" class="java.lang.Integer"/>
 	<group name="Group1" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
 		<groupHeader>
-			<band height="50" splitType="Stretch">
+			<band height="60" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<textField>
-					<reportElement x="280" y="20" width="120" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
+					<reportElement x="310" y="20" width="120" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
 					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{date}.toString()))]]></textFieldExpression>
 				</textField>
 				<textField>
@@ -164,21 +163,21 @@ GROUP BY soh_data.product]]>
 					<text><![CDATA[Data de Impressão:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="280" y="0" width="120" height="20" uuid="e70a3e97-e2d7-49f2-b959-5c42335506e4"/>
+					<reportElement x="310" y="0" width="120" height="20" uuid="e70a3e97-e2d7-49f2-b959-5c42335506e4"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Data dos dados:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="140" y="0" width="140" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
+					<reportElement x="140" y="0" width="170" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Programa:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="140" y="20" width="140" height="20" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
+					<reportElement x="140" y="20" width="170" height="40" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
 					<textFieldExpression><![CDATA[$P{programUpdated}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -188,7 +187,6 @@ GROUP BY soh_data.product]]>
 		<groupHeader>
 			<band height="30" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<rectangle>
 					<reportElement x="0" y="0" width="555" height="30" backcolor="#C0C0C0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -223,7 +221,6 @@ GROUP BY soh_data.product]]>
 		<groupHeader>
 			<band height="30">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<rectangle>
 					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="555" height="30" backcolor="#F0F0F0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
 					<graphicElement>
