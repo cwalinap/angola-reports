@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily_balance" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -13,14 +13,14 @@
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
 	<property name="net.sf.jasperreports.export.csv.remove.empty.space.between.rows" value="true"/>
-	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
-	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.group.1" value="Product Group"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="Product Group"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="title"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.4" value="summary"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.3" value="columnHeader"/>
-	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="groupHeader"/>
-	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.group.1" value="Product Group"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="Product Group"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.3" value="title"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.4" value="summary"/>
@@ -122,7 +122,6 @@ GROUP BY productname, origin, destination]]>
 		<groupHeader>
 			<band height="50" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<textField>
 					<reportElement x="280" y="20" width="120" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
 					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{occurreddate}.toString()))]]></textFieldExpression>
@@ -179,7 +178,6 @@ GROUP BY productname, origin, destination]]>
 		<groupHeader>
 			<band height="30" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<rectangle>
 					<reportElement x="0" y="0" width="555" height="30" backcolor="#C0C0C0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -229,7 +227,6 @@ Movimentada]]></text>
 		<groupHeader>
 			<band height="30">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<printWhenExpression><![CDATA[Arrays.asList("pdf", "html").contains($P{REPORT_PARAMETERS_MAP}.getOrDefault("format", "pdf"))]]></printWhenExpression>
 				<rectangle>
 					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="555" height="30" backcolor="#F0F0F0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
 					<graphicElement>
