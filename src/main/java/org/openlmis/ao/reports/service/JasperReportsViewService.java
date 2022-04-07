@@ -67,6 +67,7 @@ import org.openlmis.ao.reports.dto.external.RequisitionTemplateColumnDto;
 import org.openlmis.ao.reports.dto.external.RequisitionTemplateDto;
 import org.openlmis.ao.reports.dto.external.StockCardDto;
 import org.openlmis.ao.reports.dto.external.StockCardSummaryV2Dto;
+import org.openlmis.ao.reports.dto.external.UserDto;
 import org.openlmis.ao.reports.dto.external.WrappedStockCardV2Dto;
 import org.openlmis.ao.reports.exception.JasperReportViewException;
 import org.openlmis.ao.reports.service.fulfillment.OrderService;
@@ -248,6 +249,17 @@ public class JasperReportsViewService {
       Map<String, Object> parameters) {
     StockCardDto stockCardDto = stockCardService.findOne(
         UUID.fromString(parameters.get("stockCard").toString())
+    );
+
+    stockCardDto.getLineItems().forEach(
+        lineItem -> {
+          if (StringUtils.isBlank(lineItem.getSignature())) {
+            UserDto userDto = getIfPresent(userReferenceDataService, lineItem.getUserId());
+            if (userDto != null) {
+              lineItem.setSignature(userDto.getUsername());
+            }
+          }
+        }
     );
 
     Collections.reverse(stockCardDto.getLineItems());
