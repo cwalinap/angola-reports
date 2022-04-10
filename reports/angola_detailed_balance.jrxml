@@ -64,9 +64,9 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<parameter name="facility" class="java.lang.String">
-		<property name="displayName" value="Facility"/>
-		<property name="selectExpression" value="/api/reports/facilities"/>
+	<parameter name="district" class="java.lang.String">
+		<property name="displayName" value="District"/>
+		<property name="selectExpression" value="/api/reports/districts"/>
 		<property name="selectProperty" value="name"/>
 		<property name="displayProperty" value="name"/>
 		<property name="required" value="false"/>
@@ -89,7 +89,12 @@
 	<parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="timeZone" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="plsql">
-		<![CDATA[SELECT
+		<![CDATA[WITH RECURSIVE findChildZones AS (
+  SELECT * FROM referencedata.geographic_zones WHERE name = $P{district}::varchar
+  UNION ALL
+  SELECT referencedata.geographic_zones.* FROM referencedata.geographic_zones JOIN findChildZones ON findChildZones.id = referencedata.geographic_zones.parentId)
+
+SELECT
 	products.code as productCode,
     products.fullproductname AS product,
     facilities.name as facilityName,
@@ -151,8 +156,9 @@ join (
 JOIN referencedata.orderables AS products ON products.id = stock_cards.orderableid
 JOIN referencedata.programs AS programs ON programs.id = stock_cards.programid
 JOIN referencedata.facilities AS facilities ON facilities.id = stock_cards.facilityid
+JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
 where ($P{program} IS NULL OR $X{IN, programs.name, programList})
-    AND ($P{facility} IS NULL OR facilities.name = $P{facility}::varchar)
+    AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
 group by productCode, product, facilityName
 ORDER BY productCode]]>
 	</queryString>
@@ -193,7 +199,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				</textField>
 				<textField>
 					<reportElement x="0" y="20" width="260" height="30" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
-					<textFieldExpression><![CDATA[($P{facility} == null) ? "Todos" : $P{facility}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($P{district} == null) ? "Todos" : $P{district}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="0" y="0" width="260" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688">
@@ -202,7 +208,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Instituição:]]></text>
+					<text><![CDATA[Zona Geográfica:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement key="" x="680" y="0" width="115" height="20" uuid="1f3fbbaa-0915-4a25-90ab-f5d72944ebe4">
@@ -218,7 +224,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Data dos dados:]]></text>
+					<text><![CDATA[Período dos dados:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="265" y="0" width="275" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c">
@@ -302,7 +308,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 						<pen lineWidth="0.0"/>
 					</graphicElement>
 				</rectangle>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="true">
 					<reportElement x="535" y="0" width="85" height="30" printWhenGroupChanges="Group1" uuid="eb5409f1-cdfe-481f-a56f-17a78f1d2b6f"/>
 					<box>
 						<pen lineColor="#D2D2D2"/>
@@ -316,7 +322,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[$V{debitByProduct}]]></textFieldExpression>
 				</textField>
-				<textField evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="false">
+				<textField evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="true">
 					<reportElement x="705" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="8402f03f-3e3a-42c7-9865-32b6b0dee2ba">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					</reportElement>
@@ -332,7 +338,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[$V{sohByProduct}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="true">
 					<reportElement x="450" y="0" width="85" height="30" printWhenGroupChanges="Group1" uuid="bf8ba146-45c8-4ebd-8559-a2c699deb860">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -350,7 +356,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[$V{creditByProduct}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement positionType="Float" x="90" y="0" width="360" height="30" printWhenGroupChanges="Group1" uuid="595da585-6415-4491-b206-8fe5a54f62d9">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -368,7 +374,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="true">
 					<reportElement x="620" y="0" width="85" height="30" printWhenGroupChanges="Group1" uuid="20144e2e-60cf-4e49-ac65-e9a8dbf20b5b"/>
 					<box>
 						<pen lineColor="#D2D2D2"/>
@@ -382,7 +388,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[$V{adjustmentByProduct}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement positionType="Float" x="0" y="0" width="90" height="30" printWhenGroupChanges="Group1" uuid="c879592a-6981-44db-a22c-b1a62379407a">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -451,7 +457,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="535" y="0" width="85" height="30" printWhenGroupChanges="Group1" uuid="b82372a6-78b2-45f6-818d-7cd46115af64"/>
 				<box>
 					<pen lineColor="#D2D2D2"/>
@@ -465,7 +471,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				</textElement>
 				<textFieldExpression><![CDATA[$F{debit}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement x="705" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="7949d4e5-d2f1-461a-a68c-4c39ba0110b0">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
@@ -481,7 +487,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				</textElement>
 				<textFieldExpression><![CDATA[$F{soh}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="450" y="0" width="85" height="30" printWhenGroupChanges="Group1" uuid="3be8fec5-2056-4392-9528-ab76d07084a6">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -499,7 +505,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				</textElement>
 				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="90" y="0" width="360" height="30" printWhenGroupChanges="Group1" uuid="4f0d7539-6be5-44b5-a2d6-47de01376cd5">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -517,7 +523,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				</textElement>
 				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="620" y="0" width="85" height="30" printWhenGroupChanges="Group1" uuid="9a58bc79-3d14-4c31-ac97-fc36c75fc52f"/>
 				<box>
 					<pen lineColor="#D2D2D2"/>
