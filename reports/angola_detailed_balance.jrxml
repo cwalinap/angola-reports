@@ -96,7 +96,8 @@
 
 SELECT
 	products.code as productCode,
-    products.fullproductname AS product,
+    products.fullproductname AS productName,
+    CONCAT_WS(': ',products.code,products.fullproductname) AS product,
     facilities.name as facilityName,
     sum(events.debit) as debit,
     sum(events.credit) as credit,
@@ -159,10 +160,11 @@ JOIN referencedata.facilities AS facilities ON facilities.id = stock_cards.facil
 JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
 where ($P{program} IS NULL OR $X{IN, programs.name, programList})
     AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
-group by productCode, product, facilityName
-ORDER BY productCode]]>
+group by productCode, productName, product, facilityName
+ORDER BY product, facilityName]]>
 	</queryString>
 	<field name="productCode" class="java.lang.String"/>
+	<field name="productName" class="java.lang.String"/>
 	<field name="product" class="java.lang.String"/>
 	<field name="facilityName" class="java.lang.String"/>
 	<field name="soh" class="java.lang.Long"/>
@@ -268,7 +270,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
-					<text><![CDATA[Creditos]]></text>
+					<text><![CDATA[Entradas]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="535" y="0" width="85" height="30" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
@@ -276,7 +278,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
-					<text><![CDATA[Debitos]]></text>
+					<text><![CDATA[Saídas]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="705" y="0" width="95" height="30" uuid="2e82c1f1-cc66-4ec0-b712-3a474db89cfd">
@@ -298,7 +300,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 		</groupHeader>
 	</group>
 	<group name="Product Group" isReprintHeaderOnEachPage="true" minHeightToStartNewPage="60">
-		<groupExpression><![CDATA[$F{productCode}]]></groupExpression>
+		<groupExpression><![CDATA[$F{product}]]></groupExpression>
 		<groupHeader>
 			<band height="30">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -372,7 +374,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Product Group" isBlankWhenNull="true">
 					<reportElement x="620" y="0" width="85" height="30" printWhenGroupChanges="Group1" uuid="20144e2e-60cf-4e49-ac65-e9a8dbf20b5b"/>
