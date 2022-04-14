@@ -95,9 +95,9 @@
   SELECT referencedata.geographic_zones.* FROM referencedata.geographic_zones JOIN findChildZones ON findChildZones.id = referencedata.geographic_zones.parentId)
 
 SELECT
-	products.code as productCode,
-    products.fullproductname AS productName,
-    CONCAT_WS(': ',products.code,products.fullproductname) AS product,
+    products.productCode as productCode,
+    products.productName AS productName,
+    CONCAT_WS(': ', products.productCode, products.productName) AS product,
     facilities.name as facilityName,
     sum(events.debit) as debit,
     sum(events.credit) as credit,
@@ -154,11 +154,22 @@ join (
         group by orderableid, programid, facilityid
     ) inventories ON events.facilityid = inventories.facilityid and events.programid = inventories.programid and events.orderableid = inventories.orderableid
 ) as events on events.orderableid = stock_cards.orderableid and events.programid = stock_cards.programid and events.facilityid = stock_cards.facilityid
-JOIN referencedata.orderables AS products ON products.id = stock_cards.orderableid
+JOIN (
+    select
+        id,
+        code as productCode,
+        fullproductname as productName,
+        RANK () OVER (
+            PARTITION BY id
+            ORDER BY versionnumber DESC
+        ) AS productVersionRank
+    from referencedata.orderables
+) AS products ON products.id = stock_cards.orderableid
 JOIN referencedata.programs AS programs ON programs.id = stock_cards.programid
 JOIN referencedata.facilities AS facilities ON facilities.id = stock_cards.facilityid
 JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
-where ($P{program} IS NULL OR $X{IN, programs.name, programList})
+where productVersionRank = 1
+    AND ($P{program} IS NULL OR $X{IN, programs.name, programList})
     AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
 group by productCode, productName, product, facilityName
 ORDER BY product, facilityName]]>
@@ -425,7 +436,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				<textElement textAlignment="Center">
 					<font size="15" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Balancete]]></text>
+				<text><![CDATA[Balancete Detalhado]]></text>
 			</staticText>
 			<staticText>
 				<reportElement positionType="FixRelativeToBottom" x="261" y="0" width="279" height="39" uuid="af8e209d-cf2a-49a1-8c8a-6213dca400ea"/>

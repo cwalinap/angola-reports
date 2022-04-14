@@ -14,13 +14,11 @@
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
 	<property name="net.sf.jasperreports.export.csv.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
-	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="Product Group"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="title"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.4" value="summary"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.3" value="columnHeader"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
-	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="Product Group"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.3" value="title"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.4" value="summary"/>
@@ -90,7 +88,7 @@
 	<parameter name="timeZone" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="plsql">
 		<![CDATA[SELECT
-    CONCAT_WS(': ',products.code,products.fullproductname) AS product,
+    CONCAT_WS(': ', products.productCode, products.productName) AS product,
     sum(events.debit) as debit,
     sum(events.credit) as credit,
     sum(events.adjustment) as adjustment,
@@ -146,10 +144,21 @@ join (
         group by orderableid, programid, facilityid
     ) inventories ON events.facilityid = inventories.facilityid and events.programid = inventories.programid and events.orderableid = inventories.orderableid
 ) as events on events.orderableid = stock_cards.orderableid and events.programid = stock_cards.programid and events.facilityid = stock_cards.facilityid
-JOIN referencedata.orderables AS products ON products.id = stock_cards.orderableid
+JOIN (
+    select
+        id,
+        code as productCode,
+        fullproductname as productName,
+        RANK () OVER (
+            PARTITION BY id
+            ORDER BY versionnumber DESC
+        ) AS productVersionRank
+    from referencedata.orderables
+) AS products ON products.id = stock_cards.orderableid
 JOIN referencedata.programs AS programs ON programs.id = stock_cards.programid
 JOIN referencedata.facilities AS facilities ON facilities.id = stock_cards.facilityid
-where ($P{program} IS NULL OR $X{IN, programs.name, programList})
+where productVersionRank = 1
+    AND ($P{program} IS NULL OR $X{IN, programs.name, programList})
     AND ($P{facility} IS NULL OR facilities.name = $P{facility}::varchar)
 group by product
 ORDER BY product]]>
@@ -279,100 +288,6 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 			</band>
 		</groupHeader>
 	</group>
-	<group name="Product Group" isReprintHeaderOnEachPage="true">
-		<groupExpression><![CDATA[$F{product}]]></groupExpression>
-		<groupHeader>
-			<band height="30">
-				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<rectangle>
-					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="800" height="30" printWhenGroupChanges="Group1" backcolor="#F0F0F0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241"/>
-					<graphicElement>
-						<pen lineWidth="0.0"/>
-					</graphicElement>
-				</rectangle>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="515" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="eb5409f1-cdfe-481f-a56f-17a78f1d2b6f"/>
-					<box>
-						<pen lineColor="#D2D2D2"/>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[($F{debit} == null) ? "" : $F{debit}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="false">
-					<reportElement x="705" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="8402f03f-3e3a-42c7-9865-32b6b0dee2ba">
-						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					</reportElement>
-					<box>
-						<pen lineColor="#D2D2D2"/>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[($F{soh} == null) ? "" : $F{soh}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="420" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="bf8ba146-45c8-4ebd-8559-a2c699deb860">
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					</reportElement>
-					<box>
-						<pen lineColor="#D2D2D2"/>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[($F{credit} == null) ? "" : $F{credit}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement positionType="Float" x="0" y="0" width="420" height="30" printWhenGroupChanges="Group1" uuid="595da585-6415-4491-b206-8fe5a54f62d9">
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<box>
-						<pen lineColor="#D2D2D2"/>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-					</box>
-					<textElement verticalAlignment="Middle">
-						<font isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement x="610" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="20144e2e-60cf-4e49-ac65-e9a8dbf20b5b"/>
-					<box>
-						<pen lineColor="#D2D2D2"/>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[($F{adjustment} == null) ? "" : $F{adjustment}]]></textFieldExpression>
-				</textField>
-			</band>
-		</groupHeader>
-	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -412,4 +327,95 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 			</image>
 		</band>
 	</pageHeader>
+	<detail>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<rectangle>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="800" height="30" printWhenGroupChanges="Group1" backcolor="#F0F0F0" uuid="63561d35-41c4-45ad-a8df-c02ffdb77bd5"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="515" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="8ca8389f-6137-4a80-aa55-ab30418174e7"/>
+				<box>
+					<pen lineColor="#D2D2D2"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{debit} == null) ? "" : $F{debit}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="705" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="9e80cd43-8393-471a-b4a8-991fad12ba43">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#D2D2D2"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{soh} == null) ? "" : $F{soh}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="420" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="5e163681-fb1e-4888-b7ee-716571c7a963">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#D2D2D2"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{credit} == null) ? "" : $F{credit}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement positionType="Float" x="0" y="0" width="420" height="30" printWhenGroupChanges="Group1" uuid="a45ca3ee-a214-492d-8c77-0086d42ca278">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#D2D2D2"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="610" y="0" width="95" height="30" printWhenGroupChanges="Group1" uuid="75849a6b-9613-410f-8468-e8c909984137"/>
+				<box>
+					<pen lineColor="#D2D2D2"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{adjustment} == null) ? "" : $F{adjustment}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
 </jasperReport>
