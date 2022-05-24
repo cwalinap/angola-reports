@@ -158,10 +158,12 @@ public class UsersReportViewService implements ConcreteReportView {
 
     String firstName = getStringParameter(parameters, "firstName");
     String lastName = getStringParameter(parameters, "lastName");
+    String homeFacilityId = getStringParameter(parameters,"homeFacilityId");
 
     return users.stream().filter(user ->
             containsIgnoreCase(user.getFirstName(), firstName)
-                    && containsIgnoreCase(user.getLastName(), lastName))
+                    && containsIgnoreCase(user.getLastName(), lastName)
+                    && containsIgnoreCase(user.getHomeFacilityId(),homeFacilityId))
             .collect(Collectors.toList());
   }
 
